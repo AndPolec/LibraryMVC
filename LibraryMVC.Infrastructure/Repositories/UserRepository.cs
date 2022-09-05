@@ -17,7 +17,7 @@ namespace LibraryMVC.Infrastructure.Repositories
             _context = context;
         }
 
-        //User object
+        //User 
         public int AddUser(User user)
         {
             _context.Users.Add(user);
@@ -53,8 +53,7 @@ namespace LibraryMVC.Infrastructure.Repositories
             return _context.Users;
         }
 
-        //Address object
-
+        //Address 
         public int AddAddress(Address address)
         {
             _context.Addresses.Add(address);
