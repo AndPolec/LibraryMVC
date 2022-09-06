@@ -17,7 +17,6 @@ namespace LibraryMVC.Infrastructure.Repositories
             _context = context;
         }
 
-        //Book
         public int AddBook(Book book)
         {
             _context.Books.Add(book);
@@ -69,79 +68,6 @@ namespace LibraryMVC.Infrastructure.Repositories
         {
             var books = _context.Books.Where(b => b.PublisherId == publisherId);
             return books;
-        }
-
-        //Genre
-        public int AddGenre(Genre genre)
-        {
-            _context.Genres.Add(genre);
-            _context.SaveChanges();
-            return genre.Id;
-        }
-
-        public void DeleteGenre(int genreId)
-        {
-            var genre = _context.Genres.Find(genreId);
-            if(genre != null)
-            {
-                _context.Genres.Remove(genre);
-                _context.SaveChanges();
-            }
-        }
-
-        public Genre GetGenreById(int genreId)
-        {
-            var genre = _context.Genres.FirstOrDefault(g => g.Id == genreId);
-            return genre;
-        }
-
-        public IQueryable<Genre> GetAllGenres()
-        {
-            var genres = _context.Genres;
-            return genres;
-        }
-
-        public void UpdateGenre(Genre genre)
-        {
-            _context.Genres.Update(genre);
-            _context.SaveChanges();
-        }
-
-
-        //Publisher
-        public int AddPublisher(Publisher publisher)
-        {
-            _context.Publishers.Add(publisher);
-            _context.SaveChanges();
-            return publisher.Id;
-        }
-
-        public void DeletePublisher(int publisherId)
-        {
-            var publisher = _context.Publishers.Find(publisherId);
-            if(publisher != null)
-            {
-                _context.Publishers.Remove(publisher);
-                _context.SaveChanges();
-            }
-        }
-
-        public void UpdatePublisher(Publisher publisher)
-        {
-            _context.Publishers.Update(publisher);
-            _context.SaveChanges();
-        }
-
-        public Publisher GetPublisherById(int publisherId)
-        {
-            var publisher = _context.Publishers.Find(publisherId);
-            return publisher;
-        }
-
-        public IQueryable<Publisher> GetAllPublishers()
-        {
-            var publishers = _context.Publishers;
-            return publishers;
         }
     }
 }
