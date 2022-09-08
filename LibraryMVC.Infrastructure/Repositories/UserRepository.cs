@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.Model;
+﻿using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using Microsoft.EntityFrameworkCore.Update;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly Context _context;
 

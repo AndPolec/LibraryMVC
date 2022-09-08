@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.Model;
+﻿using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
-    public class LoanRepository
+    public class LoanRepository : ILoanRepository
     {
         private readonly Context _context;
 

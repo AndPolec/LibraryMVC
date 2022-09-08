@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.Model;
+﻿using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
-    public  class GenreRepository
+    public class GenreRepository : IGenreRepository
     {
 
         private readonly Context _context;

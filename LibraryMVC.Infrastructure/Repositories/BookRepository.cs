@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.Model;
+﻿using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
-    public class BookRepository
+    public class BookRepository : IBookRepository
     {
         private readonly Context _context;
 
@@ -27,7 +28,7 @@ namespace LibraryMVC.Infrastructure.Repositories
         public void DeleteBook(int bookId)
         {
             var book = _context.Books.Find(bookId);
-            if(book != null)
+            if (book != null)
             {
                 _context.Books.Remove(book);
                 _context.SaveChanges();
@@ -49,7 +50,7 @@ namespace LibraryMVC.Infrastructure.Repositories
         public IQueryable<Book> GetAllBooks()
         {
             var books = _context.Books;
-            return books; 
+            return books;
         }
 
         public IQueryable<Book> GetBooksByGenreId(int genreId)

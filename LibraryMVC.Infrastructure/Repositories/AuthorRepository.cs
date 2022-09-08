@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.Model;
+﻿using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
-    public class AuthorRepository
+    public class AuthorRepository : IAuthorRepository
     {
         private readonly Context _context;
 
@@ -38,7 +39,7 @@ namespace LibraryMVC.Infrastructure.Repositories
         public void DeleteAuthor(int authorId)
         {
             var author = _context.Authors.Find(authorId);
-            if(author != null)
+            if (author != null)
             {
                 _context.Authors.Remove(author);
                 _context.SaveChanges();
