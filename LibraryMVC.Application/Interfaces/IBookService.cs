@@ -10,7 +10,7 @@ namespace LibraryMVC.Application.Interfaces
     public interface IBookService
     {
         int AddBook(NewBookVm book);
-        ListOfBookForListVm GetAllBooksForList();
+        ListOfBookForListVm GetAllBooksForList(int pageSize, int pageNumber, string searchString);
         BookDetailsVm GetBook(int bookId);
     }
 }

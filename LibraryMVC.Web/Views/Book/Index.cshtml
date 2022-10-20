@@ -1,0 +1,107 @@
+﻿@model LibraryMVC.Application.ViewModels.Book.ListOfBookForListVm
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="Index" asp-controller="Book" method="post">
+    <div class="row">
+        <input type="text" asp-for="SearchString" name="searchString" id="searchString" />
+        <input type="submit" value="Wyszukaj" />
+    </div>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Nr
+                    </th>
+                    <th>
+                        Tytuł
+                    </th>
+                    <th>
+                        Autor
+                    </th>
+                    <th>
+                        Data wydania
+                    </th>
+                    <th>
+                        Gatunek
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+            @{
+                int position = 1;
+            }
+        @foreach (var item in Model.Books) {
+                <tr>
+                    <td>
+                        @position
+                        @{position++;}
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AuthorFullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RelaseYear)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <table>
+            <tr>
+                @for (int i = 1; i <= Math.Ceiling((double)Model.Count / Model.PageSize); i++)
+                {
+                    <td>
+                        @if(i != Model.CurrentPage)
+                        {
+                            <a href="javascript:PagerClick(@i)">@i</a>
+                        }else
+                        {
+                           <span>@i</span>
+                        }
+
+                    </td>
+                }
+            </tr>
+        </table>
+
+        <input type="hidden" name="pageNumber" id="pageNumber" />
+        <input type="hidden" name="pageSize" id="pageSize" value="5"/>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        function PagerClick(index)
+        {
+            document.getElementById("pageNumber").value = index;
+            document.forms[0].submit();
+        }
+    </script>
+}

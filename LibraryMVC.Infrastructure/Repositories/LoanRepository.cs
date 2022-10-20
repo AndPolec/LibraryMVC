@@ -14,7 +14,7 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public LoanRepository(Context context)
         {
-            context = _context;
+            _context = context;
         }
 
         public int AddLoan(Loan loan)

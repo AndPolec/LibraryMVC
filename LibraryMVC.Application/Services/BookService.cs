@@ -27,12 +27,18 @@ namespace LibraryMVC.Application.Services
             throw new NotImplementedException();
         }
 
-        public ListOfBookForListVm GetAllBooksForList()
+        public ListOfBookForListVm GetAllBooksForList(int pageSize, int pageNumber, string searchString)
         {
-            var books = _bookRepository.GetAllBooks().ProjectTo<BookForListVm>(_mapper.ConfigurationProvider).ToList();
+            var books = _bookRepository.GetAllBooks().Where(b => b.Title.StartsWith(searchString))
+                .ProjectTo<BookForListVm>(_mapper.ConfigurationProvider).ToList();
+
+            var booksToShow = books.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
             var bookList = new ListOfBookForListVm()
             {
-                Books = books,
+                PageSize = pageSize,
+                CurrentPage = pageNumber,
+                SearchString = searchString,
+                Books = booksToShow,
                 Count = books.Count
             };
             return bookList;
