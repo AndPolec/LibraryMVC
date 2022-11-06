@@ -16,7 +16,7 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public GenreRepository(Context context)
         {
-            context = _context;
+            _context = context;
         }
 
         public int AddGenre(Genre genre)

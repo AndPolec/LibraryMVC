@@ -1,0 +1,80 @@
+﻿@model LibraryMVC.Application.ViewModels.Book.AddNewBookVm
+
+@{
+    ViewData["Title"] = "AddNewBook";
+}
+
+<h1>AddNewBook</h1>
+
+<h4>NewBookVm</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="AddNewBook">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="NewBookModel.Id" />
+            <div class="form-group">
+                <label asp-for="NewBookModel.Title" class="control-label"></label>
+                <input asp-for="NewBookModel.Title" class="form-control" />
+                <span asp-validation-for="NewBookModel.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewBookModel.ISBN" class="control-label"></label>
+                <input asp-for="NewBookModel.ISBN" class="form-control" />
+                <span asp-validation-for="NewBookModel.ISBN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewBookModel.RelaseYear" class="control-label"></label>
+                <input asp-for="NewBookModel.RelaseYear" class="form-control" />
+                <span asp-validation-for="NewBookModel.RelaseYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewBookModel.Quantity" class="control-label"></label>
+                <input asp-for="NewBookModel.Quantity" class="form-control" />
+                <span asp-validation-for="NewBookModel.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewBookModel.AuthorId" class="control-label"></label>
+                <select asp-for="NewBookModel.AuthorId" class="form-select" aria-label="Default select example">
+                    <option selected>Wybierz autora:</option>
+                    @foreach (var author in Model.Authors.Authors)
+                    {
+                        <option value="@author.Id">@author.FullName</option>
+                    }
+                </select>
+                <span asp-validation-for="NewBookModel.AuthorId" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <select asp-for="NewBookModel.PublisherId" class="form-select" id="publisherSelect" aria-label="Default select example">
+                    @foreach (var publisher in Model.Publishers.Publishers)
+                    {
+                        <option value="@publisher.Id">@publisher.Name</option>
+                    }
+                </select>
+                <label for="publisherSelect">Wybierz wydawcę</label>
+                <span asp-validation-for="NewBookModel.PublisherId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Wybierz gatunek</label>
+                <select asp-for="NewBookModel.GenreId" class="form-select" multiple aria-label="multiple select example">
+                    @foreach (var genre in Model.Genres.Genres)
+                    {
+                            <option value="@genre.Id">@genre.Name</option>
+                    }
+                </select>   
+                <span asp-validation-for="NewBookModel.GenreId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Application.ViewModels.Book;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Text;
 
@@ -16,7 +17,7 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = _bookService.GetAllBooksForList(3,1,"");
+            var model = _bookService.GetAllBooksForList(5,1,"");
             return View(model);
         }
 
@@ -44,14 +45,15 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult AddNewBook()
         {
-            return View();
+            var addNewModel = _bookService.GetAllInfoForAddNewBook();
+            return View(addNewModel);
         }
 
-        //[HttpPost]
-        //public IActionResult AddNewBook(BookModel model)
-        //{
-        //    var id = _bookService.AddBook(model);
-        //    return View();
-        //}
+        [HttpPost]
+        public IActionResult AddNewBook(NewBookVm model)
+        {
+            var id = _bookService.AddBook(model);
+            return View();
+        }
     }
 }

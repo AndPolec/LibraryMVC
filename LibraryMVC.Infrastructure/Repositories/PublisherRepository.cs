@@ -15,7 +15,7 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public PublisherRepository(Context context)
         {
-            context = _context;
+            _context = context;
         }
 
         public int AddPublisher(Publisher publisher)

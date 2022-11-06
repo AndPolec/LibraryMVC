@@ -15,6 +15,9 @@ namespace LibraryMVC.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IGenreRepository, GenreRepository>();
+            services.AddTransient<IPublisherRepository, PublisherRepository>();
+            services.AddTransient<IAuthorRepository, AuthorRepository>();
             return services;
         }
     }
