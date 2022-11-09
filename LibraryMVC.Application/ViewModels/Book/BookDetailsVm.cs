@@ -12,7 +12,7 @@ namespace LibraryMVC.Application.ViewModels.Book
         public string Title { get; set; }
         public string AuthorFullName { get; set; }
         public int RelaseYear { get; set; }
-        public List<string> Genres { get; set; }
+        public string Genres { get; set; }
         public string PublisherName { get; set; }
         public string ISBN { get; set; }
         public bool IsAvailableForReservation { get; set; }

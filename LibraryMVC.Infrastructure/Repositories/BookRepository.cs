@@ -1,5 +1,6 @@
 ﻿using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -50,7 +51,12 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public Book GetBookById(int bookId)
         {
-            var book = _context.Books.FirstOrDefault(b => b.Id == bookId);
+            var book = _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Publisher)
+                .Include(b => b.BookGenres).ThenInclude(bg => bg.Genre)
+                .FirstOrDefault(b => b.Id == bookId);
+
             return book;
         }
 

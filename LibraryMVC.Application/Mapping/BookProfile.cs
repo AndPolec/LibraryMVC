@@ -18,6 +18,18 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.AuthorFullName, opt => opt.MapFrom(s => s.Author.FirstName + " " + s.Author.LastName))
                 .ForMember(d => d.Genre, opt => opt.MapFrom(s => String.Join(", ", s.BookGenres.Select(g => g.Genre.Name))));
 
+            CreateMap<Book, BookDetailsVm>()
+                .ForMember(d => d.AuthorFullName, opt => opt.MapFrom(s => s.Author.FirstName + " " + s.Author.LastName))
+                .ForMember(d => d.PublisherName, opt => opt.MapFrom(s => s.Publisher.Name))
+                .ForMember(d => d.Genres, opt => opt.MapFrom(s => String.Join(", ", s.BookGenres.Select(g => g.Genre.Name))))
+                .AfterMap((s, d) =>
+                {
+                    if (s.Quantity == 0)
+                        d.IsAvailableForReservation = false;
+                    else
+                        d.IsAvailableForReservation = true;
+                });
+
             CreateMap<int, BookGenre>()
                 .ForMember(d => d.GenreId, opt => opt.MapFrom(s => s));
 

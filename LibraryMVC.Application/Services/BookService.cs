@@ -107,6 +107,11 @@ namespace LibraryMVC.Application.Services
             _bookRepository.UpdateBook(book);
         }
 
+        public void DeleteBook(int id)
+        {
+            _bookRepository.DeleteBook(id);
+        }
+
         public ListOfGenreForListVm GetAllGenresForList()
         {
             var genres = _genreRepository.GetAllGenres().OrderBy(g => g.Name).ProjectTo<GenreForListVm>(_mapper.ConfigurationProvider).ToList();
