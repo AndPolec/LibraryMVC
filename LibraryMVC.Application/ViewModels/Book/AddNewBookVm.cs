@@ -12,9 +12,9 @@ namespace LibraryMVC.Application.ViewModels.Book
     public class AddNewBookVm
     {
         public NewBookVm NewBookModel { get; set; }
-        public ListOfAuthorForListVm Authors { get; set; }
-        public ListOfGenreForListVm Genres { get; set; }
-        public ListOfPublisherForListVm Publishers { get; set; }
+        public ListOfAuthorForListVm ListOfAuthors { get; set; }
+        public ListOfGenreForListVm ListOfGenres { get; set; }
+        public ListOfPublisherForListVm ListOfPublishers { get; set; }
         
     }
 }

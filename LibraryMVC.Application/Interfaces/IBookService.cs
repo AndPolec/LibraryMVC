@@ -14,12 +14,12 @@ namespace LibraryMVC.Application.Interfaces
     {
         int AddBook(AddNewBookVm book);
         ListOfBookForListVm GetAllBooksForList(int pageSize, int pageNumber, string searchString);
-        BookDetailsVm GetBook(int bookId);
+        BookDetailsVm GetBookForDetails(int bookId);
         AddNewBookVm GetAllInfoForAddNewBook();
         ListOfGenreForListVm GetAllGenresForList();
         ListOfAuthorForListVm GetAllAuthorsForList();
         ListOfPublisherForListVm GetAllPublishersForList();
-        
-
+        AddNewBookVm GetAllInfoForBookEdit(int id);
+        void UpdateBook(AddNewBookVm model);
     }
 }

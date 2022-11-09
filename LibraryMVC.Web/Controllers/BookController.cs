@@ -39,7 +39,7 @@ namespace LibraryMVC.Web.Controllers
 
         public IActionResult ViewBook(int bookId)
         {
-            var bookModel = _bookService.GetBook(bookId);
+            var bookModel = _bookService.GetBookForDetails(bookId);
             return View(bookModel);
         }
 
@@ -54,6 +54,20 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult AddNewBook(AddNewBookVm model)
         {
             var id = _bookService.AddBook(model);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult EditBook(int id)
+        {
+            var editBookModel = _bookService.GetAllInfoForBookEdit(id);
+            return View(editBookModel);
+        }
+
+        [HttpPost]
+        public IActionResult EditBook(AddNewBookVm model)
+        {
+            _bookService.UpdateBook(model);
             return RedirectToAction("Index");
         }
     }

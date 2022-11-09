@@ -37,7 +37,7 @@
                 <label asp-for="NewBookModel.AuthorId" class="control-label"></label>
                 <select asp-for="NewBookModel.AuthorId" class="form-select" aria-label="Default select example">
                     <option selected>Wybierz autora:</option>
-                    @foreach (var author in Model.Authors.Authors)
+                    @foreach (var author in Model.ListOfAuthors.Authors)
                     {
                         <option value="@author.Id">@author.FullName</option>
                     }
@@ -46,7 +46,7 @@
             </div>
             <div class="form-floating">
                 <select asp-for="NewBookModel.PublisherId" class="form-select" id="publisherSelect" aria-label="Default select example">
-                    @foreach (var publisher in Model.Publishers.Publishers)
+                    @foreach (var publisher in Model.ListOfPublishers.Publishers)
                     {
                         <option value="@publisher.Id">@publisher.Name</option>
                     }
@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label>Wybierz gatunek</label>
                 <select asp-for="NewBookModel.GenreIds" class="form-select" multiple>
-                   @foreach (var genre in Model.Genres.Genres)
+                   @foreach (var genre in Model.ListOfGenres.Genres)
                     {
                         <option value="@genre.Id">@genre.Name</option>
                     }
