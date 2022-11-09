@@ -15,5 +15,6 @@ namespace LibraryMVC.Application.ViewModels.Book
         public ListOfAuthorForListVm Authors { get; set; }
         public ListOfGenreForListVm Genres { get; set; }
         public ListOfPublisherForListVm Publishers { get; set; }
+        
     }
 }

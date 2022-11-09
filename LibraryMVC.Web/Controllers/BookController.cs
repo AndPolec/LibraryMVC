@@ -5,6 +5,7 @@ using System.Drawing.Text;
 
 namespace LibraryMVC.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class BookController : Controller
     {
         private readonly IBookService _bookService;
@@ -50,10 +51,10 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddNewBook(NewBookVm model)
+        public IActionResult AddNewBook(AddNewBookVm model)
         {
             var id = _bookService.AddBook(model);
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

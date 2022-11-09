@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryMVC.Application.ViewModels.Genre;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,9 @@ namespace LibraryMVC.Application.Mapping
     { 
         public GenreProfile()
         {
-            CreateMap<LibraryMVC.Domain.Model.Genre, GenreForListVm>();
+            CreateMap<Genre, GenreForListVm>();
+
+            
         }
     }
     

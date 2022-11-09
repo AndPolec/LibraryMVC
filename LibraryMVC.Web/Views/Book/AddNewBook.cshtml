@@ -56,13 +56,13 @@
             </div>
             <div class="form-group">
                 <label>Wybierz gatunek</label>
-                <select asp-for="NewBookModel.GenreId" class="form-select" multiple aria-label="multiple select example">
-                    @foreach (var genre in Model.Genres.Genres)
+                <select asp-for="NewBookModel.GenreIds" class="form-select" multiple>
+                   @foreach (var genre in Model.Genres.Genres)
                     {
-                            <option value="@genre.Id">@genre.Name</option>
+                        <option value="@genre.Id">@genre.Name</option>
                     }
                 </select>   
-                <span asp-validation-for="NewBookModel.GenreId" class="text-danger"></span>
+                <span asp-validation-for="NewBookModel.GenreIds" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

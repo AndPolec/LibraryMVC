@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.Model;
+﻿using LibraryMVC.Application.ViewModels.Genre;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace LibraryMVC.Application.ViewModels.Book
         public string ISBN { get; set; }
         public int RelaseYear { get; set; }
         public int Quantity { get; set; }
-        public List<int> GenreId { get; set; }
+        public List<int> GenreIds { get; set; }
         public int AuthorId { get; set; }
         public int PublisherId { get; set; }
 

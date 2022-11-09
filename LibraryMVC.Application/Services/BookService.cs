@@ -6,6 +6,7 @@ using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.Genre;
 using LibraryMVC.Application.ViewModels.Publisher;
 using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,11 @@ namespace LibraryMVC.Application.Services
             _mapper = mapper;
         }
 
-        public int AddBook(NewBookVm book)
+        public int AddBook(AddNewBookVm modelWithNewBookInfo)
         {
-            throw new NotImplementedException();
+            var newBook = _mapper.Map<Book>(modelWithNewBookInfo.NewBookModel);
+            var newBookId = _bookRepository.AddBook(newBook);
+            return newBookId;
         }
 
         public BookDetailsVm GetBook(int bookId)
