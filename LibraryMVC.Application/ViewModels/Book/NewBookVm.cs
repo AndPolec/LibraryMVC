@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Application.ViewModels.Genre;
+﻿using FluentValidation;
+using LibraryMVC.Application.ViewModels.Genre;
 using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,24 @@ namespace LibraryMVC.Application.ViewModels.Book
         public int AuthorId { get; set; }
         public int PublisherId { get; set; }
 
+    }
+
+    public class NewBookVmValidator : AbstractValidator<NewBookVm>
+    {
+        public NewBookVmValidator() 
+        {
+            RuleFor(x => x.Id).NotNull();
+            RuleFor(x => x.Title).NotEmpty();
+            RuleFor(x => x.ISBN).Custom((i, context) =>
+            {
+                if (!(i.Length == 10 || i.Length == 13))
+                    context.AddFailure("ISBN powinien zawierać 10 lub 13 cyfr.");
+            });
+            RuleFor(x => x.Quantity)
+                .NotEmpty()
+                .GreaterThan(-1);
+            RuleFor(x => x.RelaseYear).InclusiveBetween(1900, DateTime.Now.Year);
+                
+        }
     }
 }

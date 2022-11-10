@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using LibraryMVC.Application;
 using LibraryMVC.Application.Mapping;
 using LibraryMVC.Domain.Interfaces;
@@ -21,8 +22,6 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-
-
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

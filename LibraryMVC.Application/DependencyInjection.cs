@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.Mapping;
 using LibraryMVC.Application.Services;
+using LibraryMVC.Application.ViewModels.Book;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,8 @@ namespace LibraryMVC.Application
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddTransient<IBookService, BookService>();
+
+            services.AddTransient<IValidator<NewBookVm>, NewBookVmValidator>();
 
             return services;
         }
