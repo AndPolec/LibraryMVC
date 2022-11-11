@@ -32,9 +32,9 @@ namespace LibraryMVC.Application.Services
             _mapper = mapper;
         }
 
-        public int AddBook(AddNewBookVm modelWithNewBookInfo)
+        public int AddBook(NewBookVm model)
         {
-            var newBook = _mapper.Map<Book>(modelWithNewBookInfo.NewBookModel);
+            var newBook = _mapper.Map<Book>(model);
             var newBookId = _bookRepository.AddBook(newBook);
             return newBookId;
         }
@@ -64,46 +64,28 @@ namespace LibraryMVC.Application.Services
            
         }
 
-        public AddNewBookVm GetAllInfoForAddNewBook()
+        public NewBookVm GetInfoForAddNewBook()
         {
-            var genres = GetAllGenresForList();
-            var publishers = GetAllPublishersForList();
-            var authors = GetAllAuthorsForList();
+            var bookModel = new NewBookVm();
 
-            var addNewBookInfo = new AddNewBookVm()
-            {
-               NewBookModel = new NewBookVm(),
-               ListOfGenres = genres,
-               ListOfPublishers = publishers,
-               ListOfAuthors = authors
-            };
+            SetParametersToVm(bookModel);
 
-            return addNewBookInfo;
+            return bookModel;
         }
 
-        public AddNewBookVm GetAllInfoForBookEdit(int id)
+        public NewBookVm GetInfoForBookEdit(int id)
         {
             var book = _bookRepository.GetBookById(id);
             var bookModel = _mapper.Map<NewBookVm>(book);
-            var genres = GetAllGenresForList();
-            var publishers = GetAllPublishersForList();
-            var authors = GetAllAuthorsForList();
 
-            var editBookInfo = new AddNewBookVm()
-            {
-                NewBookModel = bookModel,
-                ListOfGenres = genres,
-                ListOfPublishers = publishers,
-                ListOfAuthors = authors
-            };
+            SetParametersToVm(bookModel);
 
-            return editBookInfo;
+            return bookModel;
         }
 
-        public void UpdateBook(AddNewBookVm model)
+        public void UpdateBook(NewBookVm model)
         {
-            var bookModel = model.NewBookModel;
-            var book = _mapper.Map<Book>(bookModel);
+            var book = _mapper.Map<Book>(model);
             _bookRepository.UpdateBook(book);
         }
 
@@ -142,6 +124,17 @@ namespace LibraryMVC.Application.Services
             return authorList;
         }
 
+        public NewBookVm SetParametersToVm(NewBookVm model)
+        {
+            var genres = GetAllGenresForList();
+            var publishers = GetAllPublishersForList();
+            var authors = GetAllAuthorsForList();
 
+            model.AllGenres = genres;
+            model.AllPublishers = publishers;
+            model.AllAuthors = authors;
+
+            return model;
+        }
     }
 }

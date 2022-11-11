@@ -1,6 +1,10 @@
-﻿using LibraryMVC.Application.Interfaces;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
+using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Book;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging.Signing;
 using System.Drawing.Text;
 
 namespace LibraryMVC.Web.Controllers
@@ -9,10 +13,12 @@ namespace LibraryMVC.Web.Controllers
     public class BookController : Controller
     {
         private readonly IBookService _bookService;
+        private readonly IValidator<NewBookVm> _validator;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookService bookService, IValidator<NewBookVm> newBookValidator)
         {
             _bookService = bookService;
+            _validator = newBookValidator;
         }
 
         [HttpGet]
@@ -47,13 +53,22 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult AddNewBook()
         {
-            var addNewModel = _bookService.GetAllInfoForAddNewBook();
+            var addNewModel = _bookService.GetInfoForAddNewBook();
             return View(addNewModel);
         }
 
         [HttpPost]
-        public IActionResult AddNewBook(AddNewBookVm model)
+        public IActionResult AddNewBook(NewBookVm model)
         {
+
+            var result = _validator.Validate(model);
+            if (!result.IsValid)
+            {
+                result.AddToModelState(ModelState);
+                model = _bookService.SetParametersToVm(model);
+                return View(model);
+            }
+
             var id = _bookService.AddBook(model);
             return RedirectToAction("Index");
         }
@@ -61,12 +76,12 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult EditBook(int id)
         {
-            var editBookModel = _bookService.GetAllInfoForBookEdit(id);
+            var editBookModel = _bookService.GetInfoForBookEdit(id);
             return View(editBookModel);
         }
 
         [HttpPost]
-        public IActionResult EditBook(AddNewBookVm model)
+        public IActionResult EditBook(NewBookVm model)
         {
             _bookService.UpdateBook(model);
             return RedirectToAction("Index");

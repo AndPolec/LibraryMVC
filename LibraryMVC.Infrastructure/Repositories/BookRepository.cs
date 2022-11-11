@@ -38,14 +38,17 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public void UpdateBook(Book book)
         {
+            var bookGenres = _context.BookGenre.Where(x => x.BookId == book.Id);
+            _context.BookGenre.RemoveRange(bookGenres);
+
             _context.Attach(book);
             _context.Entry(book).Property("Title").IsModified = true;
             _context.Entry(book).Property("ISBN").IsModified = true;
             _context.Entry(book).Property("RelaseYear").IsModified = true;
             _context.Entry(book).Property("Quantity").IsModified = true;
-            _context.Entry(book).Collection("BookGenres").IsModified = true;
             _context.Entry(book).Property("AuthorId").IsModified = true;
             _context.Entry(book).Property("PublisherId").IsModified = true;
+            _context.Entry(book).Collection("BookGenres").IsModified = true;
             _context.SaveChanges();
         }
 

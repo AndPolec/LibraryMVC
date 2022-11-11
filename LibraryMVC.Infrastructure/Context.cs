@@ -42,14 +42,21 @@ namespace LibraryMVC.Infrastructure
                 .HasKey(it => new { it.GenreId, it.BookId });
 
             builder.Entity<BookGenre>()
-                .HasOne<Book>(bg => bg.Book)
+                .HasOne(bg => bg.Book)
                 .WithMany(b => b.BookGenres)
                 .HasForeignKey(bg => bg.BookId);
 
             builder.Entity<BookGenre>()
-                .HasOne<Genre>(bg => bg.Genre)
+                .HasOne(bg => bg.Genre)
                 .WithMany(g => g.BookGenres)
                 .HasForeignKey(bg => bg.GenreId);
+
+            builder.Entity<Book>()
+                .HasMany(b => b.Genres)
+                .WithMany(g => g.Books)
+                .UsingEntity<BookGenre>(
+                    j => j.HasOne(g => g.Genre).WithMany(b => b.BookGenres),
+                    j => j.HasOne(g => g.Book).WithMany(b => b.BookGenres));
 
             builder.Entity<Loan>()
                 .HasOne(l => l.CheckInLibrarian)

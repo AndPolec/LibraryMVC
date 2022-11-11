@@ -9,6 +9,8 @@ namespace LibraryMVC.Domain.Model
         public string ISBN { get; set; }
         public int RelaseYear { get; set; }
         public int Quantity { get; set; }
+
+        public ICollection<Genre> Genres { get; set; }
         public ICollection<BookGenre> BookGenres { get; set; }
 
 

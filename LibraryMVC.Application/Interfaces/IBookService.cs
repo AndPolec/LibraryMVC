@@ -12,15 +12,16 @@ namespace LibraryMVC.Application.Interfaces
 {
     public interface IBookService
     {
-        int AddBook(AddNewBookVm book);
+        int AddBook(NewBookVm model);
         void DeleteBook(int id);
         ListOfBookForListVm GetAllBooksForList(int pageSize, int pageNumber, string searchString);
         BookDetailsVm GetBookForDetails(int bookId);
-        AddNewBookVm GetAllInfoForAddNewBook();
+        NewBookVm GetInfoForAddNewBook();
         ListOfGenreForListVm GetAllGenresForList();
         ListOfAuthorForListVm GetAllAuthorsForList();
         ListOfPublisherForListVm GetAllPublishersForList();
-        AddNewBookVm GetAllInfoForBookEdit(int id);
-        void UpdateBook(AddNewBookVm model);
+        NewBookVm GetInfoForBookEdit(int id);
+        void UpdateBook(NewBookVm model);
+        NewBookVm SetParametersToVm(NewBookVm model);
     }
 }
