@@ -1,99 +1,103 @@
 ﻿@model LibraryMVC.Application.ViewModels.Book.ListOfBookForListVm
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Katalog";
 }
 
-<h1>Index</h1>
+<h1>Katalog</h1>
 
 <p>
-    <a asp-action="AddNewBook">Create New</a>
+    <a asp-action="AddNewBook">Dodaj nową książkę</a>
 </p>
 
-<form asp-action="Index" asp-controller="Book" method="post">
-    <div class="row">
-        <input type="text" asp-for="SearchString" name="searchString" id="searchString" />
-        <input type="submit" value="Wyszukaj" />
-    </div>
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
+    <form asp-action="Index" asp-controller="Book" method="post">
+        <div class="row mb-5 justify-content-end">
+            <div class="input-group w-25">
+                <input type="text" asp-for="SearchString" name="searchString" id="searchString" class="form-control" placeholder="Wyszukaj" />
+                <button class="btn btn-primary" type="button">Szukaj</button>
+            </div>
+        </div>
 
-    <div class="row">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Nr
-                    </th>
-                    <th>
-                        Tytuł
-                    </th>
-                    <th>
-                        Autor
-                    </th>
-                    <th>
-                        Data wydania
-                    </th>
-                    <th>
-                        Gatunek
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Nr
+                        </th>
+                        <th>
+                            Tytuł
+                        </th>
+                        <th>
+                            Autor
+                        </th>
+                        <th>
+                            Data wydania
+                        </th>
+                        <th>
+                            Gatunek
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
 
-            @{
-                int position = 1;
-            }
-        @foreach (var item in Model.Books) {
-                <tr>
-                    <td>
-                        @position
-                        @{position++;}
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AuthorFullName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RelaseYear)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Genre)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "EditBook", new { id=item.Id}) |
-                        @Html.ActionLink("Details", "ViewBook", new { id=item.Id}) |
-                        @Html.ActionLink("Delete", "DeleteBook", new { id=item.Id })
-                    </td>
-                </tr>
-        }
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <table>
-            <tr>
-                @for (int i = 1; i <= Math.Ceiling((double)Model.Count / Model.PageSize); i++)
-                {
-                    <td>
-                        @if(i != Model.CurrentPage)
-                        {
-                            <a href="javascript:PagerClick(@i)">@i</a>
-                        }else
-                        {
-                           <span>@i</span>
-                        }
-
-                    </td>
+                @{
+                    int position = 1;
                 }
-            </tr>
-        </table>
+            @foreach (var item in Model.Books) {
+                    <tr>
+                        <td>
+                            @position
+                            @{position++;}
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AuthorFullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RelaseYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Genre)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditBook", new { id=item.Id}) |
+                            @Html.ActionLink("Details", "ViewBook", new { id=item.Id}) |
+                            @Html.ActionLink("Delete", "DeleteBook", new { id=item.Id })
+                        </td>
+                    </tr>
+            }
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <table>
+                <tr>
+                    @for (int i = 1; i <= Math.Ceiling((double)Model.Count / Model.PageSize); i++)
+                    {
+                        <td>
+                            @if(i != Model.CurrentPage)
+                            {
+                                <a href="javascript:PagerClick(@i)">@i</a>
+                            }else
+                            {
+                               <span>@i</span>
+                            }
 
-        <input type="hidden" name="pageNumber" id="pageNumber" />
-        <input type="hidden" name="pageSize" id="pageSize" value="5"/>
-    </div>
-</form>
+                        </td>
+                    }
+                </tr>
+            </table>
+
+            <input type="hidden" name="pageNumber" id="pageNumber" />
+            <input type="hidden" name="pageSize" id="pageSize" value="5"/>
+        </div>
+    </form>
+</div>
 
 @section Scripts
 {
