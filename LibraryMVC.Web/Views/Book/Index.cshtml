@@ -12,15 +12,23 @@
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
     <form asp-action="Index" asp-controller="Book" method="post">
-        <div class="row mb-5 justify-content-end">
+        <div class="row mb-4 justify-content-between">
+            <div class="col-1">
+                <select asp-for="PageSize" class="form-select" onchange="this.form.submit()">
+                    <option value="5" selected>5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="40">40</option>
+                </select>
+            </div>
             <div class="input-group w-25">
                 <input type="text" asp-for="SearchString" name="searchString" id="searchString" class="form-control" placeholder="Wyszukaj" />
-                <button class="btn btn-primary" type="button">Szukaj</button>
+                <button class="btn btn-primary" type="submit">Szukaj</button>
             </div>
         </div>
 
         <div class="row">
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>
@@ -43,34 +51,38 @@
                 </thead>
                 <tbody>
 
-                @{
-                    int position = 1;
-                }
-            @foreach (var item in Model.Books) {
-                    <tr>
-                        <td>
-                            @position
-                            @{position++;}
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AuthorFullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RelaseYear)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Genre)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "EditBook", new { id=item.Id}) |
-                            @Html.ActionLink("Details", "ViewBook", new { id=item.Id}) |
-                            @Html.ActionLink("Delete", "DeleteBook", new { id=item.Id })
-                        </td>
-                    </tr>
-            }
+                    @{
+                        int position = 1;
+                        if (Model.CurrentPage > 1)
+                        {
+                            position = (Model.CurrentPage-1) * Model.PageSize + 1;    
+                        }
+                     }
+                    @foreach (var item in Model.Books) {
+                            <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ViewBook", "Book", new { id=item.Id})'">
+                            <td>
+                                @position
+                                @{position++;}
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AuthorFullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RelaseYear)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Genre)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "EditBook", new { id=item.Id}) |
+                                @Html.ActionLink("Details", "ViewBook", new { id=item.Id}) |
+                                @Html.ActionLink("Delete", "DeleteBook", new { id=item.Id })
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -128,7 +140,7 @@
 
 
             <input type="hidden" name="pageNumber" id="pageNumber" />
-            <input type="hidden" name="pageSize" id="pageSize" value="5"/>
+            <input type="hidden" name="pageSize" id="pageSize" />
         </div>
     </form>
 </div>

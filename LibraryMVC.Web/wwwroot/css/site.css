@@ -18,3 +18,7 @@ body {
     background: rgb(166,179,225);
     background: linear-gradient(150deg, rgba(166,179,225,1) 45%, rgba(99,130,240,1) 100%);
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
