@@ -44,6 +44,28 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        public IActionResult AdminBookPanel()
+        {
+            var model = _bookService.GetAllBooksForList(10, 1, "");
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult AdminBookPanel(int pageSize, int? pageNumber, string searchString)
+        {
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
+            if (searchString is null)
+            {
+                searchString = String.Empty;
+            }
+            var model = _bookService.GetAllBooksForList(pageSize, pageNumber.Value, searchString);
+            return View(model);
+        }
+
+        [HttpGet]
         public IActionResult ViewBook(int id)
         {
             var bookModel = _bookService.GetBookForDetails(id);
