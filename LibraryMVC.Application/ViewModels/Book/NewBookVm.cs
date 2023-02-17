@@ -15,12 +15,25 @@ namespace LibraryMVC.Application.ViewModels.Book
     public class NewBookVm
     {
         public int Id { get; set; }
+
+        [DisplayName("Tytuł")]
         public string? Title { get; set; }
+
         public string? ISBN { get; set; }
+
+        [DisplayName("Rok wydania")]
         public int? RelaseYear { get; set; }
+
+        [DisplayName("Ilość")]
         public int? Quantity { get; set; }
+
+        [DisplayName("Gatunek")]
         public List<int>? GenreIds { get; set; }
+
+        [DisplayName("Autor")]
         public int? AuthorId { get; set; }
+
+        [DisplayName("Wydawca")]
         public int? PublisherId { get; set; }
 
         public ListOfAuthorForListVm AllAuthors { get; set; }
@@ -43,7 +56,7 @@ namespace LibraryMVC.Application.ViewModels.Book
             RuleFor(x => x.Quantity)
                 .NotEmpty().WithMessage("Pole 'Ilość' nie może być puste.")
                 .GreaterThan(-1).WithMessage("Ilość nie może być ujemna.");
-            RuleFor(x => x.RelaseYear).NotNull()
+            RuleFor(x => x.RelaseYear).NotNull().WithName("Data wydania")
                 .Custom((i, context) =>
                 {
                     if (i > DateTime.Today.Year)

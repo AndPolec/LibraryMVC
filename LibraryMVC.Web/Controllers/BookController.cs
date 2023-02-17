@@ -92,7 +92,7 @@ namespace LibraryMVC.Web.Controllers
             }
 
             var id = _bookService.AddBook(model);
-            return RedirectToAction("Index");
+            return RedirectToAction("AdminBookPanel");
         }
 
         [HttpGet]
@@ -106,14 +106,14 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult EditBook(NewBookVm model)
         {
             _bookService.UpdateBook(model);
-            return RedirectToAction("Index");
+            return RedirectToAction("AdminBookPanel");
         }
 
         [HttpGet]
         public IActionResult DeleteBook(int id)
         {
             _bookService.DeleteBook(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("AdminBookPanel");
         }
     }
 }
