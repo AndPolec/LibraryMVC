@@ -33,11 +33,6 @@ namespace LibraryMVC.Infrastructure
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Loan>()
-                .HasOne(a => a.Reservation)
-                .WithOne(b => b.Loan)
-                .HasForeignKey<Reservation>(c => c.LoanId);
-
             builder.Entity<BookGenre>()
                 .HasKey(it => new { it.GenreId, it.BookId });
 
