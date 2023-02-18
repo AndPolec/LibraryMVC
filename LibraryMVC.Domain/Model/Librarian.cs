@@ -7,8 +7,9 @@ namespace LibraryMVC.Domain.Model
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public virtual ICollection<Loan> AcceptedCheckOuts { get; set; }
-        public virtual ICollection<Loan> AcceptedCheckIns { get; set; }
+
+        public ICollection<CheckOutRecord> CheckOutRecords { get; set; }
+        public ICollection<ReturnRecord> ReturnRecords { get; set; }
 
 
     }

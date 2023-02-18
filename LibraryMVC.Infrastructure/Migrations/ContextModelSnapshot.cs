@@ -57,7 +57,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Author", b =>
@@ -78,7 +78,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Book", b =>
@@ -120,7 +120,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.BookGenre", b =>
@@ -135,7 +135,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BookGenre");
+                    b.ToTable("BookGenre", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.ContactDetail", b =>
@@ -162,7 +162,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ContactDetails");
+                    b.ToTable("ContactDetails", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.ContactDetailType", b =>
@@ -179,7 +179,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactDetailTypes");
+                    b.ToTable("ContactDetailTypes", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Genre", b =>
@@ -196,7 +196,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Librarian", b =>
@@ -217,7 +217,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Librarians");
+                    b.ToTable("Librarians", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Loan", b =>
@@ -252,7 +252,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("CheckOutLibrarianId");
 
-                    b.ToTable("Loans");
+                    b.ToTable("Loans", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Publisher", b =>
@@ -269,7 +269,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers");
+                    b.ToTable("Publishers", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Reservation", b =>
@@ -299,7 +299,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.User", b =>
@@ -320,7 +320,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

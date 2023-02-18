@@ -59,18 +59,6 @@ namespace LibraryMVC.Infrastructure
                     j => j.HasOne(g => g.Book).WithMany(b => b.BookGenres));
 
             builder.Entity<Loan>()
-                .HasOne(l => l.CheckInLibrarian)
-                .WithMany(l => l.AcceptedCheckIns)
-                .HasForeignKey(l => l.CheckInLibrarianId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Loan>()
-                .HasOne(l => l.CheckOutLibrarian)
-                .WithMany(l => l.AcceptedCheckOuts)
-                .HasForeignKey(l => l.CheckOutLibrarianId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Loan>()
                 .Property(l => l.Penalty)
                 .HasColumnType("decimal(8,2)");
         }

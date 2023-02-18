@@ -13,6 +13,6 @@ namespace LibraryMVC.Domain.Model
         public  int ContactDetailTypeId { get; set; }
         public virtual ContactDetailType ContactDetailType { get; set; }
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        public User User { get; set; }
     }
 }

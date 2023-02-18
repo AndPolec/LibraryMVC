@@ -14,11 +14,14 @@ namespace LibraryMVC.Domain.Model
         public ICollection<BookGenre> BookGenres { get; set; }
 
 
-        public int AuthorId { get; set; }
-        public virtual Author Author { get; set; }
+        public int? AuthorId { get; set; }
+        public Author Author { get; set; }
 
-        public int PublisherId { get; set; }
-        public virtual Publisher Publisher { get; set; }
+        public int? PublisherId { get; set; }
+        public Publisher Publisher { get; set; }
+
+        public int? BorrowCartId { get; set; }
+        public BorrowCart BorrowCart { get; set; }
 
     }
 }

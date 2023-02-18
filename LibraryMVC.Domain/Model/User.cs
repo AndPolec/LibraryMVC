@@ -12,9 +12,10 @@ namespace LibraryMVC.Domain.Model
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public virtual ICollection<Address> Addresses { get; set; }
-        public virtual ICollection<ContactDetail> ContactDetails { get; set; }
-        public virtual ICollection<Reservation> Reservations { get; set; }
 
+        public Address Address { get; set; }
+        public ICollection<ContactDetail> ContactDetails { get; set; }
+        public BorrowCart BorrowCart { get; set; }
+        public ICollection<Loan> Loans { get; set; }
     }
 }
