@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Domain.Model
 {
-    public class BorrowCart
+    public class BorrowingCart
     {
         public int Id { get; set; }
         public int UserId { get; set; }

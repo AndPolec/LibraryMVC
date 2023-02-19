@@ -15,13 +15,15 @@ namespace LibraryMVC.Infrastructure
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookGenre> BookGenre { get; set; }
+        public DbSet<BorrowingCart> BorrowingCarts { get; set; }
+        public DbSet<CheckOutRecord> CheckOutRecords { get; set; }
         public DbSet<ContactDetail> ContactDetails { get; set; }
         public DbSet<ContactDetailType> ContactDetailTypes { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Librarian> Librarians { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
-        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ReturnRecord> ReturnRecords { get; set; }
         public DbSet<User> Users { get; set; }
 
 

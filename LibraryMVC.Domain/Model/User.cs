@@ -15,7 +15,7 @@ namespace LibraryMVC.Domain.Model
 
         public Address Address { get; set; }
         public ICollection<ContactDetail> ContactDetails { get; set; }
-        public BorrowCart BorrowCart { get; set; }
+        public BorrowingCart BorrowingCart { get; set; }
         public ICollection<Loan> Loans { get; set; }
     }
 }

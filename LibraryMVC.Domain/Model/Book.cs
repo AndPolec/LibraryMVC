@@ -20,8 +20,8 @@ namespace LibraryMVC.Domain.Model
         public int? PublisherId { get; set; }
         public Publisher Publisher { get; set; }
 
-        public int? BorrowCartId { get; set; }
-        public BorrowCart BorrowCart { get; set; }
+        public int? BorrowingCartId { get; set; }
+        public BorrowingCart BorrowingCart { get; set; }
 
     }
 }
