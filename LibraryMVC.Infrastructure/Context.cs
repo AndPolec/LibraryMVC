@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Domain.Model;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Infrastructure
 {
-    public class Context : IdentityDbContext
+    public class Context : IdentityDbContext<IdentityUser>
     {
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Author> Authors { get; set; }
