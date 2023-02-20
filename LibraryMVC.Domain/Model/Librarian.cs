@@ -2,15 +2,10 @@
 
 namespace LibraryMVC.Domain.Model
 {
-    public class Librarian
+    public class Librarian : User
     {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-
+        
         public ICollection<CheckOutRecord> CheckOutRecords { get; set; }
         public ICollection<ReturnRecord> ReturnRecords { get; set; }
-
-
     }
 }
