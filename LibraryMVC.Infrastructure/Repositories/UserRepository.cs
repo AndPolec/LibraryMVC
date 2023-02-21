@@ -47,10 +47,20 @@ namespace LibraryMVC.Infrastructure.Repositories
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             return user;
         }
+        public User GetUserByIdentityUserId(string userId)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.IdentityUserId == userId);
+            return user;
+        }
 
         public IQueryable<User> GetAllUsers()
         {
             return _context.Users;
+        }
+        
+        public bool CheckIsUserExistsByIdentityUserId(string userId)
+        {
+            return _context.Users.Any(u => u.IdentityUserId == userId);
         }
 
     }

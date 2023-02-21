@@ -21,6 +21,7 @@ namespace LibraryMVC.Application
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddTransient<IBookService, BookService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddTransient<IValidator<NewBookVm>, NewBookVmValidator>();
 

@@ -18,6 +18,7 @@ namespace LibraryMVC.Infrastructure
             services.AddTransient<IGenreRepository, GenreRepository>();
             services.AddTransient<IPublisherRepository, PublisherRepository>();
             services.AddTransient<IAuthorRepository, AuthorRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             return services;
         }
     }

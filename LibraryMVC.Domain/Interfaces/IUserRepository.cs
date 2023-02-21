@@ -9,5 +9,6 @@ namespace LibraryMVC.Domain.Interfaces
         IQueryable<User> GetAllUsers();
         User GetUserById(int userId);
         void UpdateUser(User user);
+        bool CheckIsUserExistsByIdentityUserId(string userId);
     }
 }
