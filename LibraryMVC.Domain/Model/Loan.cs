@@ -15,8 +15,8 @@ namespace LibraryMVC.Domain.Model
         public DateTime ReturnDueDate { get; set; }
         public decimal Penalty { get; set; }
 
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public int LibraryUserId { get; set; }
+        public LibraryUser LibraryUser { get; set; }
         public CheckOutRecord CheckOutRecord { get; set; }
         public ReturnRecord ReturnRecord { get; set; }
 

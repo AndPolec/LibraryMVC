@@ -16,7 +16,7 @@ namespace LibraryMVC.Application.Mapping
         {
             CreateMap<AddressDetailsVm, Address>();
 
-            CreateMap<NewUserVm, User>()
+            CreateMap<NewLibraryUserVm, LibraryUser>()
                 .ForMember(d => d.Loans, act => act.Ignore());
 
 

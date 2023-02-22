@@ -2,7 +2,7 @@
 
 namespace LibraryMVC.Domain.Model
 {
-    public class Librarian : User
+    public class Librarian : LibraryUser
     {
         
         public ICollection<CheckOutRecord> CheckOutRecords { get; set; }

@@ -23,9 +23,9 @@ namespace LibraryMVC.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly IUserService _userService;
+        private readonly ILibraryUserService _userService;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IUserService userService)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, ILibraryUserService userService)
         {
             _signInManager = signInManager;
             _logger = logger;

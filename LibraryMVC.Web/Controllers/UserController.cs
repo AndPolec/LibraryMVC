@@ -8,8 +8,8 @@ namespace LibraryMVC.Web.Controllers
     [AutoValidateAntiforgeryToken]
     public class UserController : Controller
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly ILibraryUserService _userService;
+        public UserController(ILibraryUserService userService)
         {
             _userService = userService;
         }
@@ -22,11 +22,11 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult AddNewUser() 
         {
-            return View(new NewUserVm());
+            return View(new NewLibraryUserVm());
         }
 
         [HttpPost]
-        public IActionResult AddNewUser(NewUserVm model)
+        public IActionResult AddNewUser(NewLibraryUserVm model)
         {
             //To do: validate
 

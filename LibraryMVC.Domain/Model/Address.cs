@@ -15,7 +15,7 @@ namespace LibraryMVC.Domain.Model
         public string ZipCode { get; set; }
         public string City { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public LibraryUser User { get; set; }
 
 
     }

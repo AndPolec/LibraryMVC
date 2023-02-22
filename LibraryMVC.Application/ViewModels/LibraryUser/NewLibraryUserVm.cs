@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Application.ViewModels.User
 {
-    public class NewUserVm
+    public class NewLibraryUserVm
     {
         public int Id { get; set; }
         public string IdentityUserId { get; set; }

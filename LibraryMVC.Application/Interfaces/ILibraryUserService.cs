@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Application.Interfaces
 {
-    public interface IUserService
+    public interface ILibraryUserService
     {
-        int AddUser(NewUserVm model);
+        int AddUser(NewLibraryUserVm model);
         bool isUserDataExists(string identityUserId);
     }
 }

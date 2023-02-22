@@ -23,7 +23,7 @@ namespace LibraryMVC.Infrastructure
         public DbSet<Loan> Loans { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<ReturnRecord> ReturnRecords { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<LibraryUser> LibraryUsers { get; set; }
 
 
         public Context(DbContextOptions options) : base(options)

@@ -9,8 +9,8 @@ namespace LibraryMVC.Domain.Model
     public class BorrowingCart
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public int LibraryUserId { get; set; }
+        public LibraryUser LibraryUser { get; set; }
         public ICollection<Book> Books { get; set; }
     }
 }

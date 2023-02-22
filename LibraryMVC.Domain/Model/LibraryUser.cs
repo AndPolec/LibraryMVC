@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Domain.Model
 {
-    public class User
+    public class LibraryUser
     {
         public int Id { get; set; }
         public string IdentityUserId { get; set; }

@@ -11,28 +11,28 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Application.Services
 {
-    public class UserService : IUserService
+    public class LibraryUserService : ILibraryUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly ILibraryUserRepository _libraryUserRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public LibraryUserService(ILibraryUserRepository userRepository, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _libraryUserRepository = userRepository;
             _mapper = mapper;
         }
 
-        public int AddUser(NewUserVm model)
+        public int AddUser(NewLibraryUserVm model)
         {
-            var newUser = _mapper.Map<User>(model);
-            var newUserId = _userRepository.AddUser(newUser);
+            var newUser = _mapper.Map<LibraryUser>(model);
+            var newUserId = _libraryUserRepository.AddUser(newUser);
             return newUserId;
 
         }
 
         public bool isUserDataExists(string identityUserId)
         {
-            return _userRepository.CheckIsUserExistsByIdentityUserId(identityUserId);
+            return _libraryUserRepository.CheckIsUserExistsByIdentityUserId(identityUserId);
         }
     }
 }

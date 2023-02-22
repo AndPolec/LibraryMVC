@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class LibraryUserRepository : ILibraryUserRepository
     {
         private readonly Context _context;
 
-        public UserRepository(Context context)
+        public LibraryUserRepository(Context context)
         {
             _context = context;
         }
 
-        public int AddUser(User user)
+        public int AddUser(LibraryUser user)
         {
-            _context.Users.Add(user);
+            _context.LibraryUsers.Add(user);
             _context.SaveChanges();
 
             return user.Id;
@@ -28,39 +28,39 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public void DeleteUser(int userId)
         {
-            var user = _context.Users.Find(userId);
+            var user = _context.LibraryUsers.Find(userId);
             if (user != null)
             {
-                _context.Users.Remove(user);
+                _context.LibraryUsers.Remove(user);
                 _context.SaveChanges();
             }
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(LibraryUser user)
         {
-            _context.Users.Update(user);
+            _context.LibraryUsers.Update(user);
             _context.SaveChanges();
         }
 
-        public User GetUserById(int userId)
+        public LibraryUser GetUserById(int userId)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _context.LibraryUsers.FirstOrDefault(u => u.Id == userId);
             return user;
         }
-        public User GetUserByIdentityUserId(string userId)
+        public LibraryUser GetUserByIdentityUserId(string userId)
         {
-            var user = _context.Users.FirstOrDefault(u => u.IdentityUserId == userId);
+            var user = _context.LibraryUsers.FirstOrDefault(u => u.IdentityUserId == userId);
             return user;
         }
 
-        public IQueryable<User> GetAllUsers()
+        public IQueryable<LibraryUser> GetAllUsers()
         {
-            return _context.Users;
+            return _context.LibraryUsers;
         }
         
         public bool CheckIsUserExistsByIdentityUserId(string userId)
         {
-            return _context.Users.Any(u => u.IdentityUserId == userId);
+            return _context.LibraryUsers.Any(u => u.IdentityUserId == userId);
         }
 
     }
