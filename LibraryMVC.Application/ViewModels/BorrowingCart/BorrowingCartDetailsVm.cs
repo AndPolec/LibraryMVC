@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace LibraryMVC.Application.ViewModels.BorrowingCart
 {
-    public class BorrowingCartVm
+    public class BorrowingCartDetailsVm
     {
+        
     }
 }

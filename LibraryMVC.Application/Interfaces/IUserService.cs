@@ -9,7 +9,7 @@ namespace LibraryMVC.Application.Interfaces
 {
     public interface IUserService
     {
-        void AddUser(NewUserVm model);
+        int AddUser(NewUserVm model);
         bool isUserDataExists(string identityUserId);
     }
 }

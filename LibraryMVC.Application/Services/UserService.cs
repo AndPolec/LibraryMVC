@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Application.Interfaces;
+﻿using AutoMapper;
+using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.User;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
@@ -13,14 +14,20 @@ namespace LibraryMVC.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IMapper _mapper;
+
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        public void AddUser(NewUserVm model)
+        public int AddUser(NewUserVm model)
         {
-            throw new NotImplementedException();
+            var newUser = _mapper.Map<User>(model);
+            var newUserId = _userRepository.AddUser(newUser);
+            return newUserId;
+
         }
 
         public bool isUserDataExists(string identityUserId)

@@ -9,7 +9,7 @@ namespace LibraryMVC.Application.Interfaces
 {
     public interface ILoanService
     {
-        BorrowingCartVm GetBorrowingCart(string userId);
+        BorrowingCartDetailsVm GetBorrowingCart(string userId);
         
     }
 }

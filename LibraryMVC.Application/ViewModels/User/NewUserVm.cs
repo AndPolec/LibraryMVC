@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Domain.Model;
+﻿using LibraryMVC.Application.ViewModels.BorrowingCart;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace LibraryMVC.Application.ViewModels.User
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public AddressDetailsVm Address { get; set; }
-       
+        public NewBorrowingCartVm BorrowingCart { get; set; }
+
     }
 }

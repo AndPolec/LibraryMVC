@@ -10,7 +10,7 @@ namespace LibraryMVC.Application.Services
 {
     public class LoanService : ILoanService
     {
-        public BorrowingCartVm GetBorrowingCart(string userId)
+        public BorrowingCartDetailsVm GetBorrowingCart(string userId)
         {
             throw new NotImplementedException();
         }
