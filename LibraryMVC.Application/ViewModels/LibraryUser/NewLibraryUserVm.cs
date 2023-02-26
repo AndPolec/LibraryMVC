@@ -31,10 +31,8 @@ namespace LibraryMVC.Application.ViewModels.User
         public NewLibraryUserVmValidator() 
         {
             RuleFor(x => x.Id).NotNull();
-            RuleFor(x => x.IdentityUserId).NotNull();
             RuleFor(x => x.FirstName).NotEmpty().Matches(@"^[A-Z]").WithMessage("Imię musi zaczynać się od dużej litery.");
             RuleFor(x => x.LastName).NotEmpty().Matches(@"^[A-Z]").WithMessage("Nazwisko musi zaczynać się od dużej litery.");
-            RuleFor(x => x.Email).EmailAddress();
             RuleFor(x => x.PhoneNumber).Length(9,9).WithMessage("Numer telefonu musi zawierać 9 cyfr.").Matches(@"^\d{9}").WithMessage("Numer telefonu musi być w formacie XXXXXXXXX");
             RuleFor(x => x.Address).SetValidator(new AddressDetailsVmValidator());
             RuleFor(x => x.BorrowingCart.Id).NotNull();
