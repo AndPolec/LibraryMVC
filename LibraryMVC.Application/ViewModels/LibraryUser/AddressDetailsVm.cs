@@ -28,7 +28,7 @@ namespace LibraryMVC.Application.ViewModels.User
         public AddressDetailsVmValidator()
         {
             RuleFor(x => x.Id).NotNull();
-            RuleFor(x => x.Street).NotEmpty().Matches(@"^[A-Z]").WithMessage("Nazwa ulicy musi zaczynać się od dużej litery."); ;
+            RuleFor(x => x.Street).NotEmpty().Matches(@"^[A-Z]").WithMessage("Nazwa ulicy musi zaczynać się od dużej litery."); 
             RuleFor(x => x.BuildingNumber).NotEmpty();
             RuleFor(x => x.FlatNumber).NotEmpty();
             RuleFor(x => x.ZipCode).NotEmpty().Matches(@"\d{2}-\d{3}").WithMessage("Kod pocztowy musi mieć format: XX-XXX");
