@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Application.ViewModels.BorrowingCart;
+﻿using FluentValidation;
+using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace LibraryMVC.Application.ViewModels.User
         public string PhoneNumber { get; set; }
         public AddressDetailsVm Address { get; set; }
         public NewBorrowingCartVm BorrowingCart { get; set; }
-
     }
+
+   
 }
