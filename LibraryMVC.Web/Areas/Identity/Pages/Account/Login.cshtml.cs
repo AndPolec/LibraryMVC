@@ -120,13 +120,7 @@ namespace LibraryMVC.Web.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
-                    var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if (_userService.isUserDataExists(identityUserId))
-                    {
-                        return LocalRedirect(returnUrl);
-                    }
-
-                    return RedirectToAction("AddNewUser","User");
+                    return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
