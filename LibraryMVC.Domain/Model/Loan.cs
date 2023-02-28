@@ -19,6 +19,7 @@ namespace LibraryMVC.Domain.Model
         public LibraryUser LibraryUser { get; set; }
         public CheckOutRecord CheckOutRecord { get; set; }
         public ReturnRecord ReturnRecord { get; set; }
+        public ICollection<Book> Books { get; set; }
 
     }
 }

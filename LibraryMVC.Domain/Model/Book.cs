@@ -12,7 +12,8 @@ namespace LibraryMVC.Domain.Model
 
         public ICollection<Genre> Genres { get; set; }
         public ICollection<BookGenre> BookGenres { get; set; }
-
+        public ICollection<BorrowingCart> BorrowingCarts { get; set; }
+        public ICollection<Loan> Loans { get; set; }
 
         public int? AuthorId { get; set; }
         public Author Author { get; set; }
@@ -20,8 +21,7 @@ namespace LibraryMVC.Domain.Model
         public int? PublisherId { get; set; }
         public Publisher Publisher { get; set; }
 
-        public int? BorrowingCartId { get; set; }
-        public BorrowingCart BorrowingCart { get; set; }
+        
 
     }
 }

@@ -10,5 +10,7 @@ namespace LibraryMVC.Domain.Interfaces
     public interface IBorrowingCartRepository
     {
         BorrowingCart GetBorrowingCartByIndentityUserId(string id);
+        void AddToBorrowingCart(int bookId, string identityUserId);
+
     }
 }

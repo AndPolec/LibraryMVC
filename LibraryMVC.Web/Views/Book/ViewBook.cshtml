@@ -56,6 +56,6 @@
 </div>
 <div>
     <a asp-action="Index">Back to List</a>
-    <a asp-asp-action="" class="btn">Dodaj do koszyka</a>
+    <a asp-action="AddToBorrowingCart" asp-controller="BorrowingCart" asp-route-bookId ="@Model.Id" class="btn btn-success">Dodaj do koszyka</a>
     
 </div>

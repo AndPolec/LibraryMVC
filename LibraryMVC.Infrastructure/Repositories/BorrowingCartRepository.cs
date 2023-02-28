@@ -17,14 +17,27 @@ namespace LibraryMVC.Infrastructure.Repositories
             _context = context;
         }
 
+        public void AddToBorrowingCart(int bookId, string identityUserId)
+        {
+            var borrowingCart = _context.BorrowingCarts.Include(bc => bc.Books).FirstOrDefault(bc => bc.LibraryUser.IdentityUserId == identityUserId);
+            var book = _context.Books.FirstOrDefault(b => b.Id == bookId);
+            if (borrowingCart != null)
+            {
+                borrowingCart.Books.Add(book);
+                _context.SaveChanges();
+            }
+        }
+
         public BorrowingCart GetBorrowingCartByIndentityUserId(string id)
         {
             var user = _context.LibraryUsers
-                .Include(u => u.BorrowingCart)
+                .Include(u => u.BorrowingCart).ThenInclude(bc => bc.Books).ThenInclude(b => b.Author)
+                .Include(u => u.BorrowingCart).ThenInclude(bc => bc.Books).ThenInclude(b => b.BookGenres).ThenInclude(bg => bg.Genre)
                 .FirstOrDefault(u => u.IdentityUserId == id);
 
             var borrowingCart = user.BorrowingCart;
             return borrowingCart;
         }
+
     }
 }

@@ -22,5 +22,13 @@ namespace LibraryMVC.Web.Controllers
             
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult AddToBorrowingCart(int bookId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _loanService.AddToBorrowingCart(bookId,userId);
+            return RedirectToAction("Index");
+        }
     }
 }
