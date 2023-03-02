@@ -39,5 +39,15 @@ namespace LibraryMVC.Infrastructure.Repositories
             return borrowingCart;
         }
 
+        public void RemoveFromBorrowingCart(int bookId, int borrowingCartId)
+        {
+            var borrowingCart = _context.BorrowingCarts.Find(borrowingCartId);
+            if (borrowingCart != null)
+            {
+               var book = borrowingCart.Books.FirstOrDefault(b => b.Id == bookId);
+               borrowingCart.Books.Remove(book);
+                _context.SaveChanges(); 
+            }
+        }
     }
 }

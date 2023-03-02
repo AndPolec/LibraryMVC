@@ -30,5 +30,13 @@ namespace LibraryMVC.Web.Controllers
             _loanService.AddToBorrowingCart(bookId,userId);
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult RemoveFromBorrowingCart(int bookId, int borrowingCartId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
+            return RedirectToAction("Index");
+        }
     }
 }

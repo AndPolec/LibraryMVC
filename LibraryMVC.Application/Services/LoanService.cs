@@ -37,6 +37,11 @@ namespace LibraryMVC.Application.Services
             return borrowingCartVm;
         }
 
+        public void RemoveFromBorrowingCart(int bookId, int borrowingCartId)
+        {
+            _borrowingCartRepository.RemoveFromBorrowingCart(bookId, borrowingCartId);
+        }
+
         private bool isBorrowingCartFull(string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
