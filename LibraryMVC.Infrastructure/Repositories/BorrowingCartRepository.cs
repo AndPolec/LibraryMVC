@@ -20,13 +20,25 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public void AddToBorrowingCart(int bookId, string identityUserId)
         {
-            var borrowingCart = _context.BorrowingCarts.Include(bc => bc.Books).FirstOrDefault(bc => bc.LibraryUser.IdentityUserId == identityUserId);
+            var borrowingCart = _context.BorrowingCarts
+                .Include(bc => bc.Books)
+                .FirstOrDefault(bc => bc.LibraryUser.IdentityUserId == identityUserId);
+
             var book = _context.Books.FirstOrDefault(b => b.Id == bookId);
             if (borrowingCart != null)
             {
                 borrowingCart.Books.Add(book);
                 _context.SaveChanges();
             }
+        }
+
+        public BorrowingCart GetBorrowingCartById(int borrowingCartId)
+        {
+            var borrowingCart = _context.BorrowingCarts
+                .Include(bc => bc.Books)
+                .FirstOrDefault(bc => bc.Id == borrowingCartId);
+            
+            return borrowingCart;
         }
 
         public BorrowingCart GetBorrowingCartByIndentityUserId(string id)
@@ -42,7 +54,10 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public void RemoveFromBorrowingCart(int bookId, int borrowingCartId)
         {
-            var borrowingCart = _context.BorrowingCarts.Include(bc => bc.Books).FirstOrDefault(bc => bc.Id == borrowingCartId);
+            var borrowingCart = _context.BorrowingCarts
+                .Include(bc => bc.Books)
+                .FirstOrDefault(bc => bc.Id == borrowingCartId);
+
             if (borrowingCart != null)
             {
                var book = borrowingCart.Books.FirstOrDefault(b => b.Id == bookId);

@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.ViewModels.BorrowingCart;
+using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace LibraryMVC.Application.Interfaces
 {
     public interface ILoanService
     {
-        BorrowingCartDetailsVm GetBorrowingCart(string identityUserId);
+        BorrowingCartDetailsVm GetBorrowingCartByIndentityUserId(string identityUserId);
+        BorrowingCart GetBorrowingCartById(int borrowingCartId);
         bool AddToBorrowingCart(int bookId,string identityUserId);
         void RemoveFromBorrowingCart(int bookId, int borrowingCartId);
         int AddNewLoan(int borrowingCartId, int userId);

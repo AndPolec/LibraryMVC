@@ -2,6 +2,7 @@
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -32,11 +33,16 @@ namespace LibraryMVC.Application.Services
             return true;
         }
 
-        public BorrowingCartDetailsVm GetBorrowingCart(string identityUserId)
+        public BorrowingCartDetailsVm GetBorrowingCartByIndentityUserId(string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
             var borrowingCartVm = _mapper.Map<BorrowingCartDetailsVm>(borrowingCart);
             return borrowingCartVm;
+        }
+        public BorrowingCart GetBorrowingCartById(int borrowingCartId)
+        {
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
+            return borrowingCart;
         }
 
         public void RemoveFromBorrowingCart(int bookId, int borrowingCartId)
@@ -55,18 +61,20 @@ namespace LibraryMVC.Application.Services
             return true;
         }
 
-        //public bool isEveryBookAvailableForBorrowing(int borrowingCartId)
-        //{
-        //    var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
-
-        //}
-
         //Loan
         public int AddNewLoan(int borrowingCartId, int userId)
         {
+            var borrowingCart = GetBorrowingCartById(borrowingCartId);
+            var loan = new Loan()
+            {
+                LibraryUserId = userId,
+                Books = borrowingCart.Books,
+                LoanCreationDate = DateTime.Now,
+                CheckOutDueDate = DateTime.Now.AddDays(7)
+            }; 
+
+
             return 0;
         }
-
-
     }
 }
