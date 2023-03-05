@@ -13,6 +13,8 @@ namespace LibraryMVC.Application.Mapping
     {
         public BorrowingCartProfile()
         {
+            CreateMap<NewBorrowingCartVm, BorrowingCart>();
+
             CreateMap<BorrowingCart, BorrowingCartDetailsVm>()
                 .ForMember(d => d.Count, opt => opt.MapFrom(s => s.Books.Count));
 

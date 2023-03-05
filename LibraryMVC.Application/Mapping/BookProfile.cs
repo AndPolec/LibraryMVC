@@ -37,7 +37,19 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.GenreIds, opt => opt.MapFrom(s => s.BookGenres.Select(bg => bg.GenreId)))
                 .ReverseMap()
                 .ForMember(d => d.BookGenres, opt => opt.MapFrom(s => s.GenreIds));
-            
+
+            CreateMap<Book, BookForBorrowingCartVm>()
+                .ForMember(d => d.AuthorFullName, opt => opt.MapFrom(s => s.Author.FirstName + " " + s.Author.LastName))
+                .ForMember(d => d.Genre, opt => opt.MapFrom(s => String.Join(", ", s.BookGenres.Select(g => g.Genre.Name))))
+                .AfterMap((s, d) =>
+                {
+                    if (s.Quantity == 0)
+                        d.IsAvailableForReservation = false;
+                    else
+                        d.IsAvailableForReservation = true;
+                });
+                
+
         }
 
         

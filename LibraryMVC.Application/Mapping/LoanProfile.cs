@@ -13,7 +13,7 @@ namespace LibraryMVC.Application.Mapping
     {
         public LoanProfile()
         {
-            CreateMap<NewBorrowingCartVm, BorrowingCart>();
+            
         }
     }
 }

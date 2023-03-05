@@ -11,6 +11,6 @@ namespace LibraryMVC.Application.ViewModels.BorrowingCart
     public class NewBorrowingCartVm
     {
         public int Id { get; set; }
-        public List<BookForListVm> Books { get; set; }
+        public List<BookForBorrowingCartVm> Books { get; set; }
     }
 }

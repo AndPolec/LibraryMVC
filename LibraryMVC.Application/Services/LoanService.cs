@@ -2,6 +2,7 @@
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace LibraryMVC.Application.Services
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
 
+        //BorrowingCart
         public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository)
         {
             _borrowingCartRepository = borrowingCartRepository;
@@ -52,5 +54,19 @@ namespace LibraryMVC.Application.Services
 
             return true;
         }
+
+        //public bool isEveryBookAvailableForBorrowing(int borrowingCartId)
+        //{
+        //    var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
+
+        //}
+
+        //Loan
+        public int AddNewLoan(int borrowingCartId, int userId)
+        {
+            return 0;
+        }
+
+
     }
 }
