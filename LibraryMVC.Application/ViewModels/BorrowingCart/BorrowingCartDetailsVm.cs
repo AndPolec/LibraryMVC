@@ -9,6 +9,7 @@ namespace LibraryMVC.Application.ViewModels.BorrowingCart
 {
     public class BorrowingCartDetailsVm
     {
+        public int Id { get; set; }
         public List<BookForListVm> Books { get; set; }
         public int Count { get; set; }
         public int LibraryUserId { get; set; }

@@ -34,7 +34,6 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult RemoveFromBorrowingCart(int bookId, int borrowingCartId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
             return RedirectToAction("Index");
         }
