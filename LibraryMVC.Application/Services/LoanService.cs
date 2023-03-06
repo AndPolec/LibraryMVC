@@ -16,12 +16,14 @@ namespace LibraryMVC.Application.Services
     {
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
+        private readonly ILoanRepository _loanRepository;
 
         //BorrowingCart
-        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository)
+        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository)
         {
             _borrowingCartRepository = borrowingCartRepository;
             _mapper = mapper;
+            _loanRepository = loanRepository;
         }
 
         public bool AddToBorrowingCart(int bookId, string identityUserId)
@@ -50,6 +52,11 @@ namespace LibraryMVC.Application.Services
             _borrowingCartRepository.RemoveFromBorrowingCart(bookId, borrowingCartId);
         }
 
+        public int ClearBorrowingCart(int borrowingCartId)
+        {
+            _borrowingCartRepository.RemoveAllFromBorrowingCart(borrowingCartId);
+        }
+
         private bool isBorrowingCartFull(string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
@@ -62,19 +69,33 @@ namespace LibraryMVC.Application.Services
         }
 
         //Loan
+        private ICollection<Book> FilterAndReturnAvailableBooks(ICollection<Book> books)
+        {
+            var availableBooks = new List<Book>();
+            foreach (var book in books)
+            {
+                if (book.Quantity > 0)
+                    availableBooks.Add(book);
+            }
+            return availableBooks;
+        }
         public int AddNewLoan(int borrowingCartId, int userId)
         {
             var borrowingCart = GetBorrowingCartById(borrowingCartId);
+            var availableBooks = FilterAndReturnAvailableBooks(borrowingCart.Books);
+            
+
             var loan = new Loan()
             {
                 LibraryUserId = userId,
-                Books = borrowingCart.Books,
-                LoanCreationDate = DateTime.Now,
-                CheckOutDueDate = DateTime.Now.AddDays(7)
-            }; 
+                Books = availableBooks,
+                CreationDate = DateTime.Now,
+            };
 
+            var loanId = _loanRepository.AddLoan(loan);
 
-            return 0;
+            ClearBorrowingCart(borrowingCartId);
+            return loanId;
         }
     }
 }

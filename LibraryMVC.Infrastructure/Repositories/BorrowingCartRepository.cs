@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -63,6 +64,19 @@ namespace LibraryMVC.Infrastructure.Repositories
                var book = borrowingCart.Books.FirstOrDefault(b => b.Id == bookId);
                borrowingCart.Books.Remove(book);
                _context.SaveChanges(); 
+            }
+        }
+
+        public void RemoveAllFromBorrowingCart(int borrowingCartId)
+        {
+            var borrowingCart = _context.BorrowingCarts
+                .Include(bc => bc.Books)
+                .FirstOrDefault(bc => bc.Id == borrowingCartId);
+
+            if (borrowingCart != null)
+            {
+                borrowingCart.Books.Clear();
+                _context.SaveChanges();
             }
         }
     }

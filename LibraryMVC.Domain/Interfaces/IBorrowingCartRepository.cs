@@ -13,6 +13,7 @@ namespace LibraryMVC.Domain.Interfaces
         BorrowingCart GetBorrowingCartById(int borrowingCartId);
         void AddToBorrowingCart(int bookId, string identityUserId);
         void RemoveFromBorrowingCart(int bookId, int borrowingCartId);
+        void RemoveAllFromBorrowingCart(int borrowingCartId);
 
     }
 }

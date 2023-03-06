@@ -10,8 +10,7 @@ namespace LibraryMVC.Domain.Model
     public class Loan
     {
         public int Id { get; set; }
-        public DateTime LoanCreationDate { get; set; }
-        public DateTime CheckOutDueDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime ReturnDueDate { get; set; }
         public decimal Penalty { get; set; }
 

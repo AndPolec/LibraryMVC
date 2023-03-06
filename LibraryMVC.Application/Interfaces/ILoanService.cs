@@ -14,6 +14,7 @@ namespace LibraryMVC.Application.Interfaces
         BorrowingCart GetBorrowingCartById(int borrowingCartId);
         bool AddToBorrowingCart(int bookId,string identityUserId);
         void RemoveFromBorrowingCart(int bookId, int borrowingCartId);
+        void ClearBorrowingCart(int borrowingCartId);
         int AddNewLoan(int borrowingCartId, int userId);
 
     }
