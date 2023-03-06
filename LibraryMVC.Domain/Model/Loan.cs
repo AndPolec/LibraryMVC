@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -14,11 +15,12 @@ namespace LibraryMVC.Domain.Model
         public DateTime ReturnDueDate { get; set; }
         public decimal Penalty { get; set; }
 
+        public int StatusId { get; set; }
+        public Status Status { get; set; }
         public int LibraryUserId { get; set; }
         public LibraryUser LibraryUser { get; set; }
         public CheckOutRecord CheckOutRecord { get; set; }
         public ReturnRecord ReturnRecord { get; set; }
         public ICollection<Book> Books { get; set; }
-
     }
 }

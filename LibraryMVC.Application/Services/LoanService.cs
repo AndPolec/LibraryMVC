@@ -52,7 +52,7 @@ namespace LibraryMVC.Application.Services
             _borrowingCartRepository.RemoveFromBorrowingCart(bookId, borrowingCartId);
         }
 
-        public int ClearBorrowingCart(int borrowingCartId)
+        public void ClearBorrowingCart(int borrowingCartId)
         {
             _borrowingCartRepository.RemoveAllFromBorrowingCart(borrowingCartId);
         }
@@ -90,6 +90,7 @@ namespace LibraryMVC.Application.Services
                 LibraryUserId = userId,
                 Books = availableBooks,
                 CreationDate = DateTime.Now,
+                StatusId = 1
             };
 
             var loanId = _loanRepository.AddLoan(loan);

@@ -57,6 +57,13 @@ namespace LibraryMVC.Infrastructure
             builder.Entity<Loan>()
                 .Property(l => l.Penalty)
                 .HasColumnType("decimal(8,2)");
+
+
+            builder.Entity<Status>()
+                .HasData(new Status { Id = 1, Name = "Nowe" },
+                         new Status { Id = 2, Name = "Wypożyczone" },
+                         new Status { Id = 3, Name = "Zakończone" },
+                         new Status { Id = 4, Name = "Zaległe" });
         }
 
     }
