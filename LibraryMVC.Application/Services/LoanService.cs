@@ -17,15 +17,18 @@ namespace LibraryMVC.Application.Services
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
         private readonly ILoanRepository _loanRepository;
+        private readonly IBookRepository _bookRepository;
 
-        //BorrowingCart
-        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository)
+        
+        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository)
         {
             _borrowingCartRepository = borrowingCartRepository;
             _mapper = mapper;
             _loanRepository = loanRepository;
+            _bookRepository = bookRepository;
         }
 
+        //BorrowingCart
         public bool AddToBorrowingCart(int bookId, string identityUserId)
         {
             if (isBorrowingCartFull(identityUserId))
@@ -79,11 +82,19 @@ namespace LibraryMVC.Application.Services
             }
             return availableBooks;
         }
+        private void DecrementQuantityOfAvailableBooks(ICollection<Book> books)
+        {
+            foreach(var book in books)
+            {
+                book.Quantity -= 1;
+            }
+
+            _bookRepository.UpdateBooksQuantity(books);
+        }
         public int AddNewLoan(int borrowingCartId, int userId)
         {
             var borrowingCart = GetBorrowingCartById(borrowingCartId);
             var availableBooks = FilterAndReturnAvailableBooks(borrowingCart.Books);
-            
 
             var loan = new Loan()
             {
@@ -92,10 +103,11 @@ namespace LibraryMVC.Application.Services
                 CreationDate = DateTime.Now,
                 StatusId = 1
             };
-
             var loanId = _loanRepository.AddLoan(loan);
 
+            DecrementQuantityOfAvailableBooks(availableBooks);
             ClearBorrowingCart(borrowingCartId);
+
             return loanId;
         }
     }

@@ -12,5 +12,6 @@ namespace LibraryMVC.Domain.Interfaces
         IQueryable<Book> GetBooksByGenreId(int genreId);
         IQueryable<Book> GetBooksByPublisherId(int publisherId);
         void UpdateBook(Book book);
+        void UpdateBooksQuantity(ICollection<Book> books);
     }
 }

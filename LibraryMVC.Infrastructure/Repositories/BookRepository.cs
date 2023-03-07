@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
@@ -85,6 +86,15 @@ namespace LibraryMVC.Infrastructure.Repositories
         {
             var books = _context.Books.Where(b => b.PublisherId == publisherId);
             return books;
+        }
+
+        public void UpdateBooksQuantity(ICollection<Book> books)
+        {
+            foreach (var book in books)
+            {
+                _context.Entry(book).Property("Quantity").IsModified = true;
+            }
+            _context.SaveChanges();
         }
     }
 }

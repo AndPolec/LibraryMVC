@@ -49,3 +49,8 @@
 }
     </tbody>
 </table>
+
+<form asp-action="CreateNewLoan" asp-controller="Loan" asp-route-borrowingCartId="@Model.Id" asp-route-userId="@Model.LibraryUserId" method="post">
+    <button class="btn btn-primary" type="submit">Zamów</button>
+</form>
+<a asp-action="RemoveAllFromBorrowingCart" asp-controller="BorrowingCart" asp-route-borrowingCartId ="@Model.Id" class="btn btn-danger">Usuń wszystko z koszyka</a>

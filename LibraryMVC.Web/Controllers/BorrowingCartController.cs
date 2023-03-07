@@ -1,5 +1,6 @@
 ﻿using LibraryMVC.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
 using System.Security.Claims;
 
 namespace LibraryMVC.Web.Controllers
@@ -35,6 +36,13 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult RemoveFromBorrowingCart(int bookId, int borrowingCartId)
         {
             _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult RemoveAllFromBorrowingCart(int borrowingCartId)
+        {
+            _loanService.ClearBorrowingCart(borrowingCartId);
             return RedirectToAction("Index");
         }
     }
