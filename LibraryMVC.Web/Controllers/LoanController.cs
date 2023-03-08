@@ -22,7 +22,7 @@ namespace LibraryMVC.Web.Controllers
         {
             var loanId = _loanService.AddNewLoan(borrowingCartId, userId);
 
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

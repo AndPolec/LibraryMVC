@@ -64,7 +64,8 @@ namespace LibraryMVC.Infrastructure
                 .HasData(new Status { Id = 1, Name = "Nowe" },
                          new Status { Id = 2, Name = "Wypożyczone" },
                          new Status { Id = 3, Name = "Zakończone" },
-                         new Status { Id = 4, Name = "Zaległe" });
+                         new Status { Id = 4, Name = "Zaległe" },
+                         new Status { Id = 5, Name = "Anulowane" });
         }
 
     }
