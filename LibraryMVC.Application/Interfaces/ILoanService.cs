@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.ViewModels.BorrowingCart;
+using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace LibraryMVC.Application.Interfaces
         void RemoveFromBorrowingCart(int bookId, int borrowingCartId);
         void ClearBorrowingCart(int borrowingCartId);
         int AddNewLoan(int borrowingCartId, int userId);
+        ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber);
 
     }
 }

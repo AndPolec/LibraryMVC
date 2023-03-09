@@ -19,7 +19,7 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = _loanService.GetBorrowingCartByIndentityUserId(userId);
+            var model = _loanService.GetBorrowingCartForDetailsByIndentityUserId(userId);
             
             return View(model);
         }

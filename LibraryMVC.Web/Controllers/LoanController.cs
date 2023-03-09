@@ -1,5 +1,6 @@
 ﻿using LibraryMVC.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LibraryMVC.Web.Controllers
 {
@@ -14,7 +15,9 @@ namespace LibraryMVC.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = _loanService.GetAllLoansForListByIndentityUserId(userId,5,1);
+            return View(model);
         }
 
         [HttpPost]
