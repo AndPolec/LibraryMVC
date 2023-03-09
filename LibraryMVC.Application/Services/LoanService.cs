@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
+using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +40,7 @@ namespace LibraryMVC.Application.Services
             return true;
         }
 
-        public BorrowingCartDetailsVm GetBorrowingCartByIndentityUserId(string identityUserId)
+        public BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
             var borrowingCartVm = _mapper.Map<BorrowingCartDetailsVm>(borrowingCart);
@@ -109,6 +111,24 @@ namespace LibraryMVC.Application.Services
             ClearBorrowingCart(borrowingCartId);
 
             return loanId;
+        }
+        public ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber)
+        {
+            var loans = _loanRepository.GetAllLoans()
+                .Where(l => l.LibraryUser.IdentityUserId == userId)
+                .ProjectTo<LoanForListVm>(_mapper.ConfigurationProvider)
+                .ToList();
+
+            var loansToShow = loans.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            var loanList = new ListOfLoanForListVm()
+            {
+                Loans = loansToShow,
+                Count = loansToShow.Count(),
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
+
+            return loanList;
         }
     }
 }

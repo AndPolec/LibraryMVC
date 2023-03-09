@@ -10,7 +10,6 @@ namespace LibraryMVC.Application.ViewModels.Loan
     public class ListOfLoanForListVm
     {
         public List<LoanForListVm> Loans { get; set; }
-        public int UserId { get; set; }
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
         public int Count { get; set; }

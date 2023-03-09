@@ -10,7 +10,7 @@ namespace LibraryMVC.Application.Interfaces
 {
     public interface ILoanService
     {
-        BorrowingCartDetailsVm GetBorrowingCartByIndentityUserId(string identityUserId);
+        BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId);
         BorrowingCart GetBorrowingCartById(int borrowingCartId);
         bool AddToBorrowingCart(int bookId,string identityUserId);
         void RemoveFromBorrowingCart(int bookId, int borrowingCartId);

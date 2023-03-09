@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
+using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,9 @@ namespace LibraryMVC.Application.Mapping
     {
         public LoanProfile()
         {
-            
+            CreateMap<Loan, LoanForListVm>()
+                .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count))
+                .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name));
         }
     }
 }
