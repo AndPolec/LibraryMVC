@@ -17,6 +17,14 @@ namespace LibraryMVC.Application.Mapping
             CreateMap<Loan, LoanForListVm>()
                 .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count))
                 .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name));
+
+            CreateMap<Loan, LoanDetailsVm>()
+                .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name))
+                .ForMember(d => d.IsCheckedOut, opt => opt.MapFrom(s => s.CheckOutRecord != null))
+                .ForMember(d => d.CheckOutDate, opt => opt.MapFrom(s => s.CheckOutRecord.Date))
+                .ForMember(d => d.IsReturned, opt => opt.MapFrom(s => s.ReturnRecord != null))
+                .ForMember(d => d.ReturnDate, opt => opt.MapFrom(s => s.ReturnRecord.Date));
+
         }
     }
 }

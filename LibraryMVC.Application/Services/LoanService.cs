@@ -130,5 +130,11 @@ namespace LibraryMVC.Application.Services
 
             return loanList;
         }
+        public LoanDetailsVm GetLoanForDetails(int loanId)
+        {
+            var loan = _loanRepository.GetLoanById(loanId);
+            var loanVm = _mapper.Map<LoanDetailsVm>(loan);
+            return loanVm;
+        }
     }
 }

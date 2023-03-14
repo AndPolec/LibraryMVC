@@ -27,5 +27,12 @@ namespace LibraryMVC.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult ViewLoan(int loanId)
+        {
+            var model = _loanService.GetLoanForDetails(loanId);
+            return View(model);
+        }
     }
 }

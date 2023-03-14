@@ -18,6 +18,7 @@ namespace LibraryMVC.Application.Interfaces
         void ClearBorrowingCart(int borrowingCartId);
         int AddNewLoan(int borrowingCartId, int userId);
         ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber);
+        LoanDetailsVm GetLoanForDetails(int loanId);
 
     }
 }
