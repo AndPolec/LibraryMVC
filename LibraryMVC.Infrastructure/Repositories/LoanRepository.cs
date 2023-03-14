@@ -1,5 +1,6 @@
 ﻿using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,13 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public Loan GetLoanById(int loanId)
         {
-            var loan = _context.Loans.FirstOrDefault(l => l.Id == loanId);
+            var loan = _context.Loans
+                .Include(l => l.Status)
+                .Include(l => l.CheckOutRecord)
+                .Include(l => l.ReturnRecord)
+                .Include(l => l.Books).ThenInclude(b => b.Author)
+                .Include(l => l.Books).ThenInclude(b => b.BookGenres).ThenInclude(bg => bg.Genre)
+                .FirstOrDefault(l => l.Id == loanId);
             return loan;
         }
 
