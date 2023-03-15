@@ -34,5 +34,15 @@ namespace LibraryMVC.Web.Controllers
             var model = _loanService.GetLoanForDetails(loanId);
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult CancelLoan(int loanId)
+        {
+            var result = _loanService.CancelLoan(loanId);
+            if (result)
+                return RedirectToAction("Index");
+            else
+                return RedirectToAction("ViewLoan", loanId);
+        }
     }
 }

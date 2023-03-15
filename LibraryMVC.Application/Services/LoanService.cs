@@ -136,5 +136,17 @@ namespace LibraryMVC.Application.Services
             var loanVm = _mapper.Map<LoanDetailsVm>(loan);
             return loanVm;
         }
+
+        public bool CancelLoan(int loanId)
+        {
+            var loan = _loanRepository.GetLoanById(loanId);
+
+            if (loan.StatusId != 1)
+                return false;
+
+            loan.StatusId = 5;
+            _loanRepository.UpdateLoan(loan);
+            return true;
+        }
     }
 }
