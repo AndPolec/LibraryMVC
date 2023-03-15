@@ -65,6 +65,40 @@
             @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
+
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Author
+                </th>
+                <th>
+                    RelaseYear
+                </th>
+                <th>
+                    Genre
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var book in Model.Books)
+            {
+                <tr>
+                    <td> @Html.DisplayFor(modelItem => book.Id) </td>
+                    <td> @Html.DisplayFor(modelItem => book.Title) </td>
+                    <td> @Html.DisplayFor(modelItem => book.AuthorFullName) </td>
+                    <td> @Html.DisplayFor(modelItem => book.RelaseYear) </td>
+                    <td> @Html.DisplayFor(modelItem => book.Genre) </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Index">Back to List</a>
