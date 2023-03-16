@@ -44,5 +44,12 @@ namespace LibraryMVC.Web.Controllers
             else
                 return RedirectToAction("ViewLoan", loanId);
         }
+
+        [HttpGet]
+        public IActionResult AcceptCheckOut()
+        {
+            var model = _loanService.GetAllLoansForAcceptCheckOut(5, 1,"");
+            return View(model);
+        }
     }
 }
