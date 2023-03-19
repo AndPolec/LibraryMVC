@@ -93,6 +93,15 @@ namespace LibraryMVC.Application.Services
 
             _bookRepository.UpdateBooksQuantity(books);
         }
+        private void IncrementQuantityOfAvailableBooks(ICollection<Book> books)
+        {
+            foreach (var book in books)
+            {
+                book.Quantity += 1;
+            }
+
+            _bookRepository.UpdateBooksQuantity(books);
+        }
         public int AddNewLoan(int borrowingCartId, int userId)
         {
             var borrowingCart = GetBorrowingCartById(borrowingCartId);
@@ -130,6 +139,7 @@ namespace LibraryMVC.Application.Services
 
             return loanList;
         }
+
         public LoanDetailsVm GetLoanForDetails(int loanId)
         {
             var loan = _loanRepository.GetLoanById(loanId);
@@ -146,6 +156,7 @@ namespace LibraryMVC.Application.Services
 
             loan.StatusId = 5;
             _loanRepository.UpdateLoan(loan);
+            IncrementQuantityOfAvailableBooks(loan.Books);
             return true;
         }
     }

@@ -16,7 +16,8 @@ namespace LibraryMVC.Application.Mapping
         {
             CreateMap<Loan, LoanForListVm>()
                 .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count))
-                .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name));
+                .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name))
+                .ForMember(d => d.UserFullName, opt => opt.MapFrom(s =>s.LibraryUser.FirstName + " " + s.LibraryUser.LastName));
 
             CreateMap<Loan, LoanDetailsVm>()
                 .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name))

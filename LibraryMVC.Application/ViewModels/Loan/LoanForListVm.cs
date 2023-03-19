@@ -9,6 +9,7 @@ namespace LibraryMVC.Application.ViewModels.Loan
     public class LoanForListVm
     {
         public int Id { get; set; }
+        public string UserFullName { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ReturnDueDate { get; set; }
         public int NumberOfBorrowedBooks { get; set; }
