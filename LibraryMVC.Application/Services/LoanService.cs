@@ -169,5 +169,10 @@ namespace LibraryMVC.Application.Services
 
             return loans;
         }
+
+        public void ConfirmCheckOut(int loanId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

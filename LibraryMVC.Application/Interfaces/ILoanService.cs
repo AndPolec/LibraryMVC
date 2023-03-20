@@ -21,6 +21,7 @@ namespace LibraryMVC.Application.Interfaces
         List<LoanForConfirmCheckOutListVm> GetAllLoansForConfirmCheckOutList();
         LoanDetailsVm GetLoanForDetails(int loanId);
         bool CancelLoan(int loanId);
+        void ConfirmCheckOut(int loanId);
 
     }
 }

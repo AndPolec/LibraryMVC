@@ -52,6 +52,25 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.ToTable("BookLoan");
                 });
 
+            modelBuilder.Entity("LibraryMVC.Domain.Model.AdditionalLibrarianInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("LibraryUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LibraryUserId")
+                        .IsUnique();
+
+                    b.ToTable("AdditionalLibrarianInfo");
+                });
+
             modelBuilder.Entity("LibraryMVC.Domain.Model.Address", b =>
                 {
                     b.Property<int>("Id")
@@ -191,18 +210,18 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("AdditionalLibrarianInfoId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("LibrarianId")
-                        .HasColumnType("int");
 
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LibrarianId");
+                    b.HasIndex("AdditionalLibrarianInfoId");
 
                     b.HasIndex("LoanId")
                         .IsUnique();
@@ -235,10 +254,6 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -262,8 +277,6 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LibraryUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("LibraryUser");
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Loan", b =>
@@ -323,18 +336,18 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("AdditionalLibrarianInfoId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("LibrarianId")
-                        .HasColumnType("int");
 
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LibrarianId");
+                    b.HasIndex("AdditionalLibrarianInfoId");
 
                     b.HasIndex("LoanId")
                         .IsUnique();
@@ -378,6 +391,11 @@ namespace LibraryMVC.Infrastructure.Migrations
                         {
                             Id = 4,
                             Name = "Zaległe"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Anulowane"
                         });
                 });
 
@@ -583,13 +601,6 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("LibraryMVC.Domain.Model.Librarian", b =>
-                {
-                    b.HasBaseType("LibraryMVC.Domain.Model.LibraryUser");
-
-                    b.HasDiscriminator().HasValue("Librarian");
-                });
-
             modelBuilder.Entity("BookBorrowingCart", b =>
                 {
                     b.HasOne("LibraryMVC.Domain.Model.Book", null)
@@ -618,6 +629,17 @@ namespace LibraryMVC.Infrastructure.Migrations
                         .HasForeignKey("LoansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("LibraryMVC.Domain.Model.AdditionalLibrarianInfo", b =>
+                {
+                    b.HasOne("LibraryMVC.Domain.Model.LibraryUser", "LibraryUser")
+                        .WithOne("additionalLibrarianInfo")
+                        .HasForeignKey("LibraryMVC.Domain.Model.AdditionalLibrarianInfo", "LibraryUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LibraryUser");
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Address", b =>
@@ -678,9 +700,9 @@ namespace LibraryMVC.Infrastructure.Migrations
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.CheckOutRecord", b =>
                 {
-                    b.HasOne("LibraryMVC.Domain.Model.Librarian", "Librarian")
+                    b.HasOne("LibraryMVC.Domain.Model.AdditionalLibrarianInfo", "AdditionalLibrarianInfo")
                         .WithMany("CheckOutRecords")
-                        .HasForeignKey("LibrarianId");
+                        .HasForeignKey("AdditionalLibrarianInfoId");
 
                     b.HasOne("LibraryMVC.Domain.Model.Loan", "Loan")
                         .WithOne("CheckOutRecord")
@@ -688,7 +710,7 @@ namespace LibraryMVC.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Librarian");
+                    b.Navigation("AdditionalLibrarianInfo");
 
                     b.Navigation("Loan");
                 });
@@ -714,9 +736,9 @@ namespace LibraryMVC.Infrastructure.Migrations
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.ReturnRecord", b =>
                 {
-                    b.HasOne("LibraryMVC.Domain.Model.Librarian", "Librarian")
+                    b.HasOne("LibraryMVC.Domain.Model.AdditionalLibrarianInfo", "AdditionalLibrarianInfo")
                         .WithMany("ReturnRecords")
-                        .HasForeignKey("LibrarianId");
+                        .HasForeignKey("AdditionalLibrarianInfoId");
 
                     b.HasOne("LibraryMVC.Domain.Model.Loan", "Loan")
                         .WithOne("ReturnRecord")
@@ -724,7 +746,7 @@ namespace LibraryMVC.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Librarian");
+                    b.Navigation("AdditionalLibrarianInfo");
 
                     b.Navigation("Loan");
                 });
@@ -780,6 +802,13 @@ namespace LibraryMVC.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LibraryMVC.Domain.Model.AdditionalLibrarianInfo", b =>
+                {
+                    b.Navigation("CheckOutRecords");
+
+                    b.Navigation("ReturnRecords");
+                });
+
             modelBuilder.Entity("LibraryMVC.Domain.Model.Author", b =>
                 {
                     b.Navigation("Books");
@@ -804,6 +833,9 @@ namespace LibraryMVC.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Loans");
+
+                    b.Navigation("additionalLibrarianInfo")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Loan", b =>
@@ -823,13 +855,6 @@ namespace LibraryMVC.Infrastructure.Migrations
             modelBuilder.Entity("LibraryMVC.Domain.Model.Status", b =>
                 {
                     b.Navigation("Loans");
-                });
-
-            modelBuilder.Entity("LibraryMVC.Domain.Model.Librarian", b =>
-                {
-                    b.Navigation("CheckOutRecords");
-
-                    b.Navigation("ReturnRecords");
                 });
 #pragma warning restore 612, 618
         }

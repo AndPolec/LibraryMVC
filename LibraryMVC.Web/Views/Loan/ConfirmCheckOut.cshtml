@@ -49,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <a asp-action="CancelLoan" asp-route-loanId="@item.Id">Potwierdź</a>
+                <a asp-action="ConfirmCheckOut" asp-route-loanId="@item.Id">Potwierdź</a>
             </td>
         </tr>
 }

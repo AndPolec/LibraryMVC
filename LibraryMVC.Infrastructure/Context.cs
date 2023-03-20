@@ -19,7 +19,7 @@ namespace LibraryMVC.Infrastructure
         public DbSet<BorrowingCart> BorrowingCarts { get; set; }
         public DbSet<CheckOutRecord> CheckOutRecords { get; set; }
         public DbSet<Genre> Genres { get; set; }
-        public DbSet<Librarian> Librarians { get; set; }
+        public DbSet<AdditionalLibrarianInfo> AdditionalLibrarianInfo { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<ReturnRecord> ReturnRecords { get; set; }
