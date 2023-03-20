@@ -48,7 +48,8 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult ConfirmCheckOut()
         {
-            return View();
+            var model = _loanService.GetAllLoansForConfirmCheckOutList();
+            return View(model);
         }
     }
 }

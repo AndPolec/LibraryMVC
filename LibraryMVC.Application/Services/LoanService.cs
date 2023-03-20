@@ -159,5 +159,15 @@ namespace LibraryMVC.Application.Services
             IncrementQuantityOfAvailableBooks(loan.Books);
             return true;
         }
+
+        public List<LoanForConfirmCheckOutListVm> GetAllLoansForConfirmCheckOutList()
+        {
+            var loans = _loanRepository.GetAllLoans()
+                .Where(l => l.Status.Id == 1)
+                .ProjectTo<LoanForConfirmCheckOutListVm>(_mapper.ConfigurationProvider)
+                .ToList();
+
+            return loans;
+        }
     }
 }
