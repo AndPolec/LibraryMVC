@@ -33,6 +33,7 @@ namespace LibraryMVC.Infrastructure.Repositories
                 .Include(l => l.ReturnRecord)
                 .Include(l => l.Books).ThenInclude(b => b.Author)
                 .Include(l => l.Books).ThenInclude(b => b.BookGenres).ThenInclude(bg => bg.Genre)
+                .Include(l => l.LibraryUser).ThenInclude(lu => lu.additionalLibrarianInfo)
                 .FirstOrDefault(l => l.Id == loanId);
             return loan;
         }

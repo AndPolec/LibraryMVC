@@ -21,6 +21,7 @@ namespace LibraryMVC.Infrastructure
             services.AddTransient<ILibraryUserRepository, LibraryUserRepository>();
             services.AddTransient<IBorrowingCartRepository, BorrowingCartRepository>();
             services.AddTransient<ILoanRepository, LoanRepository>();
+            services.AddTransient<IAdditionalLibrarianInfoRepository, AdditionalLibrarianInfoRepository>();
             return services;
         }
     }

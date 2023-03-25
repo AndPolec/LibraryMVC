@@ -11,7 +11,7 @@ namespace LibraryMVC.Application.ViewModels.Loan
         public int Id { get; set; }
         public DateTime CreationDate { get; set; }
         public string UserName { get; set; }     
-        public int NumberOfBorrowedBooks { get; set; }
+        public List<string> BorrowedBooks { get; set; }
         public string Status { get; set; }
     }
 }

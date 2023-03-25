@@ -22,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumberOfBorrowedBooks)
+                @Html.DisplayNameFor(model => model.BorrowedBooks)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -43,13 +43,17 @@
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NumberOfBorrowedBooks)
+                @foreach(var book in item.BorrowedBooks){
+                        @book <br />
+                    }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <a asp-action="ConfirmCheckOut" asp-route-loanId="@item.Id">Potwierdź</a>
+                <form asp-action="ConfirmCheckOut" asp-controller="Loan" asp-route-loanId="@item.Id" method="post">
+                <button class="btn btn-primary" type="submit">Potwierdź wydanie</button>
+                </form>
             </td>
         </tr>
 }

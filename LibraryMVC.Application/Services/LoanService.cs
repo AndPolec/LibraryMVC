@@ -20,14 +20,16 @@ namespace LibraryMVC.Application.Services
         private readonly IBorrowingCartRepository _borrowingCartRepository;
         private readonly ILoanRepository _loanRepository;
         private readonly IBookRepository _bookRepository;
+        private readonly IAdditionalLibrarianInfoRepository _additionalLibrarianInfoRepository;
 
         
-        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository)
+        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository)
         {
             _borrowingCartRepository = borrowingCartRepository;
             _mapper = mapper;
             _loanRepository = loanRepository;
             _bookRepository = bookRepository;
+            _additionalLibrarianInfoRepository = additionalLibrarianInfoRepository;
         }
 
         //BorrowingCart
@@ -170,9 +172,21 @@ namespace LibraryMVC.Application.Services
             return loans;
         }
 
-        public void ConfirmCheckOut(int loanId)
+        public int ConfirmCheckOut(int loanId, string librarianIdentityUserId)
         {
-            throw new NotImplementedException();
+            var librarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
+            var loan = _loanRepository.GetLoanById(loanId);
+            loan.StatusId = 2;
+            loan.CheckOutRecord = new CheckOutRecord()
+            {
+                Id = 0,
+                Date = DateTime.Now,
+                LoanId = loanId,
+                AdditionalLibrarianInfoId = librarianInfoId
+            };
+
+            _loanRepository.UpdateLoan(loan);
+            return loan.CheckOutRecord.Id;
         }
     }
 }

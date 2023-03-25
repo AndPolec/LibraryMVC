@@ -52,10 +52,11 @@ namespace LibraryMVC.Web.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult ConfirmCheckOut(int loanId)
         {
-            _loanService.ConfirmCheckOut(loanId);
+            var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _loanService.ConfirmCheckOut(loanId, librarianId);
             return RedirectToAction("ConfirmCheckOut");
         }
     }

@@ -4,7 +4,8 @@ namespace LibraryMVC.Domain.Interfaces
 {
     public interface IAdditionalLibrarianInfoRepository
     {
-        int AddLibrarian(AdditionalLibrarianInfo librarian);
+        int AddNew(AdditionalLibrarianInfo librarianInfo);
+        AdditionalLibrarianInfo GetInfoByIdentityUserId(string id);
         
     }
 }
