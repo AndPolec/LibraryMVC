@@ -16,6 +16,7 @@ namespace LibraryMVC.Application.Services
 {
     public class LoanService : ILoanService
     {
+        private const decimal _penaltyRatePerDay = 0.2M;
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
         private readonly ILoanRepository _loanRepository;
@@ -86,6 +87,7 @@ namespace LibraryMVC.Application.Services
             }
             return availableBooks;
         }
+
         private void DecrementQuantityOfAvailableBooks(ICollection<Book> books)
         {
             foreach(var book in books)
@@ -95,6 +97,7 @@ namespace LibraryMVC.Application.Services
 
             _bookRepository.UpdateBooksQuantity(books);
         }
+
         private void IncrementQuantityOfAvailableBooks(ICollection<Book> books)
         {
             foreach (var book in books)
@@ -104,6 +107,23 @@ namespace LibraryMVC.Application.Services
 
             _bookRepository.UpdateBooksQuantity(books);
         }
+
+        private void UpdatePenaltyForHoldingBooks(List<Loan> loans)
+        {
+            foreach (var loan in loans)
+            {
+                if (loan.StatusId == 2) // if Status == "Wypożyczone"
+                {
+                    loan.ReturnDueDate
+                };
+
+                if (loan.StatusId == 4) // if Status == "Zaległe"
+                {
+                    loan.ReturnDueDategrergegrgeg
+                };
+            }
+        }
+
         public int AddNewLoan(int borrowingCartId, int userId)
         {
             var borrowingCart = GetBorrowingCartById(borrowingCartId);
@@ -123,6 +143,7 @@ namespace LibraryMVC.Application.Services
 
             return loanId;
         }
+
         public ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber)
         {
             var loans = _loanRepository.GetAllLoans()
@@ -187,6 +208,25 @@ namespace LibraryMVC.Application.Services
 
             _loanRepository.UpdateLoan(loan);
             return loan.CheckOutRecord.Id;
+        }
+
+        public int ConfirmReturn(int loanId, string librarianIdentityUserId, string comments, bool isPenaltyPaid)
+        {
+            var librarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
+            var loan = _loanRepository.GetLoanById(loanId);
+            loan.StatusId = 3;
+            loan.ReturnRecord = new ReturnRecord()
+            {
+                Id = 0,
+                Date = DateTime.Now,
+                LoanId = loanId,
+                AdditionalLibrarianInfoId = librarianInfoId,
+                Comments = comments,
+                isPenaltyPaid = isPenaltyPaid
+            };
+
+            _loanRepository.UpdateLoan(loan);
+            return loan.ReturnRecord.Id;
         }
     }
 }

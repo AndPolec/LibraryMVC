@@ -10,6 +10,8 @@ namespace LibraryMVC.Domain.Model
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
+        public bool isPenaltyPaid { get; set; }
+        public string Comments { get; set; }
         public int LoanId { get; set; }
         public Loan Loan { get; set; }
         public int? AdditionalLibrarianInfoId { get; set; }

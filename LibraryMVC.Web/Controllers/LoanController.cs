@@ -59,5 +59,20 @@ namespace LibraryMVC.Web.Controllers
             _loanService.ConfirmCheckOut(loanId, librarianId);
             return RedirectToAction("ConfirmCheckOut");
         }
+
+        [HttpGet]
+        public IActionResult ConfirmReturn()
+        {
+            var model = _loanService.GetAllLoansForConfirmCheckOutList();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmReturn(int loanId, string comments, bool isPenaltyPaid)
+        {
+            var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _loanService.ConfirmReturn(loanId, librarianId,comments,isPenaltyPaid);
+            return RedirectToAction("ConfirmReturn");
+        }
     }
 }
