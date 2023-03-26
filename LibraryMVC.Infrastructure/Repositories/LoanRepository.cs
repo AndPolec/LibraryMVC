@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LibraryMVC.Infrastructure.Repositories
 {
@@ -47,6 +48,16 @@ namespace LibraryMVC.Infrastructure.Repositories
         public void UpdateLoan(Loan loan)
         {
             _context.Loans.Update(loan);
+            _context.SaveChanges();
+        }
+
+        public void UpdatePenaltyAndStatusInLoans(ICollection<Loan> loans)
+        {
+            foreach (var loan in loans)
+            {
+                _context.Entry(loan).Property("StatusId").IsModified = true;
+                _context.Entry(loan).Property("Penalty").IsModified = true;
+            }
             _context.SaveChanges();
         }
 

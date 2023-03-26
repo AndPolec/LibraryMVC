@@ -16,7 +16,8 @@ namespace LibraryMVC.Application.Services
 {
     public class LoanService : ILoanService
     {
-        private const decimal _penaltyRatePerDay = 0.2M;
+        private decimal _penaltyRatePerDayForOneBook = 0.2M;
+        private int _durationOfFreeLoanInDays = 21;
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
         private readonly ILoanRepository _loanRepository;
@@ -108,20 +109,41 @@ namespace LibraryMVC.Application.Services
             _bookRepository.UpdateBooksQuantity(books);
         }
 
+        private decimal CalculatePenalty(Loan loan)
+        {
+            int numberOfBookHoldingDays = (DateTime.Now - loan.ReturnDueDate).Days;
+            int numberOfBooks = loan.Books.Count();
+            decimal penalty = numberOfBookHoldingDays * numberOfBooks * _penaltyRatePerDayForOneBook;
+            return penalty;
+        } 
+
         private void UpdatePenaltyForHoldingBooks(List<Loan> loans)
         {
+            var loansToUpdate = new List<Loan>();
+
             foreach (var loan in loans)
             {
-                if (loan.StatusId == 2) // if Status == "Wypożyczone"
+                if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone"
                 {
-                    loan.ReturnDueDate
-                };
+                    decimal calculatedPenalty = CalculatePenalty(loan);
+                    loan.Penalty = calculatedPenalty;
+                    loan.StatusId = 4;
+                    loansToUpdate.Add(loan);
+                }
 
                 if (loan.StatusId == 4) // if Status == "Zaległe"
                 {
-                    loan.ReturnDueDategrergegrgeg
-                };
+                    decimal calculatedPenalty = CalculatePenalty(loan);
+                    if (loan.Penalty != calculatedPenalty)
+                    {
+                        loan.Penalty = calculatedPenalty;
+                        loansToUpdate.Add(loan);
+                    }
+                }
             }
+
+            if (loansToUpdate.Count != 0)
+                _loanRepository.UpdatePenaltyAndStatusInLoans(loansToUpdate);
         }
 
         public int AddNewLoan(int borrowingCartId, int userId)
@@ -198,6 +220,7 @@ namespace LibraryMVC.Application.Services
             var librarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
             var loan = _loanRepository.GetLoanById(loanId);
             loan.StatusId = 2;
+            loan.ReturnDueDate = DateTime.Now.AddDays(_durationOfFreeLoanInDays);
             loan.CheckOutRecord = new CheckOutRecord()
             {
                 Id = 0,

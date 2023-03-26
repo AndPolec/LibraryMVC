@@ -9,5 +9,6 @@ namespace LibraryMVC.Domain.Interfaces
         IQueryable<Loan> GetAllLoans();
         Loan GetLoanById(int loanId);
         void UpdateLoan(Loan loan);
+        void UpdatePenaltyAndStatusInLoans(ICollection<Loan> loans);
     }
 }
