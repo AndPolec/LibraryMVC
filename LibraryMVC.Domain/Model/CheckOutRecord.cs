@@ -12,7 +12,7 @@ namespace LibraryMVC.Domain.Model
         public DateTime Date { get; set; }
         public int LoanId { get; set; }
         public Loan Loan { get; set; }
-        public int AdditionalLibrarianInfoId { get; set; }
+        public int? AdditionalLibrarianInfoId { get; set; }
         public AdditionalLibrarianInfo AdditionalLibrarianInfo { get; set; }
     }
 }
