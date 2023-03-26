@@ -71,7 +71,6 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult ConfirmReturn(int loanId, string comments, bool isPenaltyPaid)
         {
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _loanService.ConfirmReturn(loanId, librarianId,comments,isPenaltyPaid);
             return RedirectToAction("ConfirmReturn");
         }
     }

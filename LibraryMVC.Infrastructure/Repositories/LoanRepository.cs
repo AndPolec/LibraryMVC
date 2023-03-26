@@ -41,7 +41,10 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public IQueryable<Loan> GetAllLoans()
         {
-            var loan = _context.Loans;
+            var loan = _context.Loans
+                .Include(l => l.Books)
+                .Include(l => l.Status)
+                .AsNoTracking();
             return loan;
         }
 

@@ -14,6 +14,8 @@ namespace LibraryMVC.Domain.Model
         public ICollection<BookGenre> BookGenres { get; set; }
         public ICollection<BorrowingCart> BorrowingCarts { get; set; }
         public ICollection<Loan> Loans { get; set; }
+        public ICollection<ReturnRecord> ReturnRecordsWhereCopyOfBookWasLostOrDestroyed { get; set; }
+        public ICollection<ReturnRecord> ReturnRecordsWhereCopyOfBookWasReturned { get; set; }
 
         public int? AuthorId { get; set; }
         public Author Author { get; set; }

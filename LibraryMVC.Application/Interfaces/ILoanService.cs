@@ -22,7 +22,6 @@ namespace LibraryMVC.Application.Interfaces
         LoanDetailsVm GetLoanForDetails(int loanId);
         bool CancelLoan(int loanId);
         int ConfirmCheckOut(int loanId, string librarianIdentityUserId);
-        int ConfirmReturn(int loanId, string librarianIdentityUserId, string comments, bool isPenaltyPaid);
 
 
     }

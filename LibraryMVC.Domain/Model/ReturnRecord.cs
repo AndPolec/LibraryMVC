@@ -10,11 +10,15 @@ namespace LibraryMVC.Domain.Model
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public bool isPenaltyPaid { get; set; }
+        public bool IsPenaltyPaid { get; set; }
+        public decimal AdditionalPenaltyForLostAndDestroyedBooks  { get; set; }
+        public decimal TotalAmountOfPaidPenalty  { get; set; }
         public string Comments { get; set; }
         public int LoanId { get; set; }
         public Loan Loan { get; set; }
         public int? AdditionalLibrarianInfoId { get; set; }
         public AdditionalLibrarianInfo AdditionalLibrarianInfo { get; set; }
+        public ICollection<Book> LostOrDestroyedBooks { get; set; }
+        public ICollection<Book> ReturnedBooks { get; set; }
     }
 }

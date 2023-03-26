@@ -130,8 +130,7 @@ namespace LibraryMVC.Application.Services
                     loan.StatusId = 4;
                     loansToUpdate.Add(loan);
                 }
-
-                if (loan.StatusId == 4) // if Status == "Zaległe"
+                else if (loan.StatusId == 4) // if Status == "Zaległe"
                 {
                     decimal calculatedPenalty = CalculatePenalty(loan);
                     if (loan.Penalty != calculatedPenalty)
@@ -170,14 +169,16 @@ namespace LibraryMVC.Application.Services
         {
             var loans = _loanRepository.GetAllLoans()
                 .Where(l => l.LibraryUser.IdentityUserId == userId)
-                .ProjectTo<LoanForListVm>(_mapper.ConfigurationProvider)
                 .ToList();
 
-            var loansToShow = loans.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            UpdatePenaltyForHoldingBooks(loans);
+
+            var loansVm = _mapper.Map<List<LoanForListVm>>(loans);
+            var loansToDisplay = loansVm.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
             var loanList = new ListOfLoanForListVm()
             {
-                Loans = loansToShow,
-                Count = loansToShow.Count(),
+                Loans = loansToDisplay,
+                Count = loansToDisplay.Count(),
                 PageSize = pageSize,
                 CurrentPage = pageNumber
             };
@@ -233,23 +234,5 @@ namespace LibraryMVC.Application.Services
             return loan.CheckOutRecord.Id;
         }
 
-        public int ConfirmReturn(int loanId, string librarianIdentityUserId, string comments, bool isPenaltyPaid)
-        {
-            var librarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
-            var loan = _loanRepository.GetLoanById(loanId);
-            loan.StatusId = 3;
-            loan.ReturnRecord = new ReturnRecord()
-            {
-                Id = 0,
-                Date = DateTime.Now,
-                LoanId = loanId,
-                AdditionalLibrarianInfoId = librarianInfoId,
-                Comments = comments,
-                isPenaltyPaid = isPenaltyPaid
-            };
-
-            _loanRepository.UpdateLoan(loan);
-            return loan.ReturnRecord.Id;
         }
-    }
 }

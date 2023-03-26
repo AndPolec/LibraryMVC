@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,6 +60,23 @@ namespace LibraryMVC.Infrastructure
                 .Property(l => l.Penalty)
                 .HasColumnType("decimal(8,2)");
 
+            builder.Entity<ReturnRecord>()
+                .Property(r => r.AdditionalPenaltyForLostAndDestroyedBooks)
+                .HasColumnType("decimal(8,2)");
+
+            builder.Entity<ReturnRecord>()
+                .Property(r => r.TotalAmountOfPaidPenalty)
+                .HasColumnType("decimal(8,2)");
+
+            builder.Entity<ReturnRecord>()
+                .HasMany(r => r.LostOrDestroyedBooks)
+                .WithMany(b => b.ReturnRecordsWhereCopyOfBookWasLostOrDestroyed)
+                .UsingEntity(j => j.ToTable("ReturnRecordLostOrDestroyedBooks"));
+
+            builder.Entity<ReturnRecord>()
+                .HasMany(r => r.ReturnedBooks)
+                .WithMany(b => b.ReturnRecordsWhereCopyOfBookWasReturned)
+                .UsingEntity(j => j.ToTable("ReturnRecordReturnedBooks"));
 
             builder.Entity<Status>()
                 .HasData(new Status { Id = 1, Name = "Nowe" },
