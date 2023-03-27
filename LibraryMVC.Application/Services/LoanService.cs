@@ -220,7 +220,7 @@ namespace LibraryMVC.Application.Services
         {
             var librarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
             var loan = _loanRepository.GetLoanById(loanId);
-            loan.StatusId = 2;
+            loan.StatusId = 2; //Status = "Wypożyczone"
             loan.ReturnDueDate = DateTime.Now.AddDays(_durationOfFreeLoanInDays);
             loan.CheckOutRecord = new CheckOutRecord()
             {
@@ -234,5 +234,15 @@ namespace LibraryMVC.Application.Services
             return loan.CheckOutRecord.Id;
         }
 
+        public List<LoanForConfirmReturnListVm> GetAllLoansForConfirmReturnList()
+        {
+            var loans = _loanRepository.GetAllLoans()
+                .Where(l => l.Status.Id == 2 || l.Status.Id == 4).ToList(); //Staus = "Wypożyczone" || "Zaległe"
+
+            UpdatePenaltyForHoldingBooks(loans);
+
+            var loansVm = _mapper.Map<List<LoanForConfirmReturnListVm>>(loans);
+            return loansVm;
         }
+    }
 }

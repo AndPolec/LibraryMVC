@@ -19,6 +19,7 @@ namespace LibraryMVC.Application.Interfaces
         int AddNewLoan(int borrowingCartId, int userId);
         ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber);
         List<LoanForConfirmCheckOutListVm> GetAllLoansForConfirmCheckOutList();
+        List<LoanForConfirmReturnListVm> GetAllLoansForConfirmReturnList();
         LoanDetailsVm GetLoanForDetails(int loanId);
         bool CancelLoan(int loanId);
         int ConfirmCheckOut(int loanId, string librarianIdentityUserId);

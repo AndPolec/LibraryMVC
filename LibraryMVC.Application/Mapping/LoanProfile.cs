@@ -27,10 +27,15 @@ namespace LibraryMVC.Application.Mapping
 
             CreateMap<Loan, LoanForConfirmCheckOutListVm>()
                 .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name))
-                .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.LibraryUser.FirstName + " " + s.LibraryUser.LastName))
+                .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.LibraryUser.LastName + " " + s.LibraryUser.FirstName))
                 .ForMember(d => d.BorrowedBooks, opt => opt.MapFrom(s => s.Books.Select(
                     b => b.Title + " | " + b.Author.FirstName + " " + b.Author.LastName + " | ISBN: " + b.ISBN)));
-;
+
+            CreateMap<Loan, LoanForConfirmReturnListVm>()
+                .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name))
+                .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.LibraryUser.LastName + " " + s.LibraryUser.FirstName))
+                .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count));
+            ;
 
         }
     }

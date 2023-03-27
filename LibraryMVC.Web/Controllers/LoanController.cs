@@ -61,16 +61,15 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ConfirmReturn()
+        public IActionResult ConfirmReturnIndex()
         {
-            var model = _loanService.GetAllLoansForConfirmCheckOutList();
+            var model = _loanService.GetAllLoansForConfirmReturnList();
             return View(model);
         }
 
-        [HttpPost]
-        public IActionResult ConfirmReturn(int loanId, string comments, bool isPenaltyPaid)
+        [HttpGet]
+        public IActionResult ConfirmReturn(int loanId)
         {
-            var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return RedirectToAction("ConfirmReturn");
         }
     }
