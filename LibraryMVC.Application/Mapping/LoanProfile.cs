@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Application.ViewModels.Loan;
+using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,15 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name))
                 .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.LibraryUser.LastName + " " + s.LibraryUser.FirstName))
                 .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count));
-            ;
+
+            CreateMap<Loan, NewReturnRecordVm>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.FullLibraryUserName, opt => opt.MapFrom(s => s.LibraryUser.FirstName + " " + s.LibraryUser.LastName))
+                .ForMember(d => d.CheckOutDate, opt => opt.MapFrom(s => s.CheckOutRecord.Date))
+                .ForMember(d => d.PenaltyForHoldingBooks, opt => opt.MapFrom(s => s.Penalty))
+                .ForMember(d => d.BorrowedBooks, opt => opt.MapFrom(s => s.Books));
+
+                
 
         }
     }

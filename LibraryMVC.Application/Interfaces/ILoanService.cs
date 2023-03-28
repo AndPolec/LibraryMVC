@@ -1,5 +1,7 @@
-﻿using LibraryMVC.Application.ViewModels.BorrowingCart;
+﻿using LibraryMVC.Application.ViewModels.Book;
+using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Application.ViewModels.Loan;
+using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,8 @@ namespace LibraryMVC.Application.Interfaces
         LoanDetailsVm GetLoanForDetails(int loanId);
         bool CancelLoan(int loanId);
         int ConfirmCheckOut(int loanId, string librarianIdentityUserId);
+        NewReturnRecordVm GetInfoForConfirmReturn(int loanId);
+
 
 
     }

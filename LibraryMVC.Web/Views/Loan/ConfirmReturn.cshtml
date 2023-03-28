@@ -1,0 +1,84 @@
+﻿@model LibraryMVC.Application.ViewModels.ReturnRecord.NewReturnRecordVm
+
+@{
+    ViewData["Title"] = "ConfirmReturn";
+}
+
+<h1>ConfirmReturn</h1>
+
+<h4>NewReturnRecordVm</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ConfirmReturn">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullLibraryUserName" class="control-label"></label>
+                <input asp-for="FullLibraryUserName" class="form-control" />
+                <span asp-validation-for="FullLibraryUserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckOutDate" class="control-label"></label>
+                <input asp-for="CheckOutDate" class="form-control" />
+                <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReturnDueDate" class="control-label"></label>
+                <input asp-for="ReturnDueDate" class="form-control" />
+                <span asp-validation-for="ReturnDueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsPenaltyPaid" /> @Html.DisplayNameFor(model => model.IsPenaltyPaid)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="PenaltyForHoldingBooks" class="control-label"></label>
+                <input asp-for="PenaltyForHoldingBooks" class="form-control" />
+                <span asp-validation-for="PenaltyForHoldingBooks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdditionalPenaltyForLostAndDestroyedBooks" class="control-label"></label>
+                <input asp-for="AdditionalPenaltyForLostAndDestroyedBooks" class="form-control" />
+                <span asp-validation-for="AdditionalPenaltyForLostAndDestroyedBooks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalAmountOfPaidPenalty" class="control-label"></label>
+                <input asp-for="TotalAmountOfPaidPenalty" class="form-control" />
+                <span asp-validation-for="TotalAmountOfPaidPenalty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comments" class="control-label"></label>
+                <input asp-for="Comments" class="form-control" />
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+            @foreach (var book in Model.BorrowedBooks)
+            {
+                <br/>
+                <label>@book.Title</label>
+                <div class= "form-check form-check-inline">
+                    <input asp -for= "@Model.ReturnedBooksId" class= "form-check-input" type = "checkbox" id = "inlineCheckbox1" value = "@book.Id">
+                    <label class= "form-check-label" for= "inlineCheckbox1"> Zwrot </label >
+                </div>
+                 <div class= "form-check form-check-inline">
+                    <input asp -for= "@Model.LostOrDestroyedBooksId" class= "form-check-input" type = "checkbox" id = "inlineCheckbox2" value = "@book.Id">
+                    <label class= "form-check-label" for= "inlineCheckbox2"> Zniszczona / Zgubiona </label >
+                </div>
+                
+            }
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

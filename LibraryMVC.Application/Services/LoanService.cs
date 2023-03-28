@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Application.ViewModels.Loan;
+using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;
@@ -243,6 +244,13 @@ namespace LibraryMVC.Application.Services
 
             var loansVm = _mapper.Map<List<LoanForConfirmReturnListVm>>(loans);
             return loansVm;
+        }
+
+        public NewReturnRecordVm GetInfoForConfirmReturn(int loanId)
+        {
+            var loan = _loanRepository.GetLoanById(loanId);
+            var returnRecordVm = _mapper.Map<NewReturnRecordVm>(loan);
+            return returnRecordVm;
         }
     }
 }

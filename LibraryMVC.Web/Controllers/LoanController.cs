@@ -70,7 +70,8 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult ConfirmReturn(int loanId)
         {
-            return RedirectToAction("ConfirmReturn");
+            var model = _loanService.GetInfoForConfirmReturn(loanId);
+            return View(model);
         }
     }
 }
