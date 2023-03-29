@@ -12,11 +12,9 @@
     <div class="col-md-4">
         <form asp-action="ConfirmReturn">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="LoanId" type="hidden" value="@Model.LoanId" />
+            <input asp-for="NumberOfBorrowedBooks" type="hidden" value="@Model.NumberOfBorrowedBooks" />
             <div class="form-group">
                 <label asp-for="FullLibraryUserName" class="control-label"></label>
                 <input asp-for="FullLibraryUserName" class="form-control" />
@@ -57,20 +55,28 @@
                 <input asp-for="Comments" class="form-control" />
                 <span asp-validation-for="Comments" class="text-danger"></span>
             </div>
-            @foreach (var book in Model.BorrowedBooks)
-            {
-                <br/>
-                <label>@book.Title</label>
-                <div class= "form-check form-check-inline">
-                    <input asp -for= "@Model.ReturnedBooksId" class= "form-check-input" type = "checkbox" id = "inlineCheckbox1" value = "@book.Id">
-                    <label class= "form-check-label" for= "inlineCheckbox1"> Zwrot </label >
-                </div>
-                 <div class= "form-check form-check-inline">
-                    <input asp -for= "@Model.LostOrDestroyedBooksId" class= "form-check-input" type = "checkbox" id = "inlineCheckbox2" value = "@book.Id">
-                    <label class= "form-check-label" for= "inlineCheckbox2"> Zniszczona / Zgubiona </label >
-                </div>
-                
-            }
+            
+            <div class="form-group">
+                <label>Wybierz zwrócone:</label>
+                <select asp-for="ReturnedBooksId" class="form-select" multiple>
+                   @foreach (var genre in Model.BorrowedBooks)
+                    {
+                        <option value="@genre.Id">@genre.Title</option>
+                    }
+                </select>   
+                <span asp-validation-for="BorrowedBooks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Wybierz zgubione:</label>
+                <select asp-for="LostOrDestroyedBooksId" class="form-select" multiple>
+                   @foreach (var genre in Model.BorrowedBooks)
+                    {
+                        <option value="@genre.Id">@genre.Title</option>
+                    }
+                </select>   
+                <span asp-validation-for="BorrowedBooks" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -6,6 +6,7 @@ using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +27,8 @@ namespace LibraryMVC.Application.Interfaces
         bool CancelLoan(int loanId);
         int ConfirmCheckOut(int loanId, string librarianIdentityUserId);
         NewReturnRecordVm GetInfoForConfirmReturn(int loanId);
-
+        NewReturnRecordVm SetParametersToVm(NewReturnRecordVm model);
+        int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId);
 
 
     }

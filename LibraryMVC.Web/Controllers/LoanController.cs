@@ -1,16 +1,24 @@
-﻿using LibraryMVC.Application.Interfaces;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Application.Services;
+using LibraryMVC.Application.ViewModels.ReturnRecord;
+using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace LibraryMVC.Web.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class LoanController : Controller
     {
         private readonly ILoanService _loanService;
+        private readonly IValidator<NewReturnRecordVm> _validator; 
 
-        public LoanController(ILoanService loanService)
+        public LoanController(ILoanService loanService, IValidator<NewReturnRecordVm> validator)
         {
             _loanService = loanService;
+            _validator = validator;
         }
 
         public IActionResult Index()
@@ -72,6 +80,33 @@ namespace LibraryMVC.Web.Controllers
         {
             var model = _loanService.GetInfoForConfirmReturn(loanId);
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmReturn(NewReturnRecordVm model)
+        {
+            var result = _validator.Validate(model);
+            int numberOfSelectedBooks = model.LostOrDestroyedBooksId.Count + model.ReturnedBooksId.Count;
+
+            if (numberOfSelectedBooks < model.NumberOfBorrowedBooks)
+                ModelState.AddModelError("BorrowedBooks","Zaznacz status dla wszystkich wypożyczonych książek");
+
+            if (numberOfSelectedBooks > model.NumberOfBorrowedBooks)
+                ModelState.AddModelError("BorrowedBooks", "Książka nie może być oznaczona jednocześnie jako zgubiona i oddana.");
+
+            if (!result.IsValid)
+                result.AddToModelState(ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                model = _loanService.SetParametersToVm(model);
+                return View(model);
+            }
+
+            var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            _loanService.ConfirmReturn(model, librarianId);
+
+            return RedirectToAction("ConfirmCheckOut");
         }
     }
 }

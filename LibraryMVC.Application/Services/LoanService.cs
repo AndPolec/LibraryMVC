@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
@@ -252,5 +253,40 @@ namespace LibraryMVC.Application.Services
             var returnRecordVm = _mapper.Map<NewReturnRecordVm>(loan);
             return returnRecordVm;
         }
+
+        public NewReturnRecordVm SetParametersToVm(NewReturnRecordVm model)
+        {
+            var books = _bookRepository.GetAllBooks()
+                .Where(b => b.Loans.Any(l => l.Id == model.LoanId))
+                .ProjectTo<BookForListVm>(_mapper.ConfigurationProvider)
+                .ToList();
+            model.BorrowedBooks = books;
+            return model;
+        }
+
+        public int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId)
+        {
+            var returnRecord = _mapper.Map<ReturnRecord>(model);
+            returnRecord.AdditionalLibrarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
+            returnRecord.ReturnedBooks = new List<Book>();
+            returnRecord.LostOrDestroyedBooks = new List<Book>();
+            foreach (var i in model.ReturnedBooksId)
+            {
+                returnRecord.ReturnedBooks.Add(_bookRepository.GetBookById(i));
+            }
+            foreach (var i in model.LostOrDestroyedBooksId)
+            {
+                returnRecord.LostOrDestroyedBooks.Add(_bookRepository.GetBookById(i));
+            }
+
+            var loan = _loanRepository.GetLoanById(model.LoanId);
+            loan.StatusId = 3; //Status = "Zakończone"
+            loan.ReturnRecord = returnRecord;
+            _loanRepository.UpdateLoan(loan);
+
+            IncrementQuantityOfAvailableBooks(returnRecord.ReturnedBooks);
+            return returnRecord.Id;
+        }
+
     }
 }
