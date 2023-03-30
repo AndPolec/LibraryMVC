@@ -49,6 +49,11 @@ namespace LibraryMVC.Application.Mapping
             CreateMap<NewReturnRecordVm, ReturnRecord>()
                 .ForMember(d => d.Date, opt => opt.MapFrom(s => DateTime.Now));
 
+            CreateMap<ReturnRecord, ReturnRecordDetailsVm>()
+                .ForMember(d => d.FullNameOfConfirmingLibrarian, opt => opt.MapFrom(s => s.AdditionalLibrarianInfo.LibraryUser.FirstName + " " + s.AdditionalLibrarianInfo.LibraryUser.LastName));
+
+
+
         }
     }
 }

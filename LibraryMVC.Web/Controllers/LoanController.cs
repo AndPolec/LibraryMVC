@@ -104,9 +104,17 @@ namespace LibraryMVC.Web.Controllers
             }
 
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _loanService.ConfirmReturn(model, librarianId);
+            var returnRecordId = _loanService.ConfirmReturn(model, librarianId);
 
-            return RedirectToAction("ConfirmCheckOut");
+            return RedirectToAction("ViewReturnRecord", returnRecordId);
+        }
+
+        [HttpGet]
+        public IActionResult ViewReturnRecord(int returnRecordId)
+        {
+            returnRecordId = 1;
+            var model = _loanService.GetReturnRecordForDetails(returnRecordId);
+            return View(model);
         }
     }
 }

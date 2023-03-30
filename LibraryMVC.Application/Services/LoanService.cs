@@ -25,15 +25,17 @@ namespace LibraryMVC.Application.Services
         private readonly ILoanRepository _loanRepository;
         private readonly IBookRepository _bookRepository;
         private readonly IAdditionalLibrarianInfoRepository _additionalLibrarianInfoRepository;
+        private readonly IReturnRecordRepository _returnRecordRepository;
 
         
-        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository)
+        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository, IReturnRecordRepository returnRecordRepository)
         {
             _borrowingCartRepository = borrowingCartRepository;
             _mapper = mapper;
             _loanRepository = loanRepository;
             _bookRepository = bookRepository;
             _additionalLibrarianInfoRepository = additionalLibrarianInfoRepository;
+            _returnRecordRepository = returnRecordRepository;
         }
 
         //BorrowingCart
@@ -286,6 +288,13 @@ namespace LibraryMVC.Application.Services
 
             IncrementQuantityOfAvailableBooks(returnRecord.ReturnedBooks);
             return returnRecord.Id;
+        }
+
+        public ReturnRecordDetailsVm GetReturnRecordForDetails(int returnRecordId)
+        {
+            var returnRecord = _returnRecordRepository.GetReturnRecordById(returnRecordId);
+            var model = _mapper.Map<ReturnRecordDetailsVm>(returnRecord);
+            return model;
         }
 
     }

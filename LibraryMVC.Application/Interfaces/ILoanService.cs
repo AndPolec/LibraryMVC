@@ -29,6 +29,7 @@ namespace LibraryMVC.Application.Interfaces
         NewReturnRecordVm GetInfoForConfirmReturn(int loanId);
         NewReturnRecordVm SetParametersToVm(NewReturnRecordVm model);
         int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId);
+        ReturnRecordDetailsVm GetReturnRecordForDetails(int returnRecordId);
 
 
     }
