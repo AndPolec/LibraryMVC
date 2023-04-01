@@ -297,5 +297,21 @@ namespace LibraryMVC.Application.Services
             return model;
         }
 
+        public LoanSettingsVm GetGlobalLoanSettings()
+        {
+            var settings = new LoanSettingsVm()
+            {
+                penaltyRatePerDay = _penaltyRatePerDayForOneBook,
+                durationOfFreeLoan = _durationOfFreeLoanInDays
+            };
+            return settings;
+        }
+
+        public void SetGlobalLoanSettings(LoanSettingsVm model)
+        {
+            _penaltyRatePerDayForOneBook = model.penaltyRatePerDay;
+            _durationOfFreeLoanInDays = model.durationOfFreeLoan;
+        }
+
     }
 }

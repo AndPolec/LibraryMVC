@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.Services;
+using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -114,6 +115,20 @@ namespace LibraryMVC.Web.Controllers
         {
             returnRecordId = 1;
             var model = _loanService.GetReturnRecordForDetails(returnRecordId);
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ChangeGlobalLoanSettings()
+        {
+            var model =_loanService.GetGlobalLoanSettings();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ChangeGlobalLoanSettings(LoanSettingsVm model)
+        {
+            _loanService.SetGlobalLoanSettings(model);
             return View(model);
         }
     }
