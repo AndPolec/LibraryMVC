@@ -19,9 +19,9 @@ namespace LibraryMVC.Application.ViewModels.ReturnRecord
         public DateTime CheckOutDate { get; set; }
         public DateTime ReturnDueDate { get; set; }
         public bool IsPenaltyPaid { get; set; }
-        public decimal PenaltyForHoldingBooks { get; set; }
+        public decimal OverduePenalty { get; set; }
         public decimal AdditionalPenaltyForLostAndDestroyedBooks { get; set; }
-        public decimal TotalAmountOfPaidPenalty { get; set; }
+        public decimal TotalPenalty { get; set; }
         public string Comments { get; set; }
         public int NumberOfBorrowedBooks { get; set; }
         public List<int> LostOrDestroyedBooksId { get; set; }
@@ -36,7 +36,7 @@ namespace LibraryMVC.Application.ViewModels.ReturnRecord
             RuleFor(x => x.Id).NotNull();
             RuleFor(x => x.LostOrDestroyedBooksId).NotNull();
             RuleFor(x => x.ReturnedBooksId).NotNull();
-            RuleFor(x => x.TotalAmountOfPaidPenalty).ScalePrecision(2, 8, false);
+            RuleFor(x => x.TotalPenalty).ScalePrecision(2, 8, false);
         }
     }
 }

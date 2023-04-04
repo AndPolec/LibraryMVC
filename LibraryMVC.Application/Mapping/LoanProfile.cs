@@ -42,7 +42,7 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.LoanId, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.FullLibraryUserName, opt => opt.MapFrom(s => s.LibraryUser.FirstName + " " + s.LibraryUser.LastName))
                 .ForMember(d => d.CheckOutDate, opt => opt.MapFrom(s => s.CheckOutRecord.Date))
-                .ForMember(d => d.PenaltyForHoldingBooks, opt => opt.MapFrom(s => s.Penalty))
+                .ForMember(d => d.OverduePenalty, opt => opt.MapFrom(s => s.OverduePenalty))
                 .ForMember(d => d.BorrowedBooks, opt => opt.MapFrom(s => s.Books))
                 .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count));
 

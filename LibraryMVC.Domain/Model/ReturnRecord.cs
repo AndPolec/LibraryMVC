@@ -12,7 +12,7 @@ namespace LibraryMVC.Domain.Model
         public DateTime Date { get; set; }
         public bool IsPenaltyPaid { get; set; }
         public decimal AdditionalPenaltyForLostAndDestroyedBooks  { get; set; }
-        public decimal TotalAmountOfPaidPenalty  { get; set; }
+        public decimal TotalPenalty { get; set; }
         public string Comments { get; set; }
         public int LoanId { get; set; }
         public Loan Loan { get; set; }

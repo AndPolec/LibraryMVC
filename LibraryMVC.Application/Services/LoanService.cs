@@ -130,16 +130,16 @@ namespace LibraryMVC.Application.Services
                 if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone"
                 {
                     decimal calculatedPenalty = CalculatePenalty(loan);
-                    loan.Penalty = calculatedPenalty;
+                    loan.OverduePenalty = calculatedPenalty;
                     loan.StatusId = 4;
                     loansToUpdate.Add(loan);
                 }
                 else if (loan.StatusId == 4) // if Status == "Zaległe"
                 {
                     decimal calculatedPenalty = CalculatePenalty(loan);
-                    if (loan.Penalty != calculatedPenalty)
+                    if (loan.OverduePenalty != calculatedPenalty)
                     {
-                        loan.Penalty = calculatedPenalty;
+                        loan.OverduePenalty = calculatedPenalty;
                         loansToUpdate.Add(loan);
                     }
                 }

@@ -15,6 +15,7 @@ namespace LibraryMVC.Domain.Model
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        public bool isBlocked { get; set; }
 
         public Address Address { get; set; }
         public BorrowingCart BorrowingCart { get; set; }
