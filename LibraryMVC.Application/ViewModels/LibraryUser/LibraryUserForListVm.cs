@@ -11,7 +11,7 @@ namespace LibraryMVC.Application.ViewModels.LibraryUser
         public int Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public decimal UnpaidPenalties { get; set; }
-        public int OverdueLoans { get; set; }
+        public decimal UnpaidPenaltiesTotal { get; set; }
+        public int OverdueLoansCount { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Application.ViewModels.LibraryUser;
 using LibraryMVC.Application.ViewModels.User;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
@@ -28,6 +30,12 @@ namespace LibraryMVC.Application.Services
             var newUserId = _libraryUserRepository.AddUser(newUser);
             return newUserId;
 
+        }
+
+        public List<LibraryUserForListVm> GetAllLibraryUserForList()
+        {
+            var users = _libraryUserRepository.GetAllUsers().ProjectTo<LibraryUserForListVm>(_mapper.ConfigurationProvider).ToList();
+            return users;
         }
 
         public bool isUserDataExists(string identityUserId)

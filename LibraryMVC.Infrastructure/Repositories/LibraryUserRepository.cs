@@ -1,5 +1,6 @@
 ﻿using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public IQueryable<LibraryUser> GetAllUsers()
         {
-            return _context.LibraryUsers;
+            return _context.LibraryUsers.AsNoTracking();
         }
         
         public bool CheckIsUserExistsByIdentityUserId(string userId)

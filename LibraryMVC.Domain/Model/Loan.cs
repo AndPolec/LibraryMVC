@@ -13,6 +13,7 @@ namespace LibraryMVC.Domain.Model
         public int Id { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ReturnDueDate { get; set; }
+        public bool isOverdue { get; set; }
         public decimal OverduePenalty { get; set; }
 
         public int StatusId { get; set; }

@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Application.ViewModels.User;
+﻿using LibraryMVC.Application.ViewModels.LibraryUser;
+using LibraryMVC.Application.ViewModels.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace LibraryMVC.Application.Interfaces
     {
         int AddUser(NewLibraryUserVm model);
         bool isUserDataExists(string identityUserId);
+        List<LibraryUserForListVm> GetAllLibraryUserForList();
     }
 }
