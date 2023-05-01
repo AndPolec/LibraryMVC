@@ -18,7 +18,7 @@ namespace LibraryMVC.Application.Services
 {
     public class LoanService : ILoanService
     {
-        private decimal _penaltyRatePerDayForOneBook = 0.2M;
+        private decimal _OverduePenaltyRatePerDayForOneBook = 0.2M;
         private int _durationOfFreeLoanInDays = 21;
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
@@ -113,35 +113,33 @@ namespace LibraryMVC.Application.Services
             _bookRepository.UpdateBooksQuantity(books);
         }
 
-        private decimal CalculatePenalty(Loan loan)
+        private decimal CalculateOverduePenalty(Loan loan)
         {
-            int numberOfBookHoldingDays = (DateTime.Now - loan.ReturnDueDate).Days;
+            int numberOfOverdueDays = (DateTime.Now - loan.ReturnDueDate).Days;
             int numberOfBooks = loan.Books.Count();
-            decimal penalty = numberOfBookHoldingDays * numberOfBooks * _penaltyRatePerDayForOneBook;
+            decimal penalty = numberOfOverdueDays * numberOfBooks * _OverduePenaltyRatePerDayForOneBook;
             return penalty;
         } 
 
-        private void UpdatePenaltyForHoldingBooks(List<Loan> loans)
+        private void UpdateOverduePenaltyAndStatusForAllLoans()
         {
+            var loans = _loanRepository.GetAllLoans().Where(l => l.StatusId == 2 || l.StatusId == 4); // Get all Loans with Status == "Wypożyczone" || Status == "Zaległe" || ReturnDueDate < DateTime.Now.Date
             var loansToUpdate = new List<Loan>();
 
             foreach (var loan in loans)
             {
-                if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone"
+                if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone" || DateTime.Now.Date > loan.ReturnDueDate.Date
                 {
-                    decimal calculatedPenalty = CalculatePenalty(loan);
+                    decimal calculatedPenalty = CalculateOverduePenalty(loan);
                     loan.OverduePenalty = calculatedPenalty;
-                    loan.StatusId = 4;
+                    loan.StatusId = 4; //Status == "Zaległe"
                     loansToUpdate.Add(loan);
                 }
                 else if (loan.StatusId == 4) // if Status == "Zaległe"
                 {
-                    decimal calculatedPenalty = CalculatePenalty(loan);
-                    if (loan.OverduePenalty != calculatedPenalty)
-                    {
-                        loan.OverduePenalty = calculatedPenalty;
-                        loansToUpdate.Add(loan);
-                    }
+                    decimal calculatedPenalty = CalculateOverduePenalty(loan);
+                    loan.OverduePenalty = calculatedPenalty;
+                    loansToUpdate.Add(loan);
                 }
             }
 
@@ -171,13 +169,11 @@ namespace LibraryMVC.Application.Services
 
         public ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber)
         {
-            var loans = _loanRepository.GetAllLoans()
+            var loansVm = _loanRepository.GetAllLoans()
                 .Where(l => l.LibraryUser.IdentityUserId == userId)
+                .ProjectTo<LoanForListVm>(_mapper.ConfigurationProvider)
                 .ToList();
 
-            UpdatePenaltyForHoldingBooks(loans);
-
-            var loansVm = _mapper.Map<List<LoanForListVm>>(loans);
             var loansToDisplay = loansVm.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
             var loanList = new ListOfLoanForListVm()
             {
@@ -240,12 +236,11 @@ namespace LibraryMVC.Application.Services
 
         public List<LoanForConfirmReturnListVm> GetAllLoansForConfirmReturnList()
         {
-            var loans = _loanRepository.GetAllLoans()
-                .Where(l => l.Status.Id == 2 || l.Status.Id == 4).ToList(); //Staus = "Wypożyczone" || "Zaległe"
+            var loansVm = _loanRepository.GetAllLoans()
+                .Where(l => l.Status.Id == 2 || l.Status.Id == 4) //Staus = "Wypożyczone" || "Zaległe"
+                .ProjectTo<LoanForConfirmReturnListVm>(_mapper.ConfigurationProvider)
+                .ToList();
 
-            UpdatePenaltyForHoldingBooks(loans);
-
-            var loansVm = _mapper.Map<List<LoanForConfirmReturnListVm>>(loans);
             return loansVm;
         }
 
@@ -301,7 +296,7 @@ namespace LibraryMVC.Application.Services
         {
             var settings = new LoanSettingsVm()
             {
-                penaltyRatePerDay = _penaltyRatePerDayForOneBook,
+                penaltyRatePerDay = _OverduePenaltyRatePerDayForOneBook,
                 durationOfFreeLoan = _durationOfFreeLoanInDays
             };
             return settings;
@@ -309,7 +304,7 @@ namespace LibraryMVC.Application.Services
 
         public void SetGlobalLoanSettings(LoanSettingsVm model)
         {
-            _penaltyRatePerDayForOneBook = model.penaltyRatePerDay;
+            _OverduePenaltyRatePerDayForOneBook = model.penaltyRatePerDay;
             _durationOfFreeLoanInDays = model.durationOfFreeLoan;
         }
 
