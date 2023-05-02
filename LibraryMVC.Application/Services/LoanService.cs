@@ -121,7 +121,7 @@ namespace LibraryMVC.Application.Services
             return penalty;
         } 
 
-        private void UpdateOverduePenaltyAndStatusForAllLoans()
+        public void UpdateOverduePenaltyAndStatusForAllLoans()
         {
             var loans = _loanRepository.GetAllLoans().Where(l => l.StatusId == 2 || l.StatusId == 4); // Get all Loans with Status == "Wypożyczone" || Status == "Zaległe" || ReturnDueDate < DateTime.Now.Date
             var loansToUpdate = new List<Loan>();

@@ -21,6 +21,7 @@ namespace LibraryMVC.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddHostedService<OverduePenaltyUpdateBackgroundService>();
 
             services.AddTransient<IBookService, BookService>();
             services.AddTransient<ILibraryUserService, LibraryUserService>();

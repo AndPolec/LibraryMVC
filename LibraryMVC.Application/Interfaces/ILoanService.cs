@@ -32,5 +32,6 @@ namespace LibraryMVC.Application.Interfaces
         ReturnRecordDetailsVm GetReturnRecordForDetails(int returnRecordId);
         void SetGlobalLoanSettings(LoanSettingsVm model);
         LoanSettingsVm GetGlobalLoanSettings();
+        void UpdateOverduePenaltyAndStatusForAllLoans();
     }
 }
