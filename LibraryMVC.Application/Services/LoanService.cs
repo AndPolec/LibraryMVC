@@ -128,17 +128,20 @@ namespace LibraryMVC.Application.Services
 
             foreach (var loan in loans)
             {
-                if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone" || DateTime.Now.Date > loan.ReturnDueDate.Date
+                if (loan.StatusId == 4) // if Status == "Zaległe"
                 {
                     decimal calculatedPenalty = CalculateOverduePenalty(loan);
-                    loan.OverduePenalty = calculatedPenalty;
-                    loan.StatusId = 4; //Status == "Zaległe"
+                    loan.ReturnRecord.OverduePenalty = calculatedPenalty;
+                    loan.ReturnRecord.TotalPenalty = calculatedPenalty;
                     loansToUpdate.Add(loan);
                 }
-                else if (loan.StatusId == 4) // if Status == "Zaległe"
+                else if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone" || DateTime.Now.Date > loan.ReturnDueDate.Date
                 {
                     decimal calculatedPenalty = CalculateOverduePenalty(loan);
-                    loan.OverduePenalty = calculatedPenalty;
+                    loan.ReturnRecord.OverduePenalty = calculatedPenalty;
+                    loan.ReturnRecord.TotalPenalty = calculatedPenalty;
+                    loan.isOverdue = true;
+                    loan.StatusId = 4; //Status == "Zaległe"
                     loansToUpdate.Add(loan);
                 }
             }

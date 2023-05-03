@@ -44,6 +44,7 @@ namespace LibraryMVC.Infrastructure.Repositories
             var loan = _context.Loans
                 .Include(l => l.Books)
                 .Include(l => l.Status)
+                .Include(l => l.ReturnRecord)
                 .AsNoTracking();
             return loan;
         }
@@ -58,8 +59,9 @@ namespace LibraryMVC.Infrastructure.Repositories
         {
             foreach (var loan in loans)
             {
-                _context.Entry(loan).Property("StatusId").IsModified = true;
-                _context.Entry(loan).Property("Penalty").IsModified = true;
+                _context.Entry(loan).Property(l => l.StatusId).IsModified = true;
+                _context.Entry(loan.ReturnRecord).Property(rr => rr.OverduePenalty).IsModified = true;
+                _context.Entry(loan.ReturnRecord).Property(rr => rr.TotalPenalty).IsModified = true;
             }
             _context.SaveChanges();
         }

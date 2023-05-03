@@ -25,7 +25,8 @@ namespace LibraryMVC.Application.Mapping
             CreateMap<LibraryUser, LibraryUserForListVm>()
                 .ForMember(d => d.FullName, opt => opt.MapFrom(s => s.FirstName + " " + s.LastName))
                 .ForMember(d => d.OverdueLoansCount, opt => opt.MapFrom(s => s.Loans.Count(l => l.ReturnDueDate.Date < DateTime.Now.Date)))
-                .ForMember(d => d.UnpaidPenaltiesTotal, opt => opt.MapFrom(s => s.Loans.Select(l => l.OverduePenalty + l.ReturnRecord.AdditionalPenaltyForLostAndDestroyedBooks)) // to do
+                .ForMember(d => d.UnpaidPenaltiesTotal, opt => opt.MapFrom(s => s.Loans
+                    .Where(l => l.ReturnRecord != null && l.ReturnRecord.IsPenaltyPaid == false).Sum(l => l.ReturnRecord.TotalPenalty))); 
 
 
 

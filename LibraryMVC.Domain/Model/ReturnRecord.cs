@@ -11,6 +11,7 @@ namespace LibraryMVC.Domain.Model
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public bool IsPenaltyPaid { get; set; }
+        public decimal OverduePenalty { get; set; }
         public decimal AdditionalPenaltyForLostAndDestroyedBooks  { get; set; }
         public decimal TotalPenalty { get; set; }
         public string Comments { get; set; }

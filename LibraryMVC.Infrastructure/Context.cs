@@ -56,8 +56,8 @@ namespace LibraryMVC.Infrastructure
                     j => j.HasOne(g => g.Genre).WithMany(b => b.BookGenres),
                     j => j.HasOne(g => g.Book).WithMany(b => b.BookGenres));
 
-            builder.Entity<Loan>()
-                .Property(l => l.OverduePenalty)
+            builder.Entity<ReturnRecord>()
+                .Property(r => r.OverduePenalty)
                 .HasColumnType("decimal(8,2)");
 
             builder.Entity<ReturnRecord>()

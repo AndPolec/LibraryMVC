@@ -14,7 +14,6 @@ namespace LibraryMVC.Domain.Model
         public DateTime CreationDate { get; set; }
         public DateTime ReturnDueDate { get; set; }
         public bool isOverdue { get; set; }
-        public decimal OverduePenalty { get; set; }
 
         public int StatusId { get; set; }
         public Status Status { get; set; }

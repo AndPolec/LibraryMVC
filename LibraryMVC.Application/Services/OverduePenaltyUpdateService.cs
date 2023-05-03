@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,22 @@ namespace LibraryMVC.Application.Services
 {
     public class OverduePenaltyUpdateBackgroundService : BackgroundService
     {
-        private readonly ILoanService _loanService;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public OverduePenaltyUpdateBackgroundService(ILoanService loanService)
+        public OverduePenaltyUpdateBackgroundService(IServiceScopeFactory serviceScopeFactory)
         {
-            _loanService = loanService;
+            _scopeFactory = serviceScopeFactory;
         }
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _loanService.UpdateOverduePenaltyAndStatusForAllLoans();
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var loanService = scope.ServiceProvider.GetService<ILoanService>();
+                    loanService.UpdateOverduePenaltyAndStatusForAllLoans();
+                }
 
                 var now = DateTime.Now;
                 var nextUpdateDate = new DateTime(now.Year,now.Month,now.Day, 0, 0, 1).AddDays(1);
