@@ -137,6 +137,9 @@ namespace LibraryMVC.Application.Services
                 }
                 else if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone" || DateTime.Now.Date > loan.ReturnDueDate.Date
                 {
+                    if(loan.ReturnRecord == null)
+                        loan.ReturnRecord = new ReturnRecord() { Id = 0 };
+
                     decimal calculatedPenalty = CalculateOverduePenalty(loan);
                     loan.ReturnRecord.OverduePenalty = calculatedPenalty;
                     loan.ReturnRecord.TotalPenalty = calculatedPenalty;
