@@ -36,7 +36,8 @@ namespace LibraryMVC.Application.Mapping
             CreateMap<Loan, LoanForConfirmReturnListVm>()
                 .ForMember(d => d.Status, opt => opt.MapFrom(s => s.Status.Name))
                 .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.LibraryUser.LastName + " " + s.LibraryUser.FirstName))
-                .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count));
+                .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count))
+                .ForMember(d => d.Penalty, opt => opt.MapFrom(s => s.ReturnRecord.OverduePenalty));
 
             CreateMap<Loan, NewReturnRecordVm>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
@@ -45,7 +46,8 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.CheckOutDate, opt => opt.MapFrom(s => s.CheckOutRecord.Date))
                 .ForMember(d => d.OverduePenalty, opt => opt.MapFrom(s => s.ReturnRecord.OverduePenalty))
                 .ForMember(d => d.BorrowedBooks, opt => opt.MapFrom(s => s.Books))
-                .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count));
+                .ForMember(d => d.NumberOfBorrowedBooks, opt => opt.MapFrom(s => s.Books.Count))
+                .ForMember(d => d.TotalPenalty, opt => opt.MapFrom(s => s.ReturnRecord.TotalPenalty));
 
             CreateMap<NewReturnRecordVm, ReturnRecord>()
                 .ForMember(d => d.Date, opt => opt.MapFrom(s => DateTime.Now));

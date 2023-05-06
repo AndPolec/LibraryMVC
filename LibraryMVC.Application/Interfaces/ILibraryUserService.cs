@@ -12,6 +12,6 @@ namespace LibraryMVC.Application.Interfaces
     {
         int AddUser(NewLibraryUserVm model);
         bool isUserDataExists(string identityUserId);
-        List<LibraryUserForListVm> GetAllLibraryUserForList();
+        List<LibraryUserForListVm> GetAllLibraryUsersForList();
     }
 }

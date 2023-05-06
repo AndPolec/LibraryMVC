@@ -32,7 +32,7 @@ namespace LibraryMVC.Application.Services
 
         }
 
-        public List<LibraryUserForListVm> GetAllLibraryUserForList()
+        public List<LibraryUserForListVm> GetAllLibraryUsersForList()
         {
             var users = _libraryUserRepository.GetAllUsers().ProjectTo<LibraryUserForListVm>(_mapper.ConfigurationProvider).ToList();
             return users;

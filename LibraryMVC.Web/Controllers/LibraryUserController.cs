@@ -20,7 +20,7 @@ namespace LibraryMVC.Web.Controllers
 
         public IActionResult Index()
         {
-            var model = _userService.GetAllLibraryUserForList();
+            var model = _userService.GetAllLibraryUsersForList();
             return View(model);
         }
 
