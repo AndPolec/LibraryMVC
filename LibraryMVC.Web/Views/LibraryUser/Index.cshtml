@@ -47,7 +47,7 @@
                 @Html.DisplayFor(modelItem => item.OverdueLoansCount)
             </td>
             <td>
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "ViewUserDetails", new { libraryUserId=item.Id }) 
             </td>
         </tr>
 }

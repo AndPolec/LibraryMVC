@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Application.ViewModels.User;
+﻿using LibraryMVC.Application.ViewModels.Loan;
+using LibraryMVC.Application.ViewModels.User;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,10 +12,8 @@ namespace LibraryMVC.Application.ViewModels.LibraryUser
     public class LibraryUserDetailsVm
     {
         public int Id { get; set; }
-        [DisplayName("Imię")]
-        public string FirstName { get; set; }
-        [DisplayName("Nazwisko")]
-        public string LastName { get; set; }
+        [DisplayName("Imię i nazwisko")]
+        public string FullName { get; set; }
         [DisplayName("E-mail")]
         public string Email { get; set; }
         [DisplayName("Numer telefonu")]
@@ -24,5 +23,6 @@ namespace LibraryMVC.Application.ViewModels.LibraryUser
         public decimal UnpaidPenaltiesTotal { get; set; }
         [DisplayName("Liczba zaległych zamówień")]
         public int OverdueLoansCount { get; set; }
+        public List<LoanDetailsVm> Loans { get; set; }
     }
 }

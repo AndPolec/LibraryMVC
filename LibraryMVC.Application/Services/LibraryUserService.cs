@@ -38,6 +38,13 @@ namespace LibraryMVC.Application.Services
             return users;
         }
 
+        public LibraryUserDetailsVm GetLibraryUserForDetails(int id)
+        {
+            var libraryUser = _libraryUserRepository.GetUserById(id);
+            var libraryUserVm = _mapper.Map<LibraryUserDetailsVm>(libraryUser);
+            return libraryUserVm;
+        }
+
         public bool isUserDataExists(string identityUserId)
         {
             return _libraryUserRepository.CheckIsUserExistsByIdentityUserId(identityUserId);

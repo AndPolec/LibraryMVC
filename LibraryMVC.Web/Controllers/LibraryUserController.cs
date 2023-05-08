@@ -48,5 +48,11 @@ namespace LibraryMVC.Web.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult ViewUserDetails(int libraryUserId)
+        {
+            var model = _userService.GetLibraryUserForDetails(libraryUserId);
+            return View(model);
+        }
     }
 }

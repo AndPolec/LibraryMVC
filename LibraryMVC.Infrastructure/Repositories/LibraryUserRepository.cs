@@ -45,7 +45,12 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public LibraryUser GetUserById(int userId)
         {
-            var user = _context.LibraryUsers.FirstOrDefault(u => u.Id == userId);
+            var user = _context.LibraryUsers
+                .Include(u => u.Address)
+                .Include(u => u.Loans).ThenInclude(l => l.Books)
+                .Include(u => u.Loans).ThenInclude(l => l.ReturnRecord)
+                .Include(u => u.Loans).ThenInclude(l => l.CheckOutRecord)
+                .FirstOrDefault(u => u.Id == userId);
             return user;
         }
         public LibraryUser GetUserByIdentityUserId(string userId)
