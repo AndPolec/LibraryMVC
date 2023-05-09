@@ -45,9 +45,29 @@ namespace LibraryMVC.Application.Services
             return libraryUserVm;
         }
 
-        public bool isUserDataExists(string identityUserId)
+        public bool IsUserDataExists(string identityUserId)
         {
             return _libraryUserRepository.CheckIsUserExistsByIdentityUserId(identityUserId);
+        }
+
+        public bool IsBlocked(int userId)
+        {
+            var user = _libraryUserRepository.GetUserById(userId);
+            return user.isBlocked;
+        }
+
+        public void BlockUser(int userId)
+        {
+            var user = _libraryUserRepository.GetUserById(userId);
+            user.isBlocked = true;
+            _libraryUserRepository.UpdateUser(user);
+        }
+
+        public void UnblockUser(int userId)
+        {
+            var user = _libraryUserRepository.GetUserById(userId);
+            user.isBlocked = false;
+            _libraryUserRepository.UpdateUser(user);
         }
     }
 }

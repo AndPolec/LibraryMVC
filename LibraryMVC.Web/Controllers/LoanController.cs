@@ -15,10 +15,12 @@ namespace LibraryMVC.Web.Controllers
     {
         private readonly ILoanService _loanService;
         private readonly IValidator<NewReturnRecordVm> _validator; 
+        private readonly ILibraryUserService _libraryUserService;
 
-        public LoanController(ILoanService loanService, IValidator<NewReturnRecordVm> validator)
+        public LoanController(ILoanService loanService, ILibraryUserService libraryUserService, IValidator<NewReturnRecordVm> validator)
         {
             _loanService = loanService;
+            _libraryUserService = libraryUserService;
             _validator = validator;
         }
 
@@ -32,7 +34,14 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult CreateNewLoan(int borrowingCartId, int userId)
         {
+            if(_libraryUserService.IsBlocked(userId))
+                return RedirectToAction("Index");
+
             var loanId = _loanService.AddNewLoan(borrowingCartId, userId);
+            if (loanId == -1)
+            {
+                return RedirectToAction("Index", "BorrowingCart");
+            }
 
             return RedirectToAction("Index");
         }
