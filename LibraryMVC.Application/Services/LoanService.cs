@@ -157,20 +157,25 @@ namespace LibraryMVC.Application.Services
         {
             var borrowingCart = GetBorrowingCartById(borrowingCartId);
             var availableBooks = FilterAndReturnAvailableBooks(borrowingCart.Books);
-
-            var loan = new Loan()
+            if (availableBooks.Any())
             {
-                LibraryUserId = userId,
-                Books = availableBooks,
-                CreationDate = DateTime.Now,
-                StatusId = 1
-            };
-            var loanId = _loanRepository.AddLoan(loan);
+                var loan = new Loan()
+                {
+                    LibraryUserId = userId,
+                    Books = availableBooks,
+                    CreationDate = DateTime.Now,
+                    StatusId = 1
+                };
+                var loanId = _loanRepository.AddLoan(loan);
 
-            DecrementQuantityOfAvailableBooks(availableBooks);
+                DecrementQuantityOfAvailableBooks(availableBooks);
+                ClearBorrowingCart(borrowingCartId);
+
+                return loanId;
+            }
+            
             ClearBorrowingCart(borrowingCartId);
-
-            return loanId;
+            return -1;
         }
 
         public ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber)
