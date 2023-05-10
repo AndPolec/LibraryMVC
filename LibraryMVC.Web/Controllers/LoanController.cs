@@ -34,8 +34,11 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult CreateNewLoan(int borrowingCartId, int userId)
         {
-            if(_libraryUserService.IsBlocked(userId))
+            if (_libraryUserService.IsBlocked(userId))
+            {
+                TempData["ErrorMessage"] = "Blokada! Nie możesz stworzyć kolejnego zamówienia.";
                 return RedirectToAction("Index");
+            }
 
             var loanId = _loanService.AddNewLoan(borrowingCartId, userId);
             if (loanId == -1)

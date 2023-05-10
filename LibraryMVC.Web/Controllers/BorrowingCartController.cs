@@ -29,6 +29,7 @@ namespace LibraryMVC.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _loanService.AddToBorrowingCart(bookId,userId);
+            TempData["SuccessMessage"] = "Książka dodana do koszyka.";
             return RedirectToAction("Index");
         }
 

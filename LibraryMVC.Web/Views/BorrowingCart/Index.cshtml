@@ -4,6 +4,11 @@
     ViewData["Title"] = "Koszyk";
 }
 
+@if(TempData["SuccessMessage"] != null)
+{
+    <h2>@TempData["SuccessMessage"]</h2>
+}
+
 <h1>Koszyk</h1>
 
 

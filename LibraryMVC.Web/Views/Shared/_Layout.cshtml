@@ -11,11 +11,12 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm shadow border-bottom text-white navbar-dark mb-4" style="background-color: #3756c1 ;">
+        <nav class="navbar navbar-expand-sm shadow border-bottom navbar-dark mb-4" style="background-color: #3756c1 ;">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     <img src="~/img/logo.png" alt="Logo" width="40" height="auto"/>
-                    Biblioteka</a>
+                    Biblioteka
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,34 +24,39 @@
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav flex-grow-1 justify-content-center">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Zasady</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">Katalog</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="AdminBookPanel">Zarządzaj książkami</a>
+                            <a class="nav-link" asp-controller="Book" asp-action="Index">Katalog</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="BorrowingCart" asp-action="Index">Koszyk</a>
+                            <a class="nav-link" asp-controller="BorrowingCart" asp-action="Index">Koszyk</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Loan" asp-action="Index">Moje zamówienia</a>
+                            <a class="nav-link" asp-controller="Loan" asp-action="Index">Moje zamówienia</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Loan" asp-action="ConfirmCheckOut">Potwierdź wydanie</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"> 
+                                Bibliotekarz
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Loan" asp-action="ConfirmCheckOut">Potwierdź wydanie</a></li>
+                                <li><a class="dropdown-item" asp-controller="Loan" asp-action="ConfirmReturnIndex">Potwierdź zwrot</a></li>
+                                <li><a class="dropdown-item" asp-controller="Book" asp-action="AdminBookPanel">Zarządzaj książkami</a></li>
+                                <li><a class="dropdown-item" asp-controller="LibraryUser" asp-action="Index">Zarządzaj użytkownikami</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Loan" asp-action="ConfirmReturnIndex">Potwierdź zwrot</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Loan" asp-action="ChangeGlobalLoanSettings">Settings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="LibraryUser" asp-action="Index">LibraryUserList</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"> 
+                                Administrator
+                            </a>
+                            <ul class="dropdown-menu" style="background-color: #3756c1 ;">
+                                <li><a class="dropdown-item" asp-controller="Loan" asp-action="ChangeGlobalLoanSettings">Ustawienia</a></li>
+                                <li><a class="dropdown-item" asp-controller="" asp-action="">Zmień status użytkownika</a></li>
+                            </ul>
                         </li>
                         
                     </ul>
@@ -68,7 +74,7 @@
 
     <footer class="border-top footer text-muted " style="background-color: #3756c1 ;">
         <div class="container">
-            &copy; 2022 - AndPol <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - AndPol <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
