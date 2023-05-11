@@ -22,3 +22,11 @@ body {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.navbar {
+    background-color: #3756c1;
+}
+
+.dropdown-menu {
+    background-color: #afbbe6;
+}
