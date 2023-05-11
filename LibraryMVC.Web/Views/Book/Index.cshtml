@@ -25,7 +25,7 @@
         </div>
 
         <div class="row">
-            <table class="table table-hover">
+            <table class="table table-hover" id="booksTable">
                 <thead>
                     <tr>
                         <th>
@@ -139,11 +139,16 @@
 
 @section Scripts
 {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
     <script type="text/javascript">
         function PagerClick(index)
         {
             document.getElementById("pageNumber").value = index;
             document.forms["bookForm"].submit();
         }
+
+        let table = new DataTable("#booksTable");
     </script>
 }
