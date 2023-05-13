@@ -28,19 +28,19 @@
             <table class="table table-hover" id="booksTable">
                 <thead>
                     <tr>
-                        <th id="Nr" onclick="sortTable('Nr')">
+                        <th id="Nr">
                             Nr <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th id="Title" onclick="sortTable('Title')">
+                        <th id="Title">
                             Tytuł <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th id="Author" onclick="sortTable('Author')">
+                        <th id="Author">
                             Autor <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th id="RelaseDate" onclick="sortTable('RelaseDate')">
+                        <th id="RelaseDate">
                             Data wydania <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th id="Genre" onclick="sortTable('Genre')">
+                        <th id="Genre">
                             Gatunek <i class="fa-solid fa-sort"></i>
                         </th>
                     </tr>
@@ -199,6 +199,12 @@
             document.getElementById("pageNumber").value = index;
             document.forms["bookForm"].submit();
         }
+
+        document.getElementById("Nr").addEventListener("click",() => sortTable("Nr"));
+        document.getElementById("Title").addEventListener("click",() => sortTable("Title"));
+        document.getElementById("Author").addEventListener("click",() => sortTable("Author"));
+        document.getElementById("RelaseDate").addEventListener("click",() => sortTable("RelaseDate"));
+        document.getElementById("Genre").addEventListener("click",() => sortTable("Genre"));
 
     </script>
 }
