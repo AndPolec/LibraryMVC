@@ -9,7 +9,7 @@
 <div class="my-4">
     <a class="btn btn-success btn-lg" asp-controller="Book" asp-action="AddNewBook"> 
         <i class="bi bi-plus-square"></i> Dodaj nową książkę
-        </a>
+    </a>
 </div>
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
@@ -30,7 +30,7 @@
         </div>
 
         <div class="row">
-            <table class="table table-hover">
+            <table id="bookTable" class="table table-hover">
                 <thead>
                     <tr>
                         <th>
@@ -59,31 +59,31 @@
                         {
                             position = (Model.CurrentPage - 1) * Model.PageSize + 1;
                         }
-                    }
+                     }
                     @foreach (var item in Model.Books)
                     {
-                                <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ViewBook", "Book", new { id=item.Id})'">
+                            <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ViewBook", "Book", new { id=item.Id})'">
                                 <td>
-                                @position
-                                @{
-                                    position++;
-                                }
+                                    @position
+                                    @{
+                                        position++;
+                                    }
                                 </td>
                                 <td>
-                                @Html.DisplayFor(modelItem => item.Title)
+                                    @Html.DisplayFor(modelItem => item.Title)
                                 </td>
                                 <td>
-                                @Html.DisplayFor(modelItem => item.AuthorFullName)
+                                    @Html.DisplayFor(modelItem => item.AuthorFullName)
                                 </td>
                                 <td>
-                                @Html.DisplayFor(modelItem => item.RelaseYear)
+                                    @Html.DisplayFor(modelItem => item.RelaseYear)
                                 </td>
                                 <td>
-                                @Html.DisplayFor(modelItem => item.Genre)
+                                    @Html.DisplayFor(modelItem => item.Genre)
                                 </td>
                                 <td>
-                                @Html.ActionLink("Edytuj", "EditBook", new { id=item.Id }) |
-                                @Html.ActionLink("Usuń", "DeleteBook", new { id=item.Id })
+                                    @Html.ActionLink("Edytuj", "EditBook", new { id=item.Id }) |
+                                    @Html.ActionLink("Usuń", "DeleteBook", new { id=item.Id })
                                 </td>
                             </tr>
                     }
@@ -93,51 +93,51 @@
         <div class="row mt-3">
             <nav class="p-0">
                 <ul class="pagination">
-                    @{
+                    @{  
                         double numberOfPages = Math.Ceiling((double)Model.Count / Model.PageSize);
                         int currentPage = Model.CurrentPage;
 
                         if (currentPage == 1)
                         {
-                                    <li class="page-item disabled">
-                                        <a class="page-link">Poprzednia</a>
-                                    </li>
+                            <li class="page-item disabled">
+                                <a class="page-link">Poprzednia</a>
+                            </li>
                         }
                         else
                         {
-                                    <li class="page-item">
-                                        <a class="page-link" href="javascript:PagerClick(@currentPage-1)">Poprzednia</a>
-                                    </li>
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:PagerClick(@currentPage-1)">Poprzednia</a>
+                            </li>
                         }
 
                         @for (int i = 1; i <= numberOfPages; i++)
                         {
                             if (i != Model.CurrentPage)
                             {
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="javascript:PagerClick(@i)">@i</a>
-                                                    </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript:PagerClick(@i)">@i</a>
+                                </li>
                             }
                             else
                             {
-                                                    <li class="page-item active">
-                                                        <a class="page-link">@i</a>
-                                                    </li>
+                                <li class="page-item active">
+                                    <a class="page-link">@i</a>
+                                </li>
                             }
                         }
 
 
                         if (currentPage == numberOfPages)
                         {
-                                    <li class="page-item disabled">
-                                        <a class="page-link">Następna</a>
-                                    </li>
+                            <li class="page-item disabled">
+                                <a class="page-link">Następna</a>
+                            </li>
                         }
                         else
                         {
-                                    <li class="page-item">
-                                    <a class="page-link" href="javascript:PagerClick(@currentPage+1)">Następna</a>
-                                    </li>
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:PagerClick(@currentPage+1)">Następna</a>
+                            </li>
                         }
                     }
                 </ul>
@@ -151,12 +151,24 @@
 </div>
 
 @section Scripts
-    {
-        <script type="text/javascript">
-            function PagerClick(index)
-            {
-                document.getElementById("pageNumber").value = index;
-                document.forms[0].submit();
-            }
-        </script>
+{
+    <script type="text/javascript">
+
+        let sortedColumn = null;
+        let sortOrder = 1;
+
+        function sortTable(columnId)
+        {
+            const table = document.getElementsById("bookTable");
+            const rows = Array.from(table.rows).slice(1);
+
+
+        }
+
+        function PagerClick(index)
+        {
+            document.getElementById("pageNumber").value = index;
+            document.forms[0].submit();
+        }
+    </script>
 }
