@@ -30,23 +30,23 @@
         </div>
 
         <div class="row">
-            <table id="bookTable" class="table table-hover">
+            <table class="table table-hover" id="booksTable">
                 <thead>
-                    <tr>
-                        <th>
-                            Nr
+                    <tr class="cursor-pointer">
+                        <th id="Nr">
+                            Nr <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th>
-                            Tytuł
+                        <th id="Title">
+                            Tytuł <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th>
-                            Autor
+                        <th id="Author">
+                            Autor <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th>
-                            Data wydania
+                        <th id="RelaseDate">
+                            Data wydania <i class="fa-solid fa-sort"></i>
                         </th>
-                        <th>
-                            Gatunek
+                        <th id="Genre">
+                            Gatunek <i class="fa-solid fa-sort"></i>
                         </th>
                         <th></th>
                     </tr>
@@ -159,10 +159,53 @@
 
         function sortTable(columnId)
         {
-            const table = document.getElementsById("bookTable");
+            const table = document.getElementById("booksTable");
             const rows = Array.from(table.rows).slice(1);
+            const headerCell = document.getElementById(columnId);
+            const icons = document.querySelectorAll(".fa-sort-up, .fa-sort-down");
+            icons.forEach(icon => {
+                icon.classList.remove("fa-sort-up", "fa-sort-down");
+                icon.classList.add("fa-sort");
+            });
 
+            if(sortedColumn === headerCell){
+                sortOrder = -sortOrder;
+            } else {
+                sortedColumn = headerCell;
+                sortOrder = 1;
+            }
 
+            const icon = headerCell.querySelector("i");
+            icon.classList.remove("fa-sort");
+            icon.classList.add(sortOrder == 1 ? "fa-sort-up" : "fa-sort-down");
+            
+            const sortedRows = rows.sort((a, b) => {
+                const cellA = a.cells[sortedColumn.cellIndex];
+                const cellB = b.cells[sortedColumn.cellIndex];
+                let aValue = cellA.innerText;
+                let bValue = cellB.innerText;
+
+                if (columnId === "Nr") {
+                    aValue = parseInt(aValue);
+                    bValue = parseInt(bValue);
+                }
+                else if (columnId === "RelaseDate") {
+                    aValue = new Date(aValue);
+                    bValue = new Date(bValue);
+                }
+
+                if (aValue < bValue) {
+                    return -sortOrder;
+                }
+                if (aValue > bValue) {
+                    return sortOrder;
+                }
+                return 0;
+            });
+
+            for (const row of sortedRows) {
+                table.tBodies[0].appendChild(row);
+            }
         }
 
         function PagerClick(index)
@@ -170,5 +213,11 @@
             document.getElementById("pageNumber").value = index;
             document.forms[0].submit();
         }
+
+        document.getElementById("Nr").addEventListener("click",() => sortTable("Nr"));
+        document.getElementById("Title").addEventListener("click",() => sortTable("Title"));
+        document.getElementById("Author").addEventListener("click",() => sortTable("Author"));
+        document.getElementById("RelaseDate").addEventListener("click",() => sortTable("RelaseDate"));
+        document.getElementById("Genre").addEventListener("click",() => sortTable("Genre"));
     </script>
 }
