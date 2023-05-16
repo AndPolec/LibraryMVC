@@ -28,7 +28,7 @@ namespace LibraryMVC.Application.ViewModels.Book
 
         public string ISBN { get; set; }
 
-        [DisplayName("Dostępna do wypożyczenia:")]
+        [DisplayName("Dostępna do wypożyczenia")]
         public bool IsAvailableForReservation { get; set; }
     }
 }
