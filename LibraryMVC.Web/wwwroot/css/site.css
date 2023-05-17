@@ -19,9 +19,6 @@ body {
     background: linear-gradient(150deg, rgba(166,179,225,1) 45%, rgba(99,130,240,1) 100%);
 }
 
-dt::after{
-    content: ":";
-}
 
 .cursor-pointer {
     cursor: pointer;
