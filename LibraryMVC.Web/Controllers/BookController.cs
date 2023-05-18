@@ -6,6 +6,7 @@ using LibraryMVC.Application.ViewModels.Book;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Packaging.Signing;
 using System.Drawing.Text;
+using System.Security.Claims;
 
 namespace LibraryMVC.Web.Controllers
 {
@@ -13,11 +14,13 @@ namespace LibraryMVC.Web.Controllers
     public class BookController : Controller
     {
         private readonly IBookService _bookService;
+        private readonly ILibraryUserService _libraryUserService;
         private readonly IValidator<NewBookVm> _validator;
 
-        public BookController(IBookService bookService, IValidator<NewBookVm> newBookValidator)
+        public BookController(IBookService bookService, ILibraryUserService libraryUserService, IValidator<NewBookVm> newBookValidator)
         {
             _bookService = bookService;
+            _libraryUserService = libraryUserService;
             _validator = newBookValidator;
         }
 
@@ -68,6 +71,11 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult ViewBook(int id)
         {
+            if (!User.Identity.IsAuthenticated)
+                ViewBag.IsUserBlocked = true;
+            else
+                ViewBag.IsUserBlocked = _libraryUserService.IsBlocked(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             var bookModel = _bookService.GetBookForDetails(id);
             return View(bookModel);
         }

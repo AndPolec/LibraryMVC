@@ -8,6 +8,7 @@ namespace LibraryMVC.Domain.Interfaces
         void DeleteUser(int userId);
         IQueryable<LibraryUser> GetAllUsers();
         LibraryUser GetUserById(int userId);
+        LibraryUser GetUserByIdentityUserId(string userId);
         void UpdateUser(LibraryUser user);
         bool CheckIsUserExistsByIdentityUserId(string userId);
     }

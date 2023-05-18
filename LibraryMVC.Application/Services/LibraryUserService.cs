@@ -56,6 +56,12 @@ namespace LibraryMVC.Application.Services
             return user.isBlocked;
         }
 
+        public bool IsBlocked(string identityUserId)
+        {
+            var user = _libraryUserRepository.GetUserByIdentityUserId(identityUserId);
+            return user.isBlocked;
+        }
+
         public void BlockUser(int userId)
         {
             var user = _libraryUserRepository.GetUserById(userId);
