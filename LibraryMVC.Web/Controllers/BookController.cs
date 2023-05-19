@@ -72,9 +72,15 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult ViewBook(int id)
         {
             if (!User.Identity.IsAuthenticated)
+            {
                 ViewBag.IsUserBlocked = true;
+                TempData["warning"] = "Zaloguj się aby dodać książkę do koszyka.";
+            }
             else
+            {
                 ViewBag.IsUserBlocked = _libraryUserService.IsBlocked(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                TempData["warning"] = "Twoje konto zostało zablokowane.";
+            }
 
             var bookModel = _bookService.GetBookForDetails(id);
             return View(bookModel);
