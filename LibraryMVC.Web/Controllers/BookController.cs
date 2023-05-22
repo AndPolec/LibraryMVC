@@ -76,11 +76,13 @@ namespace LibraryMVC.Web.Controllers
                 ViewBag.IsUserBlocked = true;
                 TempData["warning"] = "Zaloguj się aby dodać książkę do koszyka.";
             }
-            else
+            else if(_libraryUserService.IsBlocked(User.FindFirstValue(ClaimTypes.NameIdentifier)))
             {
-                ViewBag.IsUserBlocked = _libraryUserService.IsBlocked(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                ViewBag.IsUserBlocked = true;
                 TempData["warning"] = "Twoje konto zostało zablokowane.";
             }
+
+            ViewBag.IsUserBlocked = false;
 
             var bookModel = _bookService.GetBookForDetails(id);
             return View(bookModel);

@@ -18,7 +18,7 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var model = _loanService.GetBorrowingCartForDetailsByIndentityUserId(userId);
             
             return View(model);
@@ -27,10 +27,24 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult AddToBorrowingCart(int bookId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (_loanService.IsBorrowingCartFull(userId))
+            {
+                TempData["error"] = "Koszyk jest pełny.";
+                return RedirectToAction("ViewBook", "Book", new { id = bookId });
+            }
+
+            if (_loanService.IsBookInBorrowingCart(bookId,userId))
+            {
+                TempData["warning"] = "Książka już znajduje się w koszyku.";
+                return RedirectToAction("ViewBook", "Book", new { id = bookId });
+            }
+
             _loanService.AddToBorrowingCart(bookId,userId);
-            TempData["SuccessMessage"] = "Książka dodana do koszyka.";
-            return RedirectToAction("Index");
+            TempData["success"] = "Książka dodana do koszyka.";
+            
+            return RedirectToAction("ViewBook", "Book", new {id = bookId});
         }
 
         [HttpGet]

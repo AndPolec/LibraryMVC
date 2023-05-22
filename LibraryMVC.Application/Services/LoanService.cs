@@ -39,13 +39,9 @@ namespace LibraryMVC.Application.Services
         }
 
         //BorrowingCart
-        public bool AddToBorrowingCart(int bookId, string identityUserId)
+        public void AddToBorrowingCart(int bookId, string identityUserId)
         {
-            if (isBorrowingCartFull(identityUserId))
-                return false;
-
             _borrowingCartRepository.AddToBorrowingCart(bookId, identityUserId);
-            return true;
         }
 
         public BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId)
@@ -70,7 +66,13 @@ namespace LibraryMVC.Application.Services
             _borrowingCartRepository.RemoveAllFromBorrowingCart(borrowingCartId);
         }
 
-        private bool isBorrowingCartFull(string identityUserId)
+        public bool IsBookInBorrowingCart(int bookId, string identityUserId)
+        {
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
+            return borrowingCart.Books.Any(b => b.Id == bookId);
+        }
+
+        public bool IsBorrowingCartFull(string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
             var count = borrowingCart.Books.Count();
