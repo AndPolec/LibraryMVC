@@ -41,7 +41,13 @@ namespace LibraryMVC.Application.Services
         //BorrowingCart
         public void AddToBorrowingCart(int bookId, string identityUserId)
         {
-            _borrowingCartRepository.AddToBorrowingCart(bookId, identityUserId);
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
+            var book = _bookRepository.GetBookById(bookId);
+            if (borrowingCart != null && book != null)
+            {
+                borrowingCart.Books.Add(book);
+                _borrowingCartRepository.UpdateBorrowingCart(borrowingCart);
+            }
         }
 
         public BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId)
@@ -58,7 +64,16 @@ namespace LibraryMVC.Application.Services
 
         public void RemoveFromBorrowingCart(int bookId, int borrowingCartId)
         {
-            _borrowingCartRepository.RemoveFromBorrowingCart(bookId, borrowingCartId);
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
+            if (borrowingCart != null)
+            {
+                var bookToRemove = borrowingCart.Books.FirstOrDefault(b => b.Id == bookId);
+                if (bookToRemove != null)
+                {
+                    borrowingCart.Books.Remove(bookToRemove);
+                    _borrowingCartRepository.UpdateBorrowingCart(borrowingCart);
+                }
+            }
         }
 
         public void ClearBorrowingCart(int borrowingCartId)

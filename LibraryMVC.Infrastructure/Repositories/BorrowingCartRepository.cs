@@ -19,6 +19,12 @@ namespace LibraryMVC.Infrastructure.Repositories
             _context = context;
         }
 
+        public void UpdateBorrowingCart(BorrowingCart borrowingCart)
+        {
+            _context.BorrowingCarts.Update(borrowingCart);
+            _context.SaveChanges();
+        }
+
         public void AddToBorrowingCart(int bookId, string identityUserId)
         {
             var borrowingCart = _context.BorrowingCarts
