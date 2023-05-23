@@ -4,58 +4,80 @@
     ViewData["Title"] = "Koszyk";
 }
 
-@if(TempData["SuccessMessage"] != null)
-{
-    <h2>@TempData["SuccessMessage"]</h2>
-}
-
 <h1>Koszyk</h1>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Tytuł
-            </th>
-            <th>
-                Autor
-            </th>
-            <th>
-                Data wydania
-            </th>
-            <th>
-                Gatunek
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Books) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AuthorFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RelaseYear)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAvailableForReservation)
-            </td>
-            <td>
-                    @Html.ActionLink("Delete", "RemoveFromBorrowingCart", new { bookId=item.Id, borrowingCartId=Model.Id })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-
-<form asp-action="CreateNewLoan" asp-controller="Loan" asp-route-borrowingCartId="@Model.Id" asp-route-userId="@Model.LibraryUserId" method="post">
-    <button class="btn btn-primary" type="submit">Zamów</button>
-</form>
-<a asp-action="RemoveAllFromBorrowingCart" asp-controller="BorrowingCart" asp-route-borrowingCartId ="@Model.Id" class="btn btn-danger">Usuń wszystko z koszyka</a>
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Nr
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Books.FirstOrDefault().Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Books.FirstOrDefault().AuthorFullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Books.FirstOrDefault().RelaseYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Books.FirstOrDefault().Genre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Books.FirstOrDefault().IsAvailable)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int nr = 1;
+                    foreach (var item in Model.Books) 
+                    {
+                        <tr>
+                            <td>
+                                @nr
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AuthorFullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RelaseYear)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Genre)
+                            </td>
+                            <td>
+                                @if (item.IsAvailable)
+                                {
+                                    <i class="fa-solid fa-square-check fa-xl"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa-solid fa-square-xmark fa-xl"></i>
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink("","RemoveFromBorrowingCart", new { bookId=item.Id, borrowingCartId=Model.Id }, new{ @class = "fa-solid fa-trash-can link-dark fa-xl"})
+                            </td>
+                        </tr>
+                        nr++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row mt-3">
+        <div class="d-grid gap-2 d-md-block">
+            <form class="form-check-inline" asp-action="CreateNewLoan" asp-controller="Loan" asp-route-borrowingCartId="@Model.Id" asp-route-userId="@Model.LibraryUserId" method="post">
+                <button class="btn btn-primary" type="submit">Zamów</button>
+            </form>
+            <a asp-action="RemoveAllFromBorrowingCart" asp-controller="BorrowingCart" asp-route-borrowingCartId ="@Model.Id" class="btn btn-danger">Usuń wszystko z koszyka</a>
+        </div>
+    </div>
+</div>

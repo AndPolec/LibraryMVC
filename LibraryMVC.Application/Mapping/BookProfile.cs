@@ -44,9 +44,9 @@ namespace LibraryMVC.Application.Mapping
                 .AfterMap((s, d) =>
                 {
                     if (s.Quantity == 0)
-                        d.IsAvailableForReservation = false;
+                        d.IsAvailable = false;
                     else
-                        d.IsAvailableForReservation = true;
+                        d.IsAvailable = true;
                 });
                 
 
