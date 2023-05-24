@@ -4,10 +4,12 @@
     ViewData["Title"] = "Koszyk";
 }
 
-<h1>Koszyk</h1>
+<partial name="_Notification" />
+
+<h1 class="fw-bold">Koszyk</h1>
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
-    <div class="row">
+    <div class="row gx-0">
         <table class="table">
             <thead>
                 <tr>
@@ -63,7 +65,9 @@
                                 }
                             </td>
                             <td>
-                                @Html.ActionLink("","RemoveFromBorrowingCart", new { bookId=item.Id, borrowingCartId=Model.Id }, new{ @class = "fa-solid fa-trash-can link-dark fa-xl"})
+                                <a asp-action="RemoveFromBorrowingCart" asp-controller="BorrowingCart" asp-route-borrowingCartId ="@Model.Id" asp-route-bookId="@item.Id" class="btn btn-danger">
+                                    <i class="fa-solid fa-trash-can link-dark fa-lg"></i>
+                                </a>
                             </td>
                         </tr>
                         nr++;
@@ -74,10 +78,10 @@
     </div>
     <div class="row mt-3">
         <div class="d-grid gap-2 d-md-block">
-            <form class="form-check-inline" asp-action="CreateNewLoan" asp-controller="Loan" asp-route-borrowingCartId="@Model.Id" asp-route-userId="@Model.LibraryUserId" method="post">
-                <button class="btn btn-primary" type="submit">Zamów</button>
+            <form class="d-inline" asp-action="CreateNewLoan" asp-controller="Loan" asp-route-borrowingCartId="@Model.Id" asp-route-userId="@Model.LibraryUserId" method="post">
+                <button class="btn btn-success" type="submit">Zamów</button>
             </form>
-            <a asp-action="RemoveAllFromBorrowingCart" asp-controller="BorrowingCart" asp-route-borrowingCartId ="@Model.Id" class="btn btn-danger">Usuń wszystko z koszyka</a>
+            <a asp-action="RemoveAllFromBorrowingCart" asp-controller="BorrowingCart" asp-route-borrowingCartId ="@Model.Id" class="btn btn-danger">Usuń wszystko</a>
         </div>
     </div>
 </div>

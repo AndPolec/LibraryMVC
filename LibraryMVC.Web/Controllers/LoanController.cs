@@ -36,17 +36,19 @@ namespace LibraryMVC.Web.Controllers
         {
             if (_libraryUserService.IsBlocked(userId))
             {
-                TempData["ErrorMessage"] = "Blokada! Nie możesz stworzyć kolejnego zamówienia.";
-                return RedirectToAction("Index");
+                TempData["error"] = "Twoje konto zostało zablokowane. Nie możesz stworzyć kolejnego zamówienia.";
+                return RedirectToAction("Index", "BorrowingCart");
             }
 
             var loanId = _loanService.AddNewLoan(borrowingCartId, userId);
             if (loanId == -1)
             {
+                TempData["error"] = "Zamówienie nie zostało utworzone. Wybrane książki nie są dostępne.";
                 return RedirectToAction("Index", "BorrowingCart");
             }
 
-            return RedirectToAction("Index");
+            TempData["success"] = $"Zamówienie nr {loanId} zostało utworzone.";
+            return RedirectToAction("Index", "BorrowingCart");
         }
 
         [HttpGet]
