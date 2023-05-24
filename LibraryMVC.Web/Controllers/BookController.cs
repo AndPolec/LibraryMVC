@@ -27,7 +27,7 @@ namespace LibraryMVC.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = _bookService.GetAllBooksForList(5,1,"");
+            var model = _bookService.GetAllBooksForList(10,1,"");
             return View(model);
         }
 

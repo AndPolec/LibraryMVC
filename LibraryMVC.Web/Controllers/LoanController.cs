@@ -24,10 +24,24 @@ namespace LibraryMVC.Web.Controllers
             _validator = validator;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = _loanService.GetAllLoansForListByIndentityUserId(userId,5,1);
+            var model = _loanService.GetAllLoansForListByIndentityUserId(userId,10,1);
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Index(int pageSize, int? pageNumber)
+        {
+            if (!pageNumber.HasValue)
+            {
+                pageNumber = 1;
+            }
+            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = _loanService.GetAllLoansForListByIndentityUserId(userId, pageSize, pageNumber.Value);
             return View(model);
         }
 

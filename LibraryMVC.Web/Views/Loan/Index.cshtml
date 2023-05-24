@@ -1,58 +1,225 @@
 ﻿@model LibraryMVC.Application.ViewModels.Loan.ListOfLoanForListVm
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Zamówienia";
 }
 
-<h1>Index</h1>
+<h1 class="fw-bold">Zamówienia</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Id
-            </th>
-            <th>
-                CreationDate
-            </th>
-            <th>
-                ReturnDueDate
-            </th>
-            <th>
-                NumberOfBorrowedBooks
-            </th>
-            <th>
-                Status
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Loans) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDueDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfBorrowedBooks)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "ViewLoan", new { loanId=item.Id}) |
-                @Html.ActionLink("Anuluj", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
+    
+    <form asp-action="Index" asp-controller="Loan" method="post" name="loanForm">
+        <div class="row mb-4 justify-content-start">
+            <div class="col-1">
+                <select asp-for="PageSize" class="form-select" onchange="this.form.submit()">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="40">40</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-hover" id="loanTable">
+                <thead>
+                    <tr class="cursor-pointer">
+                        <th id="Nr">
+                            Nr zamówienia <i class="fa-solid fa-sort"></i>
+                        </th>
+                        <th id="CreationDate">
+                            Data utworzenia <i class="fa-solid fa-sort"></i>
+                        </th>
+                        <th id="ReturnDueDate">
+                            Termin zwrotu <i class="fa-solid fa-sort"></i>
+                        </th>
+                        <th id="NumberOfBorrowedBooks">
+                            Liczba książek <i class="fa-solid fa-sort"></i>
+                        </th>
+                        <th id="Status">
+                            Status <i class="fa-solid fa-sort"></i>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Loans) {
+                        <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ViewLoan", "Loan", new { loanId=item.Id})'">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @item.CreationDate.ToString("yyyy-MM-dd HH:mm:ss")
+                            </td>
+                            <td>
+                                @if (item.ReturnDueDate == DateTime.MinValue)
+                                {
+                                    <text>-</text>
+                                }
+                                else
+                                {
+                                    @item.ReturnDueDate.ToString("yyyy-MM-dd HH:mm:ss")
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumberOfBorrowedBooks)
+                            </td>
+                            <td>
+                                @if (item.Status == "Zaległe")
+                                {
+                                    <span class="text-danger fw-bold">
+                                        <i class="fa-solid fa-circle-exclamation"> </i>
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </span>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "ViewLoan", new { loanId=item.Id}) |
+                                @Html.ActionLink("Anuluj", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row mt-3">
+            <nav class="p-0">
+                <ul class="pagination">
+                    @{  
+                        double numberOfPages = Math.Ceiling((double)Model.Count / Model.PageSize);
+                        int currentPage = Model.CurrentPage;
+
+                        if(currentPage == 1)
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link">Poprzednia</a>
+                            </li>
+                        }else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:PagerClick(@currentPage-1)">Poprzednia</a>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= numberOfPages; i++)
+                        {
+                            if (i != Model.CurrentPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript:PagerClick(@i)">@i</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item active">
+                                    <a class="page-link">@i</a>
+                                </li>
+                            }
+                        }
+
+                        if (currentPage == numberOfPages)
+                        {
+                            <li class="page-item disabled">
+                                <a class="page-link">Następna</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                            <a class="page-link" href="javascript:PagerClick(@currentPage+1)">Następna</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </nav>
+
+            <input type="hidden" name="pageNumber" id="pageNumber" />
+            <input type="hidden" name="pageSize" id="pageSize" />
+        </div>
+    </form>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        let sortedColumn = null;
+        let sortOrder = 1;
+
+        function sortTable(columnId) 
+        {
+            const table = document.getElementById('loanTable');
+            const rows = Array.from(table.rows).slice(1);
+            const headerCell = document.getElementById(columnId);
+            const icons = document.querySelectorAll('.fa-sort-up, .fa-sort-down');
+            icons.forEach(icon => {
+                icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                icon.classList.add('fa-sort');
+            });
+
+            if (sortedColumn === headerCell) {
+                sortOrder = -sortOrder;
+            } else {
+                sortedColumn = headerCell;
+                sortOrder = 1;
+            }
+
+            const icon = headerCell.querySelector('i');
+            icon.classList.remove('fa-sort');
+            icon.classList.add(sortOrder === 1 ? 'fa-sort-up' : 'fa-sort-down');
+
+            const sortedRows = rows.sort((a, b) => {
+                const cellA = a.cells[sortedColumn.cellIndex];
+                const cellB = b.cells[sortedColumn.cellIndex];
+                let aValue = cellA.innerText;
+                let bValue = cellB.innerText;
+
+                if (columnId === 'Nr' || columnId === 'NumberOfBorrowedBooks') {
+                    aValue = parseInt(aValue);
+                    bValue = parseInt(bValue);
+                }
+                else if (columnId === 'ReturnDueDate' || columnId === 'CreationDate') {
+                    aValue = new Date(parseDate(aValue));
+                    bValue = new Date(parseDate(bValue));
+                }
+
+                if (aValue < bValue) {
+                    return -sortOrder;
+                }
+                if (aValue > bValue) {
+                    return sortOrder;
+                }
+                return 0;
+            });
+
+            for (const row of sortedRows) {
+                table.tBodies[0].appendChild(row);
+            }
+        }
+
+        function parseDate(value) 
+        {
+            if (value === "-") {
+                return null; 
+            } else {
+                return new Date(value);
+            }
+        }
+
+        function PagerClick(index)
+        {
+            document.getElementById("pageNumber").value = index;
+            document.forms["loanForm"].submit();
+        }
+
+        document.getElementById("Nr").addEventListener("click",() => sortTable("Nr"));
+        document.getElementById("CreationDate").addEventListener("click",() => sortTable("CreationDate"));
+        document.getElementById("ReturnDueDate").addEventListener("click",() => sortTable("ReturnDueDate"));
+        document.getElementById("NumberOfBorrowedBooks").addEventListener("click",() => sortTable("NumberOfBorrowedBooks"));
+        document.getElementById("Status").addEventListener("click",() => sortTable("Status"));
+
+    </script>
 }
-    </tbody>
-</table>

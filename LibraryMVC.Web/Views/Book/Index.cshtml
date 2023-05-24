@@ -11,7 +11,7 @@
         <div class="row mb-4 justify-content-between">
             <div class="col-1">
                 <select asp-for="PageSize" class="form-select" onchange="this.form.submit()">
-                    <option value="5" selected>5</option>
+                    <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="40">40</option>
@@ -99,18 +99,17 @@
                         {
                             if (i != Model.CurrentPage)
                             {
-                                        <li class="page-item">
-                                            <a class="page-link" href="javascript:PagerClick(@i)">@i</a>
-                                        </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript:PagerClick(@i)">@i</a>
+                                </li>
                             }
                             else
                             {
-                                        <li class="page-item active">
-                                            <a class="page-link">@i</a>
-                                        </li>
+                                <li class="page-item active">
+                                    <a class="page-link">@i</a>
+                                </li>
                             }
                         }
-
 
                         if (currentPage == numberOfPages)
                         {

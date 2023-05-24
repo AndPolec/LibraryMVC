@@ -199,6 +199,7 @@ namespace LibraryMVC.Application.Services
         {
             var loansVm = _loanRepository.GetAllLoans()
                 .Where(l => l.LibraryUser.IdentityUserId == userId)
+                .OrderByDescending(l => l.CreationDate)
                 .ProjectTo<LoanForListVm>(_mapper.ConfigurationProvider)
                 .ToList();
 
