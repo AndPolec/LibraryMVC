@@ -76,10 +76,6 @@
                                     @Html.DisplayFor(modelItem => item.Status)
                                 }
                             </td>
-                            <td>
-                                @Html.ActionLink("Details", "ViewLoan", new { loanId=item.Id}) |
-                                @Html.ActionLink("Anuluj", "Delete", new { /* id=item.PrimaryKey */ })
-                            </td>
                         </tr>
                     }
                 </tbody>
