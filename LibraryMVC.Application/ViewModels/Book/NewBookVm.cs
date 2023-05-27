@@ -47,7 +47,7 @@ namespace LibraryMVC.Application.ViewModels.Book
         {
             RuleFor(x => x.Id).NotNull();
             RuleFor(x => x.Title).NotEmpty().WithMessage("Tytuł nie może być pusty.");
-            RuleFor(x => x.ISBN).NotEmpty().WithMessage("ISBN nie może być pusty.")
+            RuleFor(x => x.ISBN).Cascade(CascadeMode.Stop).NotEmpty().WithMessage("ISBN nie może być pusty.")
                 .Custom((i, context) =>
                 {
                     if (!(i.Length == 10 || i.Length == 13))
