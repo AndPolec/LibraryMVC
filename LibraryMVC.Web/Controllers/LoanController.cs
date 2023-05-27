@@ -6,6 +6,7 @@ using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 
 namespace LibraryMVC.Web.Controllers
@@ -77,9 +78,15 @@ namespace LibraryMVC.Web.Controllers
         {
             var result = _loanService.CancelLoan(loanId);
             if (result)
-                return RedirectToAction("Index");
+            {
+                TempData["success"] = "Zamówienie anulowane.";
+                return RedirectToAction("ViewLoan", new { loanId = loanId });
+            }
             else
-                return RedirectToAction("ViewLoan", loanId);
+            {
+                TempData["error"] = "Zamówienie nie zostało anulowane.";
+                return RedirectToAction("ViewLoan", new { loanId = loanId });
+            }
         }
 
         [HttpGet]

@@ -1,106 +1,150 @@
 ﻿@model LibraryMVC.Application.ViewModels.Loan.LoanDetailsVm
 
 @{
-    ViewData["Title"] = "ViewLoan";
+    ViewData["Title"] = $"Zamówienie nr {@Model.Id}";
 }
 
-<h1>ViewLoan</h1>
+<partial name="_Notification" />
 
-<div>
-    <h4>LoanDetailsVm</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReturnDueDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReturnDueDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsCheckedOut)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsCheckedOut)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CheckOutDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CheckOutDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsReturned)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsReturned)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReturnDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReturnDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Penalty)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Penalty)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-
-    <table>
-        <thead>
-            <tr>
-                <th>
-                    Id
-                </th>
-                <th>
-                    Title
-                </th>
-                <th>
-                    Author
-                </th>
-                <th>
-                    RelaseYear
-                </th>
-                <th>
-                    Genre
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var book in Model.Books)
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
+    <div class="row">
+        <div class="col-6">
+            <h3>@ViewData["Title"]</h3>
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @if (Model.Status == "Zaległe")
+                {
+                    <strong class="text-danger">@Html.DisplayFor(model => model.Status)</strong>
+                }
+                else
+                {
+                    <strong>@Html.DisplayFor(model => model.Status)</strong>
+                }
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CreationDate)
+            </dd>
+            @if (Model.IsCheckedOut)
             {
-                <tr>
-                    <td> @Html.DisplayFor(modelItem => book.Id) </td>
-                    <td> @Html.DisplayFor(modelItem => book.Title) </td>
-                    <td> @Html.DisplayFor(modelItem => book.AuthorFullName) </td>
-                    <td> @Html.DisplayFor(modelItem => book.RelaseYear) </td>
-                    <td> @Html.DisplayFor(modelItem => book.Genre) </td>
-                </tr>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IsCheckedOut)
+                </dt>
+                <dd class="col-sm-10">
+                    @if (Model.IsCheckedOut)
+                    {
+                        <i class="fa-solid fa-square-check fa-xl"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-square-xmark fa-xl"></i>
+                    }
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CheckOutDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CheckOutDate)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ReturnDueDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ReturnDueDate)
+                </dd>
             }
-        </tbody>
-    </table>
+           
+            @if (Model.IsReturned)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IsReturned)
+                </dt>
+                <dd class="col-sm-10">
+                    @if (Model.IsReturned)
+                    {
+                        <i class="fa-solid fa-square-check fa-xl"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-square-xmark fa-xl"></i>
+                    }
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ReturnDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ReturnDate)
+                </dd>
+            }
+            @if (Model.isOverdue)
+            {
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.isOverdue)
+                </dt>
+                <dd class="col-sm-10">
+                    @if (Model.isOverdue)
+                    {
+                        <i class="fa-solid fa-square-check fa-xl"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-square-xmark fa-xl"></i>
+                    }
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Penalty)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Penalty)
+                </dd>
+            }
+        </dl>
+    </div>
+    <div class="row mt-3">
+        <div class="col-6">
+            <h5>Wypożyczone książki</h5>
+            <hr />
+        </div>
+        <div class="col-12">
+            @{int count = 1;}
+            @foreach (var item in Model.Books)
+            {
+                <text>@count. @item.Title, @item.AuthorFullName, @item.RelaseYear</text>
+                <br />
+                count++; 
+            }
+
+            <h1>//To implement: returned books</h1>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="d-grid gap-2 d-md-block">
+            <a class="btn btn-primary" role="button" asp-action="Index">
+                <i class="fa-solid fa-arrow-left-long"></i> Wróć
+            </a>
+            @if (Model.IsCheckedOut)
+            {
+                <a asp-action="CancelLoan" asp-controller="Loan" asp-route-loanId="@Model.Id" class="btn btn-danger" role="button">
+                    <i class="fa-solid fa-circle-xmark"></i> Anuluj
+                </a>
+            }
+            else
+            {
+                <button class="btn btn-danger" disabled>
+                    <i class="fa-solid fa-circle-xmark"></i> Anuluj
+                </button>
+            }
+        </div>
+    </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Index">Back to List</a>
-    <a asp-action="CancelLoan" asp-route-loanId="@Model.Id">Anuluj</a>
-</div>
+
