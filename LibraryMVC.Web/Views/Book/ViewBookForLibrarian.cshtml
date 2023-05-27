@@ -1,0 +1,86 @@
+﻿@model LibraryMVC.Application.ViewModels.Book.BookDetailsVm
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<partial name="_Notification" />
+
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
+    <div class="row mb-4">
+        <div class="row">
+            <div class="col-5 d-flex justify-content-center align-items-center">
+                <i class="fa-regular fa-book fa-10x"></i>
+            </div>
+            <div class="col-7">
+                <dl class="row">
+                    <dt class="col-sm-3 my-auto">
+                        @Html.DisplayNameFor(model => model.Title)
+                    </dt>
+                    <dd class="col-sm-9 fs-2">
+                        @Html.DisplayFor(model => model.Title)
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.AuthorFullName)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.AuthorFullName)
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.RelaseYear)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.RelaseYear)
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.PublisherName)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.PublisherName)
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.ISBN)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.ISBN)
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.Genres)
+                    </dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.Genres)
+                    </dd>
+                    <dt class="col-sm-3">
+                        @Html.DisplayNameFor(model => model.IsAvailableForReservation)
+                    </dt>
+                    <dd class="col-sm-9 my-auto">
+                        @if (Model.IsAvailableForReservation)
+                        {
+                            <i class="fa-solid fa-square-check fa-xl"></i>
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-square-xmark fa-xl"></i>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="d-grid gap-2 d-md-block">
+                <a class="btn btn-primary" role="button" asp-action="AdminBookPanel">
+                    <i class="fa-solid fa-arrow-left-long"></i> Wróć
+                </a>
+                <a class="btn btn-warning" role="button" asp-action="EditBook" asp-route-id="@Model.Id">
+                    <i class="fa-solid fa-pen-to-square"></i> Edytuj
+                </a>
+                <a class="btn btn-danger" role="button" asp-action="DeleteBook" asp-route-id="@Model.Id">
+                    <i class="fa-solid fa-trash-can"></i> Usuń
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</div>
+

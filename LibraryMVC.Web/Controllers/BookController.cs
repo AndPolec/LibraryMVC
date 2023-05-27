@@ -107,8 +107,9 @@ namespace LibraryMVC.Web.Controllers
                 return View(model);
             }
 
-            var id = _bookService.AddBook(model);
-            return RedirectToAction("AdminBookPanel");
+            var bookId = _bookService.AddBook(model);
+            TempData["success"] = "Książka została dodana.";
+            return RedirectToAction("ViewBookForLibrarian", new { id = bookId });
         }
 
         [HttpGet]
@@ -122,14 +123,23 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult EditBook(NewBookVm model)
         {
             _bookService.UpdateBook(model);
-            return RedirectToAction("AdminBookPanel");
+            TempData["success"] = "Zmiany zostały zapisane.";
+            return RedirectToAction("ViewBookForLibrarian", new {id = model.Id});
         }
 
         [HttpGet]
         public IActionResult DeleteBook(int id)
         {
             _bookService.DeleteBook(id);
+            TempData["success"] = "Książka została usunięta.";
             return RedirectToAction("AdminBookPanel");
+        }
+
+        [HttpGet]
+        public IActionResult ViewBookForLibrarian(int id)
+        {
+            var bookModel = _bookService.GetBookForDetails(id);
+            return View(bookModel);
         }
     }
 }

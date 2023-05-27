@@ -4,6 +4,8 @@
     ViewData["Title"] = "Zarządzaj książkami";
 }
 
+<partial name="_Notification" />
+
 <h1>Zarządzaj książkami</h1>
 
 <div class="my-4">
@@ -62,7 +64,7 @@
                      }
                     @foreach (var item in Model.Books)
                     {
-                            <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ViewBook", "Book", new { id=item.Id})'">
+                            <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ViewBookForLibrarian", "Book", new { id=item.Id})'">
                                 <td>
                                     @position
                                     @{
@@ -82,8 +84,14 @@
                                     @Html.DisplayFor(modelItem => item.Genre)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Edytuj", "EditBook", new { id=item.Id }) |
-                                    @Html.ActionLink("Usuń", "DeleteBook", new { id=item.Id })
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <a class="btn btn-warning" role="button" asp-action="EditBook" asp-route-id="@item.Id">
+                                            <i class="fa-solid fa-pen-to-square"></i> Edytuj
+                                        </a>
+                                        <a class="btn btn-danger" role="button" asp-action="DeleteBook" asp-route-id="@item.Id">
+                                            <i class="fa-solid fa-trash-can"></i> Usuń
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                     }
