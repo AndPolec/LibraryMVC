@@ -20,6 +20,7 @@ namespace LibraryMVC.Application.Services
     {
         private decimal _OverduePenaltyRatePerDayForOneBook = 0.2M;
         private int _durationOfFreeLoanInDays = 21;
+        private int _maxBooksInOrder = 5;
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
         private readonly ILoanRepository _loanRepository;
@@ -92,7 +93,7 @@ namespace LibraryMVC.Application.Services
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
             var count = borrowingCart.Books.Count();
             
-            if (count < 5)
+            if (count < _maxBooksInOrder)
                 return false;
 
             return true;
@@ -326,7 +327,8 @@ namespace LibraryMVC.Application.Services
             var settings = new LoanSettingsVm()
             {
                 penaltyRatePerDay = _OverduePenaltyRatePerDayForOneBook,
-                durationOfFreeLoan = _durationOfFreeLoanInDays
+                durationOfFreeLoan = _durationOfFreeLoanInDays,
+                maxBooksInOrder = _maxBooksInOrder
             };
             return settings;
         }
@@ -335,6 +337,7 @@ namespace LibraryMVC.Application.Services
         {
             _OverduePenaltyRatePerDayForOneBook = model.penaltyRatePerDay;
             _durationOfFreeLoanInDays = model.durationOfFreeLoan;
+            _maxBooksInOrder = model.maxBooksInOrder;
         }
 
     }

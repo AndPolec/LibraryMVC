@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.Services;
@@ -15,14 +16,16 @@ namespace LibraryMVC.Web.Controllers
     public class LoanController : Controller
     {
         private readonly ILoanService _loanService;
-        private readonly IValidator<NewReturnRecordVm> _validator; 
+        private readonly IValidator<NewReturnRecordVm> _validatorNewReturnRecordVm; 
+        private readonly IValidator<LoanSettingsVm> _validatorLoanSettingsVm; 
         private readonly ILibraryUserService _libraryUserService;
 
-        public LoanController(ILoanService loanService, ILibraryUserService libraryUserService, IValidator<NewReturnRecordVm> validator)
+        public LoanController(ILoanService loanService, ILibraryUserService libraryUserService, IValidator<NewReturnRecordVm> validatorNewReturnRecordVm,IValidator<LoanSettingsVm> validatorLoanSettingsVm)
         {
             _loanService = loanService;
             _libraryUserService = libraryUserService;
-            _validator = validator;
+            _validatorNewReturnRecordVm = validatorNewReturnRecordVm;
+            _validatorLoanSettingsVm = validatorLoanSettingsVm;
         }
 
         [HttpGet]
@@ -121,7 +124,7 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult ConfirmReturn(NewReturnRecordVm model)
         {
-            var result = _validator.Validate(model);
+            var result = _validatorNewReturnRecordVm.Validate(model);
             int numberOfSelectedBooks = model.LostOrDestroyedBooksId.Count + model.ReturnedBooksId.Count;
 
             if (numberOfSelectedBooks < model.NumberOfBorrowedBooks)
@@ -163,7 +166,16 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult ChangeGlobalLoanSettings(LoanSettingsVm model)
         {
+            var result = _validatorLoanSettingsVm.Validate(model);
+
+            if (!result.IsValid)
+            {
+                result.AddToModelState(ModelState);
+                return View(model);
+            }
+
             _loanService.SetGlobalLoanSettings(model);
+            TempData["success"] = "Ustawienia zostały zmienione.";
             return View(model);
         }
     }

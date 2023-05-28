@@ -4,31 +4,36 @@
     ViewData["Title"] = "ChangeGlobalLoanSettings";
 }
 
-<h1>ChangeGlobalLoanSettings</h1>
+<partial name="_Notification" />
 
-<h4>LoanSettingsVm</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="ChangeGlobalLoanSettings">
-            <div class="form-group">
-                <label asp-for="penaltyRatePerDay" class="control-label"></label>
-                <input asp-for="penaltyRatePerDay" class="form-control" />
-                <span asp-validation-for="penaltyRatePerDay" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="durationOfFreeLoan" class="control-label"></label>
-                <input asp-for="durationOfFreeLoan" class="form-control" />
-                <span asp-validation-for="durationOfFreeLoan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<h1>Ustawiania wypożyczeń</h1>
+
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border mt-3">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="ChangeGlobalLoanSettings">
+                <div class="form-group mb-3">
+                    <label asp-for="penaltyRatePerDay" class="control-label"></label>
+                    <input asp-for="penaltyRatePerDay" class="form-control" />
+                    <span asp-validation-for="penaltyRatePerDay" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="durationOfFreeLoan" class="control-label"></label>
+                    <input asp-for="durationOfFreeLoan" class="form-control" />
+                    <span asp-validation-for="durationOfFreeLoan" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="maxBooksInOrder" class="control-label"></label>
+                    <input asp-for="maxBooksInOrder" class="form-control" />
+                    <span asp-validation-for="maxBooksInOrder" class="text-danger"></span>
+                </div>
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa-solid fa-circle-plus"></i> Zapisz zmiany
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 

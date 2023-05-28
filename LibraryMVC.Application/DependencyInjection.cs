@@ -4,6 +4,7 @@ using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.Mapping;
 using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Book;
+using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Application.ViewModels.User;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ namespace LibraryMVC.Application
             services.AddTransient<IValidator<NewBookVm>, NewBookVmValidator>();
             services.AddTransient<IValidator<NewLibraryUserVm>, NewLibraryUserVmValidator>();
             services.AddTransient<IValidator<NewReturnRecordVm>, NewReturnRecordVmValidator>();
+            services.AddTransient<IValidator<LoanSettingsVm>, LoanSettingsVmValidator>();
 
             return services;
         }
