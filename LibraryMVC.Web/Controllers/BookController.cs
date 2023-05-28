@@ -122,6 +122,14 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult EditBook(NewBookVm model)
         {
+            var result = _validator.Validate(model);
+            if (!result.IsValid)
+            {
+                result.AddToModelState(ModelState);
+                model = _bookService.SetParametersToVm(model);
+                return View(model);
+            }
+
             _bookService.UpdateBook(model);
             TempData["success"] = "Zmiany zostały zapisane.";
             return RedirectToAction("ViewBookForLibrarian", new {id = model.Id});
