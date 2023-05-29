@@ -1,70 +1,65 @@
 ﻿@model IEnumerable<LibraryMVC.Application.ViewModels.Loan.LoanForConfirmReturnListVm>
 
 @{
-    ViewData["Title"] = "ConfirmReturnIndex";
+    ViewData["Title"] = "Potwierdź zwrot";
 }
 
-<h1>ConfirmReturnIndex</h1>
+<h1 class="fw-bold">Potwierdź zwrot</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReturnDueDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfBorrowedBooks)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Penalty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReturnDueDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfBorrowedBooks)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Penalty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.ActionLink("Potwierdź", "ConfirmReturn", new { loanId=item.Id }) |
-                
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReturnDueDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumberOfBorrowedBooks)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Penalty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ConfirmReturn", "Loan", new { loanId=item.Id })'">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReturnDueDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumberOfBorrowedBooks)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Penalty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
