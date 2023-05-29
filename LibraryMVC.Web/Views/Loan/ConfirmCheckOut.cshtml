@@ -1,61 +1,71 @@
 ﻿@model IEnumerable<LibraryMVC.Application.ViewModels.Loan.LoanForConfirmCheckOutListVm>
 
 @{
-    ViewData["Title"] = "ConfirmCheckOut";
+    ViewData["Title"] = "Potwierdź wydanie książek";
 }
 
-<h1>ConfirmCheckOut</h1>
+<partial name="_Notification" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BorrowedBooks)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @foreach(var book in item.BorrowedBooks){
-                        @book <br />
-                    }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <form asp-action="ConfirmCheckOut" asp-controller="Loan" asp-route-loanId="@item.Id" method="post">
-                <button class="btn btn-primary" type="submit">Potwierdź wydanie</button>
-                </form>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<h1 class="fw-bold">Potwierdź wydanie książek</h1>
+
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border mt-3">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BorrowedBooks)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) 
+            {
+                <tr class="border-top border-secondary">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @for (int i = 0; i < item.BorrowedBooks.Count; i++)
+                        {
+                            <text>@(i + 1). @item.BorrowedBooks[i] <br /></text>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        <form asp-action="ConfirmCheckOut" asp-controller="Loan" asp-route-loanId="@item.Id" method="post">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa-solid fa-circle-check"></i> Potwierdź
+                                </button>
+                                <a asp-action="CancelLoan" asp-controller="Loan" asp-route-loanId="@item.Id" class="btn btn-danger" role="button">
+                                    <i class="fa-solid fa-circle-xmark"></i> Anuluj
+                                </a>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

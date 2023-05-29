@@ -34,7 +34,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("BorrowingCartsId");
 
-                    b.ToTable("BookBorrowingCart");
+                    b.ToTable("BookBorrowingCart", (string)null);
                 });
 
             modelBuilder.Entity("BookLoan", b =>
@@ -49,7 +49,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("LoansId");
 
-                    b.ToTable("BookLoan");
+                    b.ToTable("BookLoan", (string)null);
                 });
 
             modelBuilder.Entity("BookReturnRecord", b =>
@@ -98,7 +98,7 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.HasIndex("LibraryUserId")
                         .IsUnique();
 
-                    b.ToTable("AdditionalLibrarianInfo");
+                    b.ToTable("AdditionalLibrarianInfo", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Address", b =>
@@ -137,7 +137,7 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Author", b =>
@@ -158,7 +158,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Book", b =>
@@ -195,7 +195,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("PublisherId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.BookGenre", b =>
@@ -210,7 +210,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BookGenre");
+                    b.ToTable("BookGenre", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.BorrowingCart", b =>
@@ -229,7 +229,7 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.HasIndex("LibraryUserId")
                         .IsUnique();
 
-                    b.ToTable("BorrowingCarts");
+                    b.ToTable("BorrowingCarts", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.CheckOutRecord", b =>
@@ -256,7 +256,7 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.HasIndex("LoanId")
                         .IsUnique();
 
-                    b.ToTable("CheckOutRecords");
+                    b.ToTable("CheckOutRecords", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Genre", b =>
@@ -273,7 +273,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.LibraryUser", b =>
@@ -309,7 +309,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LibraryUsers");
+                    b.ToTable("LibraryUsers", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Loan", b =>
@@ -341,7 +341,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Loans");
+                    b.ToTable("Loans", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Publisher", b =>
@@ -358,7 +358,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Publishers");
+                    b.ToTable("Publishers", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.ReturnRecord", b =>
@@ -401,7 +401,7 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.HasIndex("LoanId")
                         .IsUnique();
 
-                    b.ToTable("ReturnRecords");
+                    b.ToTable("ReturnRecords", (string)null);
                 });
 
             modelBuilder.Entity("LibraryMVC.Domain.Model.Status", b =>
@@ -418,7 +418,7 @@ namespace LibraryMVC.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
 
                     b.HasData(
                         new

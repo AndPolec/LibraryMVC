@@ -241,6 +241,7 @@ namespace LibraryMVC.Application.Services
             var loans = _loanRepository.GetAllLoans()
                 .Where(l => l.Status.Id == 1)
                 .ProjectTo<LoanForConfirmCheckOutListVm>(_mapper.ConfigurationProvider)
+                .OrderBy(l => l.Id)
                 .ToList();
 
             return loans;
@@ -267,11 +268,12 @@ namespace LibraryMVC.Application.Services
         public List<LoanForConfirmReturnListVm> GetAllLoansForConfirmReturnList()
         {
             var loansVm = _loanRepository.GetAllLoans()
-                .Where(l => l.Status.Id == 2 || l.Status.Id == 4) //Staus = "Wypożyczone" || "Zaległe"
-                .ProjectTo<LoanForConfirmReturnListVm>(_mapper.ConfigurationProvider)
+                .Where(l => l.StatusId == 2 || l.StatusId == 4) //Staus = "Wypożyczone" || "Zaległe"
+                .OrderBy(l => l.Id)
                 .ToList();
+            var loansToReturn = _mapper.Map<List<Loan>,List<LoanForConfirmReturnListVm>>(loansVm);
 
-            return loansVm;
+            return loansToReturn;
         }
 
         public NewReturnRecordVm GetInfoForConfirmReturn(int loanId)

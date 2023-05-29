@@ -104,6 +104,7 @@ namespace LibraryMVC.Web.Controllers
         {
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _loanService.ConfirmCheckOut(loanId, librarianId);
+            TempData["success"] = $"Potwierdzono wydanie dla zamówienia nr {loanId}.";
             return RedirectToAction("ConfirmCheckOut");
         }
 
