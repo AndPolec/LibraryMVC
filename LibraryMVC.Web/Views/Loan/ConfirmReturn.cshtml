@@ -8,79 +8,96 @@
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
     <div class="row">
-        <div class="col-md-4">
-            <form asp-action="ConfirmReturn">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="ConfirmReturn">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
                 <input asp-for="Id" type="hidden" />
                 <input asp-for="LoanId" type="hidden" value="@Model.LoanId" />
                 <input asp-for="NumberOfBorrowedBooks" type="hidden" value="@Model.NumberOfBorrowedBooks" />
-                <div class="form-group">
-                    <label asp-for="FullLibraryUserName" class="control-label"></label>
-                    <input asp-for="FullLibraryUserName" class="form-control" />
-                    <span asp-validation-for="FullLibraryUserName" class="text-danger"></span>
+                <input asp-for="OverduePenalty" type="hidden" value="@Model.OverduePenalty" />
+                <input asp-for="FullLibraryUserName" type="hidden" value="@Model.FullLibraryUserName" />
+                <input asp-for="ReturnDueDate" type="hidden" value="@Model.ReturnDueDate" />
+
+                <dl class="row mb-3">
+                    <dt class="col-sm-3 my-auto" >
+                        @Html.DisplayNameFor(model => model.FullLibraryUserName)
+                    </dt>
+                    <dd class="col-sm-9 fs-4">
+                        @Html.DisplayFor(model => model.FullLibraryUserName)
+                    </dd>
+                    <dt class="col-sm-3 my-auto">
+                        @Html.DisplayNameFor(model => model.ReturnDueDate)
+                    </dt>
+                    <dd class="col-sm-9 fs-4">
+                        @Html.DisplayFor(model => model.ReturnDueDate)
+                    </dd>
+                    <dt class="col-sm-3 my-auto">
+                        @Html.DisplayNameFor(model => model.OverduePenalty)
+                    </dt>
+                    <dd class="col-sm-9 fs-4">
+                        @Html.DisplayFor(model => model.OverduePenalty) zł
+                    </dd>
+                </dl>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class ="d-block mb-2">Wybierz zwrócone</label>
+                        <select asp-for="ReturnedBooksId" class="selectpicker show-tick" multiple title="Zaznacz zwrócone książki">
+                            @foreach (var genre in Model.BorrowedBooks)
+                            {
+                                <option value="@genre.Id">@genre.Title</option>
+                            }
+                        </select>
+                        <span asp-validation-for="BorrowedBooks" class="text-danger d-block"></span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="CheckOutDate" class="control-label"></label>
-                    <input asp-for="CheckOutDate" class="form-control" />
-                    <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="d-block mb-2">Wybierz zgubione/zniszczone</label>
+                        <select asp-for="LostOrDestroyedBooksId" class="selectpicker show-tick mb-3" multiple title="Zaznacz zgubione/zniszczone książki">
+                            @foreach (var genre in Model.BorrowedBooks)
+                            {
+                                <option value="@genre.Id">@genre.Title</option>
+                            }
+                        </select>
+                        <span asp-validation-for="BorrowedBooks" class="text-danger d-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AdditionalPenaltyForLostAndDestroyedBooks" class="control-label mb-2"></label>
+                        <input asp-for="AdditionalPenaltyForLostAndDestroyedBooks" class="form-control w-auto" />
+                        <span asp-validation-for="AdditionalPenaltyForLostAndDestroyedBooks" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="ReturnDueDate" class="control-label"></label>
-                    <input asp-for="ReturnDueDate" class="form-control" />
-                    <span asp-validation-for="ReturnDueDate" class="text-danger"></span>
-                </div>
-                <div class="form-group form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" asp-for="IsPenaltyPaid" /> @Html.DisplayNameFor(model => model.IsPenaltyPaid)
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label asp-for="OverduePenalty" class="control-label"></label>
-                    <input asp-for="OverduePenalty" class="form-control" />
-                    <span asp-validation-for="OverduePenalty" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AdditionalPenaltyForLostAndDestroyedBooks" class="control-label"></label>
-                    <input asp-for="AdditionalPenaltyForLostAndDestroyedBooks" class="form-control" />
-                    <span asp-validation-for="AdditionalPenaltyForLostAndDestroyedBooks" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TotalPenalty" class="control-label"></label>
-                    <input asp-for="TotalPenalty" class="form-control" />
-                    <span asp-validation-for="TotalPenalty" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Comments" class="control-label"></label>
-                    <input asp-for="Comments" class="form-control" />
+            </div>
+            <hr />
+            <div class="row">
+                <div class="form-group mb-3">
+                    <label asp-for="Comments" class="control-label mb-2"></label>
+                    <textarea asp-for="Comments" class="form-control" rows="3"> </textarea>
                     <span asp-validation-for="Comments" class="text-danger"></span>
                 </div>
+                
+                <div class="form-group">
+                    <label asp-for="TotalPenalty" class="control-label mb-2"></label>
+                    <input asp-for="TotalPenalty" class="form-control w-auto" />
+                    <span asp-validation-for="TotalPenalty" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-check">
+                    <label class="form-check-label mb-2"> </label>
+                    <input class="form-check-input" asp-for="IsPenaltyPaid" /> @Html.DisplayNameFor(model => model.IsPenaltyPaid)
+                </div>
+               
             
-                <div class="form-group">
-                    <label>Wybierz zwrócone:</label>
-                    <select asp-for="ReturnedBooksId" class="form-select" multiple>
-                       @foreach (var genre in Model.BorrowedBooks)
-                        {
-                            <option value="@genre.Id">@genre.Title</option>
-                        }
-                    </select>   
-                    <span asp-validation-for="BorrowedBooks" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label>Wybierz zgubione:</label>
-                    <select asp-for="LostOrDestroyedBooksId" class="form-select" multiple>
-                       @foreach (var genre in Model.BorrowedBooks)
-                        {
-                            <option value="@genre.Id">@genre.Title</option>
-                        }
-                    </select>   
-                    <span asp-validation-for="BorrowedBooks" class="text-danger"></span>
-                </div>
+              
 
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 <div>
