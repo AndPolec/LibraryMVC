@@ -32,3 +32,6 @@ body {
     background-color: #afbbe6;
 }
 
+.checkbox-xl {
+    transform: scale(1.7);
+}

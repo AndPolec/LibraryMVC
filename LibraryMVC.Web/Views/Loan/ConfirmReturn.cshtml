@@ -6,6 +6,7 @@
 
 <h1 class="fw-bold">Protokół zwrotu</h1>
 
+
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
     <div class="row">
         <form asp-action="ConfirmReturn">
@@ -79,18 +80,18 @@
                     <span asp-validation-for="Comments" class="text-danger"></span>
                 </div>
             </div>
-            <div class="row align-items-end">
-                <div class="col-3">
-                    <div class="form-group w-">
+            <div class="row gy-5 align-items-end">
+                <div class="col-md-6 col-lg-3">
+                    <div class="form-group">
                         <label asp-for="TotalPenalty" class="control-label mb-2"></label>
-                        <input asp-for="TotalPenalty" class="form-control w-auto" />
+                        <input readonly asp-for="TotalPenalty" class="form-control w-auto" />
                         <span asp-validation-for="TotalPenalty" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-md-6 col-lg-3">
                     <div class="form-group form-check">
-                        <label class="form-check-label mb-2"> </label>
-                        <input class="form-check-input" asp-for="IsPenaltyPaid" /> @Html.DisplayNameFor(model => model.IsPenaltyPaid)
+                        <label class="form-check-label ms-2"> @Html.DisplayNameFor(model => model.IsPenaltyPaid)</label>
+                        <input class="form-check-input checkbox-xl" asp-for="IsPenaltyPaid" /> 
                     </div>
                 </div>
             </div>
@@ -111,9 +112,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('AdditionalPenaltyForLostAndDestroyedBooks').addEventListener('input', function () {
-            var additionalPenalty = parseFloat(this.value) || 0;
-            var overduePenalty = parseFloat(document.getElementById('OverduePenalty').value) || 0;
-            var totalPenalty = overduePenalty + additionalPenalty;
+            let additionalPenalty = parseFloat(this.value.replace(',', '.')) || 0;
+            let overduePenalty = parseFloat(document.getElementById('OverduePenalty').value.replace(',', '.')) || 0;
+            let totalPenalty = additionalPenalty + overduePenalty;
             document.getElementById('TotalPenalty').value = totalPenalty.toFixed(2);
         });
     });
