@@ -31,7 +31,8 @@ namespace LibraryMVC.Infrastructure.Repositories
             var loan = _context.Loans
                 .Include(l => l.Status)
                 .Include(l => l.CheckOutRecord)
-                .Include(l => l.ReturnRecord)
+                .Include(l => l.ReturnRecord).ThenInclude(rr => rr.LostOrDestroyedBooks)
+                .Include(l => l.ReturnRecord).ThenInclude(rr => rr.ReturnedBooks)
                 .Include(l => l.Books).ThenInclude(b => b.Author)
                 .Include(l => l.Books).ThenInclude(b => b.BookGenres).ThenInclude(bg => bg.Genre)
                 .Include(l => l.LibraryUser).ThenInclude(lu => lu.additionalLibrarianInfo)

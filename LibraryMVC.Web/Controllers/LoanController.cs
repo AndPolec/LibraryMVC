@@ -125,15 +125,23 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult ConfirmReturn(NewReturnRecordVm model)
         {
-            var result = _validatorNewReturnRecordVm.Validate(model);
-            int numberOfSelectedBooks = model.LostOrDestroyedBooksId.Count + model.ReturnedBooksId.Count;
+            if (model.LostOrDestroyedBooksId == null)
+                model.LostOrDestroyedBooksId = new List<int>();
 
+            if (model.ReturnedBooksId == null)
+                model.ReturnedBooksId = new List<int>();
+
+            int numberOfSelectedBooks = model.LostOrDestroyedBooksId.Count + model.ReturnedBooksId.Count;
             if (numberOfSelectedBooks < model.NumberOfBorrowedBooks)
                 ModelState.AddModelError("BorrowedBooks","Zaznacz status dla wszystkich wypożyczonych książek");
 
-            if (numberOfSelectedBooks > model.NumberOfBorrowedBooks)
-                ModelState.AddModelError("BorrowedBooks", "Książka nie może być oznaczona jednocześnie jako zgubiona i oddana.");
+            foreach(var id in model.ReturnedBooksId)
+            {
+                if (model.LostOrDestroyedBooksId.Contains(id))
+                    ModelState.AddModelError("BorrowedBooks", "Książka nie może być oznaczona jednocześnie jako zgubiona i oddana.");
+            }
 
+            var result = _validatorNewReturnRecordVm.Validate(model);
             if (!result.IsValid)
                 result.AddToModelState(ModelState);
 
@@ -146,7 +154,8 @@ namespace LibraryMVC.Web.Controllers
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var returnRecordId = _loanService.ConfirmReturn(model, librarianId);
 
-            return RedirectToAction("ViewReturnRecord", returnRecordId);
+            TempData["success"] = $"Zwrot zamówienia nr {model.LoanId} został potwierdzony.";
+            return RedirectToAction("ConfirmReturnIndex");
         }
 
         [HttpGet]

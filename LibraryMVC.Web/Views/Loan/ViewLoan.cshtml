@@ -101,17 +101,17 @@
                     }
                 </dd>
                 <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Penalty)
+                    @Html.DisplayNameFor(model => model.ReturnRecord.TotalAmountOfPaidPenalty)
                 </dt>
                 <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Penalty)
+                    @Html.DisplayFor(model => model.ReturnRecord.TotalAmountOfPaidPenalty)
                 </dd>
             }
         </dl>
     </div>
     <div class="row mt-3">
         <div class="col-6">
-            <h5>Wypożyczone książki</h5>
+            <h5>@Html.DisplayNameFor(model => model.Books)</h5>
             <hr />
         </div>
         <div class="col-12">
@@ -122,16 +122,58 @@
                 <br />
                 count++; 
             }
-
-            <h1>//To implement: returned books</h1>
         </div>
     </div>
+    @if (Model.IsReturned)
+    {
+        <div class="row my-5">
+            <div class="col-md-6">
+                <div class="col">
+                    <h5>@Html.DisplayNameFor(model => model.ReturnRecord.ReturnedBooks)</h5>
+                    <hr />
+                </div>
+                <div class="col-12">
+                    @{
+                        count = 1;
+                    }
+                    @foreach (var item in Model.ReturnRecord.ReturnedBooks)
+                    {
+                        <text>@count. @item.Title, @item.AuthorFullName, @item.RelaseYear</text>
+                        <br />
+                        count++;
+                    }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col">
+                    <h5>@Html.DisplayNameFor(model => model.ReturnRecord.LostOrDestroyedBooks)</h5>
+                    <hr />
+                </div>
+                <div class="col-12">
+                    @{
+                        count = 1;
+                    }
+                    @foreach (var item in Model.ReturnRecord.LostOrDestroyedBooks)
+                    {
+                        <text>@count. @item.Title, @item.AuthorFullName, @item.RelaseYear</text>
+                        <br />
+                        count++;
+                    }
+
+                    <h5>
+                        @Html.DisplayNameFor(model => model.ReturnRecord.AdditionalPenaltyForLostAndDestroyedBooks): @Html.DisplayFor(model => model.ReturnRecord.AdditionalPenaltyForLostAndDestroyedBooks)
+                    </h5>
+                </div>
+            </div>
+        </div>
+    }
+
     <div class="row mt-3">
         <div class="d-grid gap-2 d-md-block">
             <a class="btn btn-primary" role="button" asp-action="Index">
                 <i class="fa-solid fa-arrow-left-long"></i> Wróć
             </a>
-            @if (Model.IsCheckedOut)
+            @if (!Model.IsCheckedOut)
             {
                 <a asp-action="CancelLoan" asp-controller="Loan" asp-route-loanId="@Model.Id" class="btn btn-danger" role="button">
                     <i class="fa-solid fa-circle-xmark"></i> Anuluj
@@ -145,6 +187,6 @@
             }
         </div>
     </div>
-    </div>
 </div>
+
 

@@ -16,6 +16,7 @@ namespace LibraryMVC.Application.ViewModels.ReturnRecord
     {
         public int Id { get; set; }
         public int LoanId { get; set; }
+        public bool IsReturned { get; set; }
 
         [DisplayName("Użytkownik")]
         public string FullLibraryUserName { get; set; }
@@ -41,7 +42,7 @@ namespace LibraryMVC.Application.ViewModels.ReturnRecord
         [DisplayName("Komentarz")]
         public string Comments { get; set; }
         public int NumberOfBorrowedBooks { get; set; }
-        public List<int> LostOrDestroyedBooksId { get; set; }
+        public List<int>? LostOrDestroyedBooksId { get; set; }
         public List<int> ReturnedBooksId { get; set; }
         public List<BookForListVm>? BorrowedBooks { get; set; }
     }
@@ -53,7 +54,9 @@ namespace LibraryMVC.Application.ViewModels.ReturnRecord
             RuleFor(x => x.Id).NotNull();
             RuleFor(x => x.LostOrDestroyedBooksId).NotNull();
             RuleFor(x => x.ReturnedBooksId).NotNull();
+            RuleFor(x => x.Comments).NotEmpty().WithMessage("Komentarz jest wymagany.");
             RuleFor(x => x.TotalPenalty).ScalePrecision(2, 8, false);
+            RuleFor(x => x.IsPenaltyPaid).Must(x => x.Equals(true)).WithMessage("Klient musi zapłacić karę podczas zwrotu zamówienia.");
         }
     }
 }

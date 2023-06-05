@@ -13,6 +13,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
                 <input asp-for="Id" type="hidden" />
+                <input asp-for="IsReturned" value="@true" type="hidden" />
                 <input asp-for="LoanId" type="hidden" value="@Model.LoanId" />
                 <input asp-for="NumberOfBorrowedBooks" type="hidden" value="@Model.NumberOfBorrowedBooks" />
                 <input asp-for="OverduePenalty" type="hidden" value="@Model.OverduePenalty" />
@@ -92,8 +93,12 @@
                     <div class="form-group form-check">
                         <label class="form-check-label ms-2"> @Html.DisplayNameFor(model => model.IsPenaltyPaid)</label>
                         <input class="form-check-input checkbox-xl" asp-for="IsPenaltyPaid" /> 
+                        
                     </div>
                 </div>
+            </div>
+            <div class="row">
+                <span asp-validation-for="IsPenaltyPaid" class="text-danger d-block"></span>
             </div>
             <div class="row mt-5">
                 <div class="d-grid gap-2 d-md-block">

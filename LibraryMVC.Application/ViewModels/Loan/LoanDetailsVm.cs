@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.ViewModels.Book;
+using LibraryMVC.Application.ViewModels.ReturnRecord;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,15 +33,15 @@ namespace LibraryMVC.Application.ViewModels.Loan
         [DisplayName("Data zwrotu")]
         public DateTime ReturnDate { get; set; }
 
-        [DisplayName("Opłata")]
-        public decimal Penalty { get; set; }
-
         [DisplayName("Status")]
         public string Status { get; set; }
 
         [DisplayName("Brak zwrotu w terminie")]
         public bool isOverdue { get; set; }
 
+        public ReturnRecordDetailsVm ReturnRecord { get; set; }
+
+        [DisplayName("Wypożyczone książki")]
         public List<BookForListVm> Books { get; set; }
 
 
