@@ -4,52 +4,53 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="fw-bold">Użytkownicy</h1>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnpaidPenaltiesTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OverdueLoansCount)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnpaidPenaltiesTotal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OverdueLoansCount)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "ViewUserDetails", new { libraryUserId=item.Id }) 
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border mt-3">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnpaidPenaltiesTotal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OverdueLoansCount)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnpaidPenaltiesTotal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OverdueLoansCount)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "ViewUserDetails", new { libraryUserId=item.Id }) 
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>
