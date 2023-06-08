@@ -1,56 +1,121 @@
 ﻿@model IEnumerable<LibraryMVC.Application.ViewModels.LibraryUser.LibraryUserForListVm>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Użytkownicy";
 }
 
 <h1 class="fw-bold">Użytkownicy</h1>
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border mt-3">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Id)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FullName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Email)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UnpaidPenaltiesTotal)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.OverdueLoansCount)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UnpaidPenaltiesTotal)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OverdueLoansCount)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "ViewUserDetails", new { libraryUserId=item.Id }) 
-                </td>
-            </tr>
-    }
-        </tbody>
-    </table>
+    <div class="row">
+        <table class="table table-hover" id="usersTable">
+            <thead>
+                <tr class="cursor-pointer">
+                    <th id="Nr">
+                        @Html.DisplayNameFor(model => model.Id) <i class="fa-solid fa-sort"></i>
+                    </th>
+                    <th id="Name">
+                        @Html.DisplayNameFor(model => model.FullName) <i class="fa-solid fa-sort"></i>
+                    </th>
+                    <th id="Email">
+                        @Html.DisplayNameFor(model => model.Email) <i class="fa-solid fa-sort"></i>
+                    </th>
+                    <th id="Penalty">
+                        @Html.DisplayNameFor(model => model.UnpaidPenaltiesTotal) <i class="fa-solid fa-sort"></i>
+                    </th>
+                    <th id="Overdue">
+                        @Html.DisplayNameFor(model => model.OverdueLoansCount) <i class="fa-solid fa-sort"></i>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) 
+                {
+                    <tr class="cursor-pointer" onclick="location.href = '@Url.ActionLink("ViewUserDetails", "LibraryUser", new { libraryUserId=item.Id })'">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnpaidPenaltiesTotal)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OverdueLoansCount)
+                        </td>
+                        <td>
+                     
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        let sortedColumn = null;
+        let sortOrder = 1;
+
+        function sortTable(columnId) {
+            const table = document.getElementById('usersTable');
+            const rows = Array.from(table.rows).slice(1);
+            const headerCell = document.getElementById(columnId);
+            const icons = document.querySelectorAll('.fa-sort-up, .fa-sort-down');
+            icons.forEach(icon => {
+                icon.classList.remove('fa-sort-up', 'fa-sort-down');
+                icon.classList.add('fa-sort');
+            });
+
+            if (sortedColumn === headerCell) {
+                sortOrder = -sortOrder;
+            } else {
+                sortedColumn = headerCell;
+                sortOrder = 1;
+            }
+
+            const icon = headerCell.querySelector('i');
+            icon.classList.remove('fa-sort');
+            icon.classList.add(sortOrder === 1 ? 'fa-sort-up' : 'fa-sort-down');
+
+            const sortedRows = rows.sort((a, b) => {
+                const cellA = a.cells[sortedColumn.cellIndex];
+                const cellB = b.cells[sortedColumn.cellIndex];
+                let aValue = cellA.innerText;
+                let bValue = cellB.innerText;
+
+                if (columnId === 'Nr' || columnId === 'Penalty' || columnId === 'Overdue') {
+                    aValue = parseInt(aValue);
+                    bValue = parseInt(bValue);
+                }
+                
+
+                if (aValue < bValue) {
+                    return -sortOrder;
+                }
+                if (aValue > bValue) {
+                    return sortOrder;
+                }
+                return 0;
+            });
+
+            for (const row of sortedRows) {
+                table.tBodies[0].appendChild(row);
+            }
+        }
+
+        document.getElementById("Nr").addEventListener("click", () => sortTable("Nr"));
+        document.getElementById("Name").addEventListener("click", () => sortTable("Name"));
+        document.getElementById("Email").addEventListener("click", () => sortTable("Email"));
+        document.getElementById("Penalty").addEventListener("click", () => sortTable("Penalty"));
+        document.getElementById("Overdue").addEventListener("click", () => sortTable("Overdue"));
+    </script>
+}
