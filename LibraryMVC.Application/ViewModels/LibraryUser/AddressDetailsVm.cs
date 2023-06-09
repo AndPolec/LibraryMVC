@@ -13,9 +13,9 @@ namespace LibraryMVC.Application.ViewModels.User
         public int Id { get; set; }
         [DisplayName("Ulica")]
         public string Street { get; set; }
-        [DisplayName("Numer domu")]
+        [DisplayName("Nr domu")]
         public string BuildingNumber { get; set; }
-        [DisplayName("Numer mieszkania")]
+        [DisplayName("Nr mieszkania")]
         public string FlatNumber { get; set; }
         [DisplayName("Kod pocztowy")]
         public string ZipCode { get; set; }
