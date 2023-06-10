@@ -16,5 +16,7 @@ namespace LibraryMVC.Application.Interfaces
         LibraryUserDetailsVm GetLibraryUserForDetails(int id);
         bool IsBlocked(int userId);
         bool IsBlocked(string identityUserId);
+        void BlockUser(int userId);
+        void UnblockUser(int userId);
     }
 }

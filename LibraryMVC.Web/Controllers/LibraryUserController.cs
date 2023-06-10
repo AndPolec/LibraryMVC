@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.User;
+using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -49,10 +50,29 @@ namespace LibraryMVC.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
         public IActionResult ViewUserDetails(int libraryUserId)
         {
             var model = _userService.GetLibraryUserForDetails(libraryUserId);
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult BlockUser(int userId) 
+        { 
+            _userService.BlockUser(userId);
+            TempData["warning"] = $"Użytkownik zablokowany.";
+            return RedirectToAction("ViewUserDetails", new { libraryUserId = userId });
+        }
+
+        [HttpGet]
+        public IActionResult UnblockUser(int userId)
+        {
+            _userService.UnblockUser(userId);
+            TempData["warning"] = $"Użytkownik odblokowany.";
+            return RedirectToAction("ViewUserDetails", new { libraryUserId = userId });
+        }
+
+
     }
 }

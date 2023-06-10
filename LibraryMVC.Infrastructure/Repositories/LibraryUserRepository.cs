@@ -48,6 +48,7 @@ namespace LibraryMVC.Infrastructure.Repositories
             var user = _context.LibraryUsers
                 .Include(u => u.Address)
                 .Include(u => u.Loans).ThenInclude(l => l.Books)
+                .Include(u => u.Loans).ThenInclude(l => l.Status)
                 .Include(u => u.Loans).ThenInclude(l => l.ReturnRecord)
                 .Include(u => u.Loans).ThenInclude(l => l.CheckOutRecord)
                 .FirstOrDefault(u => u.Id == userId);

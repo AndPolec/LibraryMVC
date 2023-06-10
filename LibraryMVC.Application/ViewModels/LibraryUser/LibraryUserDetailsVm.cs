@@ -32,6 +32,6 @@ namespace LibraryMVC.Application.ViewModels.LibraryUser
         [DisplayName("Liczba zaległych zamówień")]
         public int OverdueLoansCount { get; set; }
 
-        public List<LoanDetailsVm> Loans { get; set; }
+        public List<LoanForListVm> Loans { get; set; }
     }
 }

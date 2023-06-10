@@ -4,6 +4,8 @@
     ViewData["Title"] = "Dane użytkownika";
 }
 
+<partial name="_Notification" />
+
 <h1 class="fw-bold">Dane użytkownika</h1>
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
@@ -11,6 +13,10 @@
         <div class="col-md-6">
             <h4>
                 @Html.DisplayFor(model => model.FullName)
+                @if (Model.IsBlocked)
+                {
+                    <span class="bg-danger rounded-3 p-2">ZABLOKOWANY</span>
+                }
             </h4>
             <hr />
             <dl class="row">
@@ -130,7 +136,7 @@
                             }
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Books.Count)
+                            @Html.DisplayFor(modelItem => item.NumberOfBorrowedBooks)
                         </td>
                         <td>
                             @if (item.Status == "Zaległe")
@@ -149,10 +155,26 @@
                 }
             </tbody>
         </table>
+        <hr />
     </div>
-    <div>
-        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-        <a asp-action="Index">Back to List</a>
+    <div class="row mt-4">
+        <div class="d-grid gap-2 d-md-block">
+            <a class="btn btn-primary" role="button" asp-action="Index">
+                <i class="fa-solid fa-arrow-left-long"></i> Wróć
+            </a>
+            @if (!Model.IsBlocked)
+            {
+                <a asp-action="BlockUser" asp-route-userId="@Model.Id" class="btn btn-danger" role="button">
+                    <i class="fa-solid fa-user-lock"></i> Zablokuj
+                </a>
+            }
+            else
+            {
+                <a asp-action="UnblockUser" asp-route-userId="@Model.Id" class="btn btn-warning" role="button">
+                    <i class="fa-solid fa-user-check"></i> Odblokuj
+                </a>
+            }
+        </div>
     </div>
 </div>
 
