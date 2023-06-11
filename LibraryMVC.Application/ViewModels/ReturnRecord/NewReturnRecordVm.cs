@@ -57,6 +57,14 @@ namespace LibraryMVC.Application.ViewModels.ReturnRecord
             RuleFor(x => x.Comments).NotEmpty().WithMessage("Komentarz jest wymagany.");
             RuleFor(x => x.TotalPenalty).ScalePrecision(2, 8, false);
             RuleFor(x => x.IsPenaltyPaid).Must(x => x.Equals(true)).WithMessage("Klient musi zapłacić karę podczas zwrotu zamówienia.");
+            RuleFor(x => x).Must(x => x.LostOrDestroyedBooksId.Count + x.ReturnedBooksId.Count == x.NumberOfBorrowedBooks)
+                .WithName("BorrowedBooks")
+                .WithMessage("Każda wypożyczona książka musi zostać oznaczona jako zwrócona lub oddana.");
+            RuleFor(x => x).Must(x => !x.ReturnedBooksId.Intersect(x.LostOrDestroyedBooksId).Any())
+                .WithName("BorrowedBooks")
+                .WithMessage("Książka nie może być oznaczona jednocześnie jako zgubiona i oddana.");
+
         }
     }
+    
 }

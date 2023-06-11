@@ -125,28 +125,10 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult ConfirmReturn(NewReturnRecordVm model)
         {
-            if (model.LostOrDestroyedBooksId == null)
-                model.LostOrDestroyedBooksId = new List<int>();
-
-            if (model.ReturnedBooksId == null)
-                model.ReturnedBooksId = new List<int>();
-
-            int numberOfSelectedBooks = model.LostOrDestroyedBooksId.Count + model.ReturnedBooksId.Count;
-            if (numberOfSelectedBooks < model.NumberOfBorrowedBooks)
-                ModelState.AddModelError("BorrowedBooks","Zaznacz status dla wszystkich wypożyczonych książek");
-
-            foreach(var id in model.ReturnedBooksId)
-            {
-                if (model.LostOrDestroyedBooksId.Contains(id))
-                    ModelState.AddModelError("BorrowedBooks", "Książka nie może być oznaczona jednocześnie jako zgubiona i oddana.");
-            }
-
             var result = _validatorNewReturnRecordVm.Validate(model);
             if (!result.IsValid)
-                result.AddToModelState(ModelState);
-
-            if (!ModelState.IsValid)
             {
+                result.AddToModelState(ModelState);
                 model = _loanService.SetParametersToVm(model);
                 return View(model);
             }
