@@ -83,12 +83,12 @@ namespace LibraryMVC.Web.Controllers
             if (result)
             {
                 TempData["success"] = "Zamówienie anulowane.";
-                return RedirectToAction("ViewLoan", new { loanId = loanId });
+                return RedirectToAction("ViewLoan", new { loanId });
             }
             else
             {
                 TempData["error"] = "Zamówienie nie zostało anulowane.";
-                return RedirectToAction("ViewLoan", new { loanId = loanId });
+                return RedirectToAction("ViewLoan", new { loanId });
             }
         }
 
