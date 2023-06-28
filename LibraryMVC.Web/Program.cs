@@ -33,6 +33,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 
     options.SignIn.RequireConfirmedEmail = false;
+    options.User.RequireUniqueEmail = true;
 });
 
 
