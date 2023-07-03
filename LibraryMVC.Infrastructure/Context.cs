@@ -26,6 +26,7 @@ namespace LibraryMVC.Infrastructure
         public DbSet<ReturnRecord> ReturnRecords { get; set; }
         public DbSet<LibraryUser> LibraryUsers { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<UserType> UserType { get; set; }
 
 
         public Context(DbContextOptions options) : base(options)
@@ -84,6 +85,11 @@ namespace LibraryMVC.Infrastructure
                          new Status { Id = 3, Name = "Zakończone" },
                          new Status { Id = 4, Name = "Zaległe" },
                          new Status { Id = 5, Name = "Anulowane" });
+
+            builder.Entity<UserType>()
+                .HasData(new UserType { Id = 1, Name = "Czytelnik" },
+                         new UserType { Id = 2, Name = "Bibliotekarz" },
+                         new UserType { Id = 3, Name = "Administrator" });
         }
 
     }
