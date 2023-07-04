@@ -90,6 +90,11 @@ namespace LibraryMVC.Infrastructure
                 .HasData(new UserType { Id = 1, Name = "Czytelnik" },
                          new UserType { Id = 2, Name = "Bibliotekarz" },
                          new UserType { Id = 3, Name = "Administrator" });
+
+            builder.Entity<IdentityRole>()
+               .HasData(new IdentityRole { Id = "Reader", Name = "Czytelnik", NormalizedName = "Czytelnik" },
+                        new IdentityRole { Id = "Librarian", Name = "Bibliotekarz", NormalizedName = "Bibliotekarz" },
+                        new IdentityRole { Id = "Administrator", Name = "Administrator", NormalizedName = "Administrator" });
         }
 
     }
