@@ -18,3 +18,12 @@ For library staff, the application offers tools for managing the book catalog. A
 
 The application is built in Clean Architecture and Service-Repository pattern.
 
+## Technologies
+* .NET 6.0
+* ASP.NET MVC, HTML5, MSSQL
+* Depedency Injection
+* Entity Framework Core 6.0.10
+* LINQ
+* Fluent Validation 11.2.2
+* AutoMapper 12.0.0
+* Bootstrap 5.1
