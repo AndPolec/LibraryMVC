@@ -26,7 +26,7 @@ namespace LibraryMVC.Infrastructure
         public DbSet<ReturnRecord> ReturnRecords { get; set; }
         public DbSet<LibraryUser> LibraryUsers { get; set; }
         public DbSet<Status> Statuses { get; set; }
-        public DbSet<UserType> UserType { get; set; }
+        public DbSet<UserType> UserTypes { get; set; }
 
 
         public Context(DbContextOptions options) : base(options)
