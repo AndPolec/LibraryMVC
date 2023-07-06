@@ -72,7 +72,5 @@ namespace LibraryMVC.Web.Controllers
             TempData["warning"] = $"Użytkownik odblokowany.";
             return RedirectToAction("ViewUserDetails", new { libraryUserId = userId });
         }
-
-
     }
 }

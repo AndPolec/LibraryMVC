@@ -1,0 +1,26 @@
+﻿@model IEnumerable<LibraryMVC.Application.ViewModels.LibraryUserRoles.IdentityUsersForListVm>
+
+@{
+    ViewData["Title"] = "Zmień uprawnienia";
+}
+
+<h1 class="fw-bold">Zmień uprawnienia użytkownika</h1>
+
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border mt-3">
+    <div class="row">
+        <div class="col-auto m-5">
+            <div class="form-group mb-3">
+                <label class="mb-2">Użytkownicy</label> <br />
+                <select class="selectpicker" data-live-search="true" title="Wybierz użytkownika">
+                    @foreach (var user in Model)
+                    {
+                        <option value="@user.Id">@user.UserName</option>
+                    }
+                </select>
+            </div>
+            <a class="btn btn-primary mt-3 w-100" role="button" asp-action="ViewUserRoleDetails">
+                <i class="fa-regular fa-eye"></i> Pokaż uprawnienia
+            </a>
+        </div>
+    </div>
+</div>

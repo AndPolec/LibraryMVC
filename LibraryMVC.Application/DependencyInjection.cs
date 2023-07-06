@@ -27,6 +27,7 @@ namespace LibraryMVC.Application
             services.AddTransient<IBookService, BookService>();
             services.AddTransient<ILibraryUserService, LibraryUserService>();
             services.AddTransient<ILoanService, LoanService>();
+            services.AddTransient<IIdentityUserRolesService, IdentityUserRolesService>();
 
             services.AddTransient<IValidator<NewBookVm>, NewBookVmValidator>();
             services.AddTransient<IValidator<NewLibraryUserVm>, NewLibraryUserVmValidator>();

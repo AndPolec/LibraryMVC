@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.LibraryUser;
+using LibraryMVC.Application.ViewModels.LibraryUserRoles;
 using LibraryMVC.Application.ViewModels.User;
 using LibraryMVC.Domain.Model;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,8 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.UnpaidPenaltiesTotal, opt => opt.MapFrom(s => s.Loans
                     .Where(l => l.ReturnRecord != null && l.ReturnRecord.IsPenaltyPaid == false).Sum(l => l.ReturnRecord.TotalPenalty)))
                 .ForMember(d => d.OverdueLoansCount, opt => opt.MapFrom(s => s.Loans.Count(l => l.isOverdue == true)));
+
+            CreateMap<IdentityUser, IdentityUsersForListVm>();
 
 
         }
