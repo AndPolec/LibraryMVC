@@ -1,4 +1,4 @@
-﻿using LibraryMVC.Application.ViewModels.LibraryUserRoles;
+﻿using LibraryMVC.Application.ViewModels.IdentityUserRoles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +10,6 @@ namespace LibraryMVC.Application.Interfaces
     public interface IIdentityUserRolesService
     {
         List<IdentityUsersForListVm> GetAllUsers();
+        Task<IdentityUserRolesDetailsVm> GetUserRolesDetails(string id);
     }
 }

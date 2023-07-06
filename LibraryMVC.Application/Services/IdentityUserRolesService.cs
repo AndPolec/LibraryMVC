@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using LibraryMVC.Application.Interfaces;
-using LibraryMVC.Application.ViewModels.LibraryUserRoles;
+using LibraryMVC.Application.ViewModels.IdentityUserRoles;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -30,6 +30,10 @@ namespace LibraryMVC.Application.Services
             return model;
         }
 
-
+        public async Task<IdentityUserRolesDetailsVm> GetUserRolesDetails(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var user
+        }
     }
 }

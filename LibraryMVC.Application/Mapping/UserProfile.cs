@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LibraryMVC.Application.ViewModels.Book;
+using LibraryMVC.Application.ViewModels.IdentityUserRoles;
 using LibraryMVC.Application.ViewModels.LibraryUser;
 using LibraryMVC.Application.ViewModels.LibraryUserRoles;
 using LibraryMVC.Application.ViewModels.User;
@@ -39,7 +40,8 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.OverdueLoansCount, opt => opt.MapFrom(s => s.Loans.Count(l => l.isOverdue == true)));
 
             CreateMap<IdentityUser, IdentityUsersForListVm>();
-
+            CreateMap<IdentityRole, RoleVm>();
+            CreateMap<IdentityUser, IdentityUserRolesDetailsVm>();
 
         }
     }

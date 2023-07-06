@@ -16,5 +16,12 @@ namespace LibraryMVC.Web.Controllers
             var model = _rolesService.GetAllUsers();
             return View(model);
         }
+
+        
+        public PartialViewResult AddRolesToUser(string id)
+        {
+            var userRolesVm = _rolesService.GetUserRolesDetails(id);
+            return PartialView(userRolesVm);
+        }
     }
 }
