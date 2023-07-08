@@ -2,7 +2,6 @@
 using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.IdentityUserRoles;
 using LibraryMVC.Application.ViewModels.LibraryUser;
-using LibraryMVC.Application.ViewModels.LibraryUserRoles;
 using LibraryMVC.Application.ViewModels.User;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;

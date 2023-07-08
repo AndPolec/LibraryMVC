@@ -10,6 +10,8 @@ namespace LibraryMVC.Application.Interfaces
     public interface IIdentityUserRolesService
     {
         List<IdentityUsersForListVm> GetAllUsers();
-        Task<IdentityUserRolesDetailsVm> GetUserRolesDetails(string id);
+        IQueryable<RoleVm> GetAllRoles();
+        Task<List<string>>  GetRolesByUserIdAsync(string id);
+        Task<IdentityUserRolesDetailsVm> GetUserRolesDetailsAsync(string id);
     }
 }

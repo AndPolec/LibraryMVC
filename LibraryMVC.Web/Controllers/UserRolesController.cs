@@ -18,10 +18,10 @@ namespace LibraryMVC.Web.Controllers
         }
 
         
-        public PartialViewResult AddRolesToUser(string id)
+        public async Task<IActionResult> AddRolesToUser(string id)
         {
-            var userRolesVm = _rolesService.GetUserRolesDetails(id);
-            return PartialView(userRolesVm);
+            var userRolesVm = await _rolesService.GetUserRolesDetailsAsync(id);
+            return PartialView("_AddRolesToUser",userRolesVm);
         }
     }
 }

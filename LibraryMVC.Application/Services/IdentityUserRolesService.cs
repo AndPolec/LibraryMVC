@@ -30,10 +30,26 @@ namespace LibraryMVC.Application.Services
             return model;
         }
 
-        public async Task<IdentityUserRolesDetailsVm> GetUserRolesDetails(string id)
+        public IQueryable<RoleVm> GetAllRoles()
+        {
+            var rolesVm = _roleManager.Roles.ProjectTo<RoleVm>(_mapper.ConfigurationProvider);
+            return rolesVm;
+        }
+
+        public async Task<List<string>> GetRolesByUserIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var user
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles.ToList();
+        }
+
+        public async Task<IdentityUserRolesDetailsVm> GetUserRolesDetailsAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userDetailsVm = _mapper.Map<IdentityUserRolesDetailsVm>(user);
+            userDetailsVm.UserRoles = await GetRolesByUserIdAsync(id);
+            userDetailsVm.AllRoles = GetAllRoles().ToList();
+            return userDetailsVm;
         }
     }
 }
