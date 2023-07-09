@@ -29,7 +29,7 @@
         <dt class="col-sm-2 mt-3">
             @Html.DisplayNameFor(model => model.AllRoles)
         </dt>
-        <dd class="col-sm-10 mt-3" id="checkboxContainer">
+        <dd class="col-sm-10 mt-3" id="roleCheckboxes">
             @foreach (var item in Model.AllRoles)
             {
                 <div class="form-check">
@@ -41,8 +41,8 @@
             }
         </dd>
     </dl>
+    <button class="btn btn-primary mt-3" id="changeRoles">
+        <i class="fa-regular fa-circle-check"></i> Zmień uprawnienia
+    </button>
 </div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+

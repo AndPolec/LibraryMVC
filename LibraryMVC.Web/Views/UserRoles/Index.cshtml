@@ -4,6 +4,8 @@
     ViewData["Title"] = "Zmień uprawnienia";
 }
 
+<partial name="_Notification" />
+
 <h1 class="fw-bold">Zmień uprawnienia użytkownika</h1>
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border mt-3">
@@ -32,13 +34,16 @@
         
         $(document).ready(function(){
             $('#showDetails').on('click', function(){
-                debugger;
                 LoadDetails();
             });
         });
 
+        $(document).on('click', '#changeRoles', function () {
+            ChangeRoles();
+        });
+
         function LoadDetails(){
-            let userId = $('#userId').val();
+            const userId = $('#userId').val();
             $.ajax({
                 type: 'GET',
                 url: '@Url.Action("AddRolesToUser","UserRoles")',
@@ -47,6 +52,34 @@
                     $('#details').html(data);
                 }
             });
+        };
+
+        function ChangeRoles(){
+            const userId = $('#userId').val();
+            let selectedRoles = [];
+            $('#roleCheckboxes input[type=checkbox]:checked').each(function () {
+                selectedRoles.push($(this).val());
+            });
+
+            if (selectedRoles.length === 0) {
+                alert("Nie wybrano żadnej roli. Wybierz przynajmniej jedną rolę przed zatwierdzeniem.");
+                return;
+            }
+
+            if (confirm('Potwierdź chęć zmiany uprawnień użytkownika.')){
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AddRolesToUser","UserRoles")',
+                    traditional: true,
+                    data: { id: userId, newRoles: selectedRoles },
+                    success: function (result) {
+                        location.reload();
+                    },
+                    error: function (jqXHR) {
+                        alert(jqXHR.responseText);
+                    }
+                });
+            }
         };
 
     </script>

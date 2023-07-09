@@ -17,11 +17,24 @@ namespace LibraryMVC.Web.Controllers
             return View(model);
         }
 
-        
+        [HttpGet]
         public async Task<IActionResult> AddRolesToUser(string id)
         {
             var userRolesVm = await _rolesService.GetUserRolesDetailsAsync(id);
             return PartialView("_AddRolesToUser",userRolesVm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRolesToUser(string id, List<string> newRoles)
+        {
+            if (newRoles == null || !newRoles.Any())
+            {
+                return BadRequest("Lista nowych ról nie może być pusta.");
+            }
+
+            await _rolesService.ChangeUserRoles(id,newRoles);
+            TempData["success"] = "Zaktualizowano uprawnienia.";
+            return Ok();
         }
     }
 }
