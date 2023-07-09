@@ -32,7 +32,7 @@ namespace LibraryMVC.Web.Controllers
                 return BadRequest("Lista nowych ról nie może być pusta.");
             }
 
-            await _rolesService.ChangeUserRoles(id,newRoles);
+            await _rolesService.ChangeUserRolesAsync(id,newRoles);
             TempData["success"] = "Zaktualizowano uprawnienia.";
             return Ok();
         }

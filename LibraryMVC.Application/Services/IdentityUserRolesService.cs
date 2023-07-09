@@ -51,5 +51,14 @@ namespace LibraryMVC.Application.Services
             userDetailsVm.AllRoles = GetAllRoles().ToList();
             return userDetailsVm;
         }
+
+        public async Task<IdentityResult> ChangeUserRolesAsync(string userId, List<string> newRoles)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, userRoles);
+            return await _userManager.AddToRolesAsync(user, newRoles);
+           
+        }
     }
 }
