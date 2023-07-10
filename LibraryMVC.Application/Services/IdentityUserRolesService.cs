@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.IdentityUserRoles;
+using LibraryMVC.Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace LibraryMVC.Application.Services
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILibraryUserRepository _libraryUserRepository;
         private readonly IMapper _mapper;
 
         public IdentityUserRolesService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
@@ -59,6 +61,12 @@ namespace LibraryMVC.Application.Services
             await _userManager.RemoveFromRolesAsync(user, userRoles);
             return await _userManager.AddToRolesAsync(user, newRoles);
            
+        }
+
+        private async Task ChangeLibraryUserRole(string userId, List<string> newRoles)
+        {
+            var libraryUser = await Task.Run(() => _libraryUserRepository.GetUserByIdentityUserId(userId));
+            // to implement
         }
     }
 }
