@@ -23,6 +23,7 @@ namespace LibraryMVC.Infrastructure
             services.AddTransient<ILoanRepository, LoanRepository>();
             services.AddTransient<IAdditionalLibrarianInfoRepository, AdditionalLibrarianInfoRepository>();
             services.AddTransient<IReturnRecordRepository, ReturnRecordRepository>();
+            services.AddTransient<IUserTypeRepository, UserTypeRepository>();
             return services;
         }
     }

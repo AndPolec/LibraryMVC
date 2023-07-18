@@ -56,7 +56,9 @@ namespace LibraryMVC.Infrastructure.Repositories
         }
         public LibraryUser GetUserByIdentityUserId(string userId)
         {
-            var user = _context.LibraryUsers.FirstOrDefault(u => u.IdentityUserId == userId);
+            var user = _context.LibraryUsers
+                .Include(u => u.UserTypes)
+                .FirstOrDefault(u => u.IdentityUserId == userId);
             return user;
         }
 

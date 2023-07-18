@@ -304,15 +304,10 @@ namespace LibraryMVC.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserTypeId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("isBlocked")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserTypeId");
 
                     b.ToTable("LibraryUsers");
                 });
@@ -490,6 +485,21 @@ namespace LibraryMVC.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("LibraryUserUserType", b =>
+                {
+                    b.Property<int>("LibraryUsersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserTypesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LibraryUsersId", "UserTypesId");
+
+                    b.HasIndex("UserTypesId");
+
+                    b.ToTable("LibraryUserUserType");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -520,21 +530,21 @@ namespace LibraryMVC.Infrastructure.Migrations
                         new
                         {
                             Id = "Reader",
-                            ConcurrencyStamp = "f6254c29-14c9-4e70-b19f-792ca984d378",
+                            ConcurrencyStamp = "00f8712d-8656-46ca-aee7-81aed10ad64a",
                             Name = "Czytelnik",
                             NormalizedName = "Czytelnik"
                         },
                         new
                         {
                             Id = "Librarian",
-                            ConcurrencyStamp = "b41e2b52-47ca-4e13-b914-dad134bec9bd",
+                            ConcurrencyStamp = "bf71615a-a80b-454d-88f4-83441759d8cc",
                             Name = "Bibliotekarz",
                             NormalizedName = "Bibliotekarz"
                         },
                         new
                         {
                             Id = "Administrator",
-                            ConcurrencyStamp = "7d52db00-8d50-4b9b-b5ef-9948d116eed8",
+                            ConcurrencyStamp = "25a2607d-1e67-443e-bb65-0749d1e074f0",
                             Name = "Administrator",
                             NormalizedName = "Administrator"
                         });
@@ -859,15 +869,6 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.Navigation("Loan");
                 });
 
-            modelBuilder.Entity("LibraryMVC.Domain.Model.LibraryUser", b =>
-                {
-                    b.HasOne("LibraryMVC.Domain.Model.UserType", "UserType")
-                        .WithMany("LibraryUsers")
-                        .HasForeignKey("UserTypeId");
-
-                    b.Navigation("UserType");
-                });
-
             modelBuilder.Entity("LibraryMVC.Domain.Model.Loan", b =>
                 {
                     b.HasOne("LibraryMVC.Domain.Model.LibraryUser", "LibraryUser")
@@ -902,6 +903,21 @@ namespace LibraryMVC.Infrastructure.Migrations
                     b.Navigation("AdditionalLibrarianInfo");
 
                     b.Navigation("Loan");
+                });
+
+            modelBuilder.Entity("LibraryUserUserType", b =>
+                {
+                    b.HasOne("LibraryMVC.Domain.Model.LibraryUser", null)
+                        .WithMany()
+                        .HasForeignKey("LibraryUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LibraryMVC.Domain.Model.UserType", null)
+                        .WithMany()
+                        .HasForeignKey("UserTypesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1008,11 +1024,6 @@ namespace LibraryMVC.Infrastructure.Migrations
             modelBuilder.Entity("LibraryMVC.Domain.Model.Status", b =>
                 {
                     b.Navigation("Loans");
-                });
-
-            modelBuilder.Entity("LibraryMVC.Domain.Model.UserType", b =>
-                {
-                    b.Navigation("LibraryUsers");
                 });
 #pragma warning restore 612, 618
         }

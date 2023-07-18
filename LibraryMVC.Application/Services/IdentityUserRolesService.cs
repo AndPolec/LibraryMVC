@@ -17,13 +17,16 @@ namespace LibraryMVC.Application.Services
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILibraryUserRepository _libraryUserRepository;
+        private readonly IUserTypeRepository _userTypeRepository;
         private readonly IMapper _mapper;
 
-        public IdentityUserRolesService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
+        public IdentityUserRolesService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper, IUserTypeRepository userTypeRepository, ILibraryUserRepository libraryUserRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
+            _userTypeRepository = userTypeRepository;
+            _libraryUserRepository = libraryUserRepository;
         }
 
         public List<IdentityUsersForListVm> GetAllUsers()
@@ -59,14 +62,20 @@ namespace LibraryMVC.Application.Services
             var user = await _userManager.FindByIdAsync(userId);
             var userRoles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, userRoles);
+            await ChangeLibraryUserType(userId,newRoles);
             return await _userManager.AddToRolesAsync(user, newRoles);
-           
         }
 
-        private async Task ChangeLibraryUserRole(string userId, List<string> newRoles)
+        private async Task ChangeLibraryUserType(string userId, List<string> newRoles)
         {
             var libraryUser = await Task.Run(() => _libraryUserRepository.GetUserByIdentityUserId(userId));
-            // to implement
+            var newUserTypes = await Task.Run(() => _userTypeRepository.GetAll().Where(ut => newRoles.Contains(ut.Name)).ToList());
+            libraryUser.UserTypes.Clear();
+            foreach (var userType in newUserTypes)
+            {
+                libraryUser.UserTypes.Add(userType);
+            }
+            await Task.Run(() => _libraryUserRepository.UpdateUser(libraryUser));
         }
     }
 }
