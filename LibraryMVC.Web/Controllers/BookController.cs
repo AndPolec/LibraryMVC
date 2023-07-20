@@ -98,7 +98,6 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult AddNewBook(NewBookVm model)
         {
-
             var result = _validator.Validate(model);
             if (!result.IsValid)
             {
