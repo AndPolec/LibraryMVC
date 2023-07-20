@@ -15,7 +15,7 @@ namespace LibraryMVC.Application.ViewModels.User
 
         [DisplayName("Ulica")]
         [Required]
-        [RegularExpression(@"^[A-Z]", ErrorMessage = "Nazwa ulicy musi zaczynać się od dużej litery.")]
+        [RegularExpression(@"^[A-Z].*", ErrorMessage = "Nazwa ulicy musi zaczynać się od dużej litery.")]
         public string Street { get; set; }
 
         [DisplayName("Nr domu")]
@@ -31,7 +31,7 @@ namespace LibraryMVC.Application.ViewModels.User
 
         [DisplayName("Miasto")]
         [Required]
-        [RegularExpression(@"^[A-Z]", ErrorMessage = "Nazwa miasta musi zaczynać się od dużej litery.")]
+        [RegularExpression(@"^[A-Z].*", ErrorMessage = "Nazwa miasta musi zaczynać się od dużej litery.")]
         public string City { get; set; }
     }
 

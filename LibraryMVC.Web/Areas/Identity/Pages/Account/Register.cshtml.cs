@@ -35,7 +35,6 @@ namespace LibraryMVC.Web.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IValidator<NewLibraryUserVm> _validator;
         private readonly ILibraryUserService _libraryUserService;
         private readonly IIdentityUserRolesService _identityUserRolesService;
 
@@ -45,7 +44,6 @@ namespace LibraryMVC.Web.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IValidator<NewLibraryUserVm> validator,
             ILibraryUserService libraryUserService,
             IIdentityUserRolesService identityUserRolesService)
         {
@@ -55,7 +53,6 @@ namespace LibraryMVC.Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _validator = validator;
             _libraryUserService = libraryUserService;
             _identityUserRolesService = identityUserRolesService;
         }
@@ -138,9 +135,14 @@ namespace LibraryMVC.Web.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
                     var userId = await _userManager.GetUserIdAsync(user);
+
+                    Input.NewLibraryUserInfo.IdentityUserId = userId;
+                    Input.NewLibraryUserInfo.Email = Input.Email;
+                    await Task.Run(() => _libraryUserService.AddUser(Input.NewLibraryUserInfo));
+                    await _identityUserRolesService.SetStandardReaderRoleAsync(user);
+                    _logger.LogInformation("User created a new account with password.");
+                    
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

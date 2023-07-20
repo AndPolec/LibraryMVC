@@ -18,12 +18,12 @@ namespace LibraryMVC.Application.ViewModels.User
 
         [DisplayName("Imię")]
         [Required(ErrorMessage = "Imię jest wymagane.")]
-        [RegularExpression(@"^[A-Z]", ErrorMessage = "Imię musi zaczynać się od dużej litery.")]
+        [RegularExpression(@"^[A-Z].*", ErrorMessage = "Imię musi zaczynać się od dużej litery.")]
         public string FirstName { get; set; }
 
         [DisplayName("Nazwisko")]
         [Required(ErrorMessage = "Nazwisko jest wymagane.")]
-        [RegularExpression(@"^[A-Z]", ErrorMessage = "Nazwisko musi zaczynać się od dużej litery.")]
+        [RegularExpression(@"^[A-Z].*", ErrorMessage = "Nazwisko musi zaczynać się od dużej litery.")]
         public string LastName { get; set; }
 
         [DisplayName("E-mail")]

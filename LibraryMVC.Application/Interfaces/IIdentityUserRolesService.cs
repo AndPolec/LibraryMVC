@@ -15,5 +15,6 @@ namespace LibraryMVC.Application.Interfaces
         Task<List<string>>  GetRolesByUserIdAsync(string id);
         Task<IdentityUserRolesDetailsVm> GetUserRolesDetailsAsync(string id);
         Task<IdentityResult> ChangeUserRolesAsync(string userId, List<string> newRoles);
+        Task<IdentityResult> SetStandardReaderRoleAsync(IdentityUser user);
     }
 }

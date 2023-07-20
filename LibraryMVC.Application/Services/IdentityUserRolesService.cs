@@ -66,6 +66,13 @@ namespace LibraryMVC.Application.Services
             return await _userManager.AddToRolesAsync(user, newRoles);
         }
 
+        public async Task<IdentityResult> SetStandardReaderRoleAsync(IdentityUser user)
+        {
+            var userRole = new List<string>() { "Czytelnik" };
+            await ChangeLibraryUserType(user.Id, userRole);
+            return await _userManager.AddToRolesAsync(user, userRole);
+        }
+
         private async Task ChangeLibraryUserType(string userId, List<string> newRoles)
         {
             var libraryUser = await Task.Run(() => _libraryUserRepository.GetUserByIdentityUserId(userId));
