@@ -17,19 +17,23 @@ namespace LibraryMVC.Application.Services
     {
         private readonly ILibraryUserRepository _libraryUserRepository;
         private readonly IMapper _mapper;
+        private readonly IUserTypeRepository _userTypeRepository;
+        private readonly IAdditionalLibrarianInfoRepository _additionalLibrarianInfoRepository;
 
-        public LibraryUserService(ILibraryUserRepository userRepository, IMapper mapper)
+        public LibraryUserService(ILibraryUserRepository userRepository, IMapper mapper, IUserTypeRepository userTypeRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository)
         {
             _libraryUserRepository = userRepository;
             _mapper = mapper;
+            _userTypeRepository = userTypeRepository;
+            _additionalLibrarianInfoRepository = additionalLibrarianInfoRepository;
         }
 
         public int AddUser(NewLibraryUserVm model)
         {
             var newUser = _mapper.Map<LibraryUser>(model);
+            newUser.BorrowingCart = new BorrowingCart();
             var newUserId = _libraryUserRepository.AddUser(newUser);
             return newUserId;
-
         }
 
         public List<LibraryUserForListVm> GetAllLibraryUsersForList()
@@ -74,6 +78,36 @@ namespace LibraryMVC.Application.Services
             var user = _libraryUserRepository.GetUserById(userId);
             user.isBlocked = false;
             _libraryUserRepository.UpdateUser(user);
+        }
+
+        public async Task ChangeLibraryUserType(string userId, List<string> newRoles)
+        {
+            var libraryUser = await Task.Run(() => _libraryUserRepository.GetUserByIdentityUserId(userId));
+            var newUserTypes = await Task.Run(() => _userTypeRepository.GetAll().Where(ut => newRoles.Contains(ut.Name)).ToList());
+            libraryUser.UserTypes.Clear();
+            foreach (var userType in newUserTypes)
+            {
+                libraryUser.UserTypes.Add(userType);
+            }
+
+            if (newRoles.Contains("Bibliotekarz"))
+                CreateAdditionalLibrarianInfoForLibraryUser(libraryUser);
+
+            await Task.Run(() => _libraryUserRepository.UpdateUser(libraryUser));
+        }
+
+        private void CreateAdditionalLibrarianInfoForLibraryUser(LibraryUser user)
+        {
+            if (!IsAdditionalLibrarianInfoExists(user.Id))
+            {
+                user.additionalLibrarianInfo = new AdditionalLibrarianInfo() { Id = user.Id };
+            }
+        }
+
+        private bool IsAdditionalLibrarianInfoExists(int libraryUserId)
+        {
+            var additionalLibrarianInfo = _additionalLibrarianInfoRepository.GetInfoByLibraryUserId(libraryUserId);
+            return additionalLibrarianInfo == null ? false : true;
         }
     }
 }

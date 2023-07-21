@@ -23,8 +23,7 @@ namespace LibraryMVC.Application.Mapping
 
             CreateMap<NewLibraryUserVm, LibraryUser>()
                 .ForMember(d => d.Loans, opt => opt.MapFrom(s => new List<Loan>()))
-                .ForMember(d => d.isBlocked, opt => opt.MapFrom(s => false))
-                .AfterMap((s, d) => { d.BorrowingCart.Books = new List<Book>(); });
+                .ForMember(d => d.isBlocked, opt => opt.MapFrom(s => false));
 
             CreateMap<LibraryUser, LibraryUserForListVm>()
                 .ForMember(d => d.FullName, opt => opt.MapFrom(s => s.FirstName + " " + s.LastName))
