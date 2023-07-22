@@ -55,13 +55,20 @@ namespace LibraryMVC.Application.Services
             return userDetailsVm;
         }
 
-        public async Task<IdentityResult> ChangeUserRolesAsync(string userId, List<string> newRoles)
+        public async Task ChangeUserRolesAsync(string userId, List<string> newRoles)
         {
             var user = await _userManager.FindByIdAsync(userId);
             var userRoles = await _userManager.GetRolesAsync(user);
+
+            if (newRoles.All(r => userRoles.Contains(r)) && newRoles.Count == userRoles.Count)
+            {
+                return;
+            }
+
             await _userManager.RemoveFromRolesAsync(user, userRoles);
             await _libraryUserService.ChangeLibraryUserType(userId,newRoles);
-            return await _userManager.AddToRolesAsync(user, newRoles);
+            await _userManager.AddToRolesAsync(user, newRoles);
+            return;
         }
 
         public async Task<IdentityResult> SetStandardReaderRoleAsync(IdentityUser user)
