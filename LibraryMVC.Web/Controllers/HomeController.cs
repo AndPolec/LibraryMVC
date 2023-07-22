@@ -18,7 +18,7 @@ namespace LibraryMVC.Web.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Rules()
         {
             return View();
         }

@@ -45,7 +45,7 @@ namespace LibraryMVC.Infrastructure.Repositories
 
         public LibraryUser GetUserById(int userId)
         {
-            var user = _context.LibraryUsers.AsNoTracking()
+            var user = _context.LibraryUsers
                 .Include(u => u.Address)
                 .Include(u => u.Loans).ThenInclude(l => l.Books)
                 .Include(u => u.Loans).ThenInclude(l => l.Status)

@@ -11,9 +11,12 @@ namespace LibraryMVC.Application.Interfaces
     public interface ILibraryUserService
     {
         int AddUser(NewLibraryUserVm model);
+        int GetLibraryUserIdByIdentityUserId(string id);
         bool IsUserDataExists(string identityUserId);
         List<LibraryUserForListVm> GetAllLibraryUsersForList();
         LibraryUserDetailsVm GetLibraryUserForDetails(int id);
+        LibraryUserForPersonalDataVm GetLibraryUserForPersonalData(int id);
+        NewLibraryUserVm GetInfoForUserEdit(int id);
         bool IsBlocked(int userId);
         bool IsBlocked(string identityUserId);
         void BlockUser(int userId);

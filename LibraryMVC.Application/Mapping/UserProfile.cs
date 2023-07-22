@@ -25,6 +25,8 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.Loans, opt => opt.MapFrom(s => new List<Loan>()))
                 .ForMember(d => d.isBlocked, opt => opt.MapFrom(s => false));
 
+            CreateMap<LibraryUser, NewLibraryUserVm>();
+
             CreateMap<LibraryUser, LibraryUserForListVm>()
                 .ForMember(d => d.FullName, opt => opt.MapFrom(s => s.FirstName + " " + s.LastName))
                 .ForMember(d => d.OverdueLoansCount, opt => opt.MapFrom(s => s.Loans.Count(l => l.isOverdue == true)))
@@ -32,6 +34,12 @@ namespace LibraryMVC.Application.Mapping
                     .Where(l => l.ReturnRecord != null && l.ReturnRecord.IsPenaltyPaid == false).Sum(l => l.ReturnRecord.TotalPenalty)));
 
             CreateMap<LibraryUser, LibraryUserDetailsVm>()
+                .ForMember(d => d.FullName, opt => opt.MapFrom(s => s.FirstName + " " + s.LastName))
+                .ForMember(d => d.UnpaidPenaltiesTotal, opt => opt.MapFrom(s => s.Loans
+                    .Where(l => l.ReturnRecord != null && l.ReturnRecord.IsPenaltyPaid == false).Sum(l => l.ReturnRecord.TotalPenalty)))
+                .ForMember(d => d.OverdueLoansCount, opt => opt.MapFrom(s => s.Loans.Count(l => l.isOverdue == true)));
+
+            CreateMap<LibraryUser, LibraryUserForPersonalDataVm>()
                 .ForMember(d => d.FullName, opt => opt.MapFrom(s => s.FirstName + " " + s.LastName))
                 .ForMember(d => d.UnpaidPenaltiesTotal, opt => opt.MapFrom(s => s.Loans
                     .Where(l => l.ReturnRecord != null && l.ReturnRecord.IsPenaltyPaid == false).Sum(l => l.ReturnRecord.TotalPenalty)))

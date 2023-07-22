@@ -110,5 +110,25 @@ namespace LibraryMVC.Application.Services
             var additionalLibrarianInfo = _additionalLibrarianInfoRepository.GetInfoByLibraryUserId(libraryUserId);
             return additionalLibrarianInfo == null ? false : true;
         }
+
+        public LibraryUserForPersonalDataVm GetLibraryUserForPersonalData(int id)
+        {
+            var libraryUser = _libraryUserRepository.GetUserById(id);
+            var libraryUserVm = _mapper.Map<LibraryUserForPersonalDataVm>(libraryUser);
+            return libraryUserVm;
+        }
+
+        public int GetLibraryUserIdByIdentityUserId(string id)
+        {
+            var user = _libraryUserRepository.GetUserByIdentityUserId(id);
+            return user.Id;
+        }
+
+        public NewLibraryUserVm GetInfoForUserEdit(int id)
+        {
+            var user = _libraryUserRepository.GetUserById(id);
+            var userVm = _mapper.Map<NewLibraryUserVm>(user);
+            return userVm;
+        }
     }
 }

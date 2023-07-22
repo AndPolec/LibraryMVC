@@ -49,12 +49,30 @@ namespace LibraryMVC.Web.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        
+        [HttpGet]
+        public IActionResult EditUserData(int id)
+        {
+            var model = _userService.GetInfoForUserEdit(id);
+            return View(model);
+        }
 
         [HttpGet]
+        [Route("LibraryUser/ViewUserDetails/{id}")]
         public IActionResult ViewUserDetails(int libraryUserId)
         {
             var model = _userService.GetLibraryUserForDetails(libraryUserId);
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("LibraryUser/ViewUserDetails")]
+        public IActionResult ViewUserDetails()
+        {
+            var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var libraryUserId = _userService.GetLibraryUserIdByIdentityUserId(identityUserId);
+            var model = _userService.GetLibraryUserForPersonalData(libraryUserId);
+            return View("ViewUserPersonalDetails", model);
         }
 
         [HttpGet]

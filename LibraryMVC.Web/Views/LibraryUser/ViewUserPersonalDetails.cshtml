@@ -1,0 +1,104 @@
+﻿@model LibraryMVC.Application.ViewModels.LibraryUser.LibraryUserForPersonalDataVm
+
+@{
+    ViewData["Title"] = "Moje dane";
+}
+
+<partial name="_Notification" />
+
+<h1 class="fw-bold">Moje dane</h1>
+
+<div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>
+                @Html.DisplayFor(model => model.FullName)
+                @if (Model.IsBlocked)
+                {
+                    <span class="bg-danger rounded-3 p-2">ZABLOKOWANY</span>
+                }
+            </h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Id)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Id)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.PhoneNumber)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.UnpaidPenaltiesTotal)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.UnpaidPenaltiesTotal)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.OverdueLoansCount)
+                </dt>
+                <dd class="col-sm-9 my-auto">
+                    @Html.DisplayFor(model => model.OverdueLoansCount)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <h4>Adres</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address.Street)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address.Street)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address.BuildingNumber)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address.BuildingNumber)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address.FlatNumber)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address.FlatNumber)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address.City)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address.City)
+                </dd>
+                <dt class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Address.ZipCode)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Address.ZipCode)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <hr />
+    </div>
+    <div class="row mt-4">
+        <div class="d-grid gap-2 d-md-block">
+            <a class="btn btn-primary" role="button" asp-action="Index">
+                <i class="fa-solid fa-arrow-left-long"></i> Wróć
+            </a>
+            <a asp-action="EditUserData" asp-route-userId="@Model.Id" class="btn btn-warning" role="button">
+                <i class="fa-solid fa-user-lock"></i> Edytuj
+            </a>
+        </div>
+    </div>
+</div>

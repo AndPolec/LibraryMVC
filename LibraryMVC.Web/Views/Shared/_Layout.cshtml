@@ -30,7 +30,7 @@
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Zasady</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Privacy">Jak korzystać</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Book" asp-action="Index">Katalog</a>
@@ -44,7 +44,7 @@
                             </a>
                             <ul class="dropdown-menu custom-dropdown-bg-color">
                                 <li><a class="dropdown-item" asp-controller="Loan" asp-action="Index">Moje zamówienia</a></li>
-                                <li><a class="dropdown-item" asp-controller="LibraryUser" asp-action="Index">Moje dane</a></li>
+                                <li><a class="dropdown-item" asp-controller="LibraryUser" asp-action="ViewUserDetails">Moje dane</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -83,7 +83,7 @@
 
     <footer class="border-top footer text-muted " style="background-color: #3756c1 ;">
         <div class="container">
-            &copy; 2022 - AndPol <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - AndPol <a asp-controller="Home" asp-action="Rules">Jak korzystać</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
