@@ -96,11 +96,12 @@ namespace LibraryMVC.Application.Services
             await Task.Run(() => _libraryUserRepository.UpdateUser(libraryUser));
         }
 
-        private void CreateAdditionalLibrarianInfoForLibraryUser(LibraryUser user)
+        private async void CreateAdditionalLibrarianInfoForLibraryUser(LibraryUser user)
         {
             if (!IsAdditionalLibrarianInfoExists(user.Id))
             {
-                user.additionalLibrarianInfo = new AdditionalLibrarianInfo() { Id = user.Id };
+                var newLibrarianInfo = new AdditionalLibrarianInfo() { LibraryUserId = user.Id };
+                await _additionalLibrarianInfoRepository.AddNewLibrarianInfo(newLibrarianInfo);
             }
         }
 

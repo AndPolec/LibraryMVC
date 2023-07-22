@@ -16,6 +16,11 @@ namespace LibraryMVC.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task AddNewLibrarianInfo(AdditionalLibrarianInfo librarianInfo)
+        {   
+            await _context.AdditionalLibrarianInfo.AddAsync(librarianInfo);
+        }
+
         public AdditionalLibrarianInfo GetInfoByIdentityUserId(string id)
         {
             var info = _context.AdditionalLibrarianInfo.FirstOrDefault(i => i.LibraryUser.IdentityUserId == id);

@@ -60,7 +60,7 @@ namespace LibraryMVC.Application.Services
             var user = await _userManager.FindByIdAsync(userId);
             var userRoles = await _userManager.GetRolesAsync(user);
 
-            if (newRoles.All(r => userRoles.Contains(r)) && newRoles.Count == userRoles.Count)
+            if (!IsRoleChanged(userRoles, newRoles))
             {
                 return;
             }
@@ -69,6 +69,18 @@ namespace LibraryMVC.Application.Services
             await _libraryUserService.ChangeLibraryUserType(userId,newRoles);
             await _userManager.AddToRolesAsync(user, newRoles);
             return;
+        }
+
+        private bool IsRoleChanged(IList<string> userRoles, List<string> newRoles)
+        {
+            if (newRoles.All(r => userRoles.Contains(r)) && newRoles.Count == userRoles.Count)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public async Task<IdentityResult> SetStandardReaderRoleAsync(IdentityUser user)
