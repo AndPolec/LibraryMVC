@@ -11,6 +11,7 @@ namespace LibraryMVC.Application.Interfaces
     public interface ILibraryUserService
     {
         int AddUser(NewLibraryUserVm model);
+        void UpdateUser(NewLibraryUserVm model);
         int GetLibraryUserIdByIdentityUserId(string id);
         bool IsUserDataExists(string identityUserId);
         List<LibraryUserForListVm> GetAllLibraryUsersForList();

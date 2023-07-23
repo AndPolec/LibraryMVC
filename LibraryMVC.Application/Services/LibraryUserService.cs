@@ -130,5 +130,11 @@ namespace LibraryMVC.Application.Services
             var userVm = _mapper.Map<NewLibraryUserVm>(user);
             return userVm;
         }
+
+        public void UpdateUser(NewLibraryUserVm model)
+        {
+            var user = _mapper.Map<LibraryUser>(model);
+            _libraryUserRepository.UpdateUser(user);
+        }
     }
 }

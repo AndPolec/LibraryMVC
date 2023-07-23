@@ -57,6 +57,20 @@ namespace LibraryMVC.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public IActionResult EditUserData(NewLibraryUserVm user)
+        {
+            if (!ModelState.IsValid)
+            {
+                var model = _userService.GetInfoForUserEdit(user.Id);
+                return View(model);
+            }
+
+            _userService.UpdateUser(user);
+            TempData["success"] = "Dane zaktualizowane.";
+            return RedirectToAction("ViewUserDetails");
+        }
+
         [HttpGet]
         [Route("LibraryUser/ViewUserDetails/{id}")]
         public IActionResult ViewUserDetails(int libraryUserId)
