@@ -5,6 +5,7 @@ using LibraryMVC.Application.Mapping;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Infrastructure;
 using LibraryMVC.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -36,6 +37,11 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 });
 
+builder.Services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+});
 
 var app = builder.Build();
 
