@@ -125,6 +125,11 @@ namespace LibraryMVC.Web.Controllers
         [HttpPost]
         public IActionResult ConfirmReturn(NewReturnRecordVm model)
         {
+            if (model.ReturnedBooksId == null)
+                model.ReturnedBooksId = new List<int>();
+            if (model.LostOrDestroyedBooksId == null)
+                model.LostOrDestroyedBooksId = new List<int>();
+
             var result = _validatorNewReturnRecordVm.Validate(model);
             if (!result.IsValid)
             {

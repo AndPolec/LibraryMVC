@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Book;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Packaging.Signing;
 using System.Drawing.Text;
@@ -47,6 +48,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Librarian,Administrator")]
         public IActionResult AdminBookPanel()
         {
             var model = _bookService.GetAllBooksForList(10, 1, "");

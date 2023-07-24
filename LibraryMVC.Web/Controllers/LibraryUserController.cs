@@ -72,7 +72,6 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
-        [Route("LibraryUser/ViewUserDetails/{id}")]
         public IActionResult ViewUserDetails(int libraryUserId)
         {
             var model = _userService.GetLibraryUserForDetails(libraryUserId);
@@ -80,8 +79,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
-        [Route("LibraryUser/ViewUserDetails")]
-        public IActionResult ViewUserDetails()
+        public IActionResult ViewLoggedUserDetails()
         {
             var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var libraryUserId = _userService.GetLibraryUserIdByIdentityUserId(identityUserId);

@@ -22,7 +22,7 @@ namespace LibraryMVC.Application.ViewModels.User
         public string BuildingNumber { get; set; }
 
         [DisplayName("Nr mieszkania")]
-        public string? FlatNumber { get; set; }
+        public string FlatNumber { get; set; }
 
         [DisplayName("Kod pocztowy")]
         [Required]
