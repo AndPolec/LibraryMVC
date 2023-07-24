@@ -47,8 +47,9 @@ namespace LibraryMVC.Web.Controllers
             return View(model);
         }
 
+        
         [HttpGet]
-        [Authorize(Roles = "Librarian,Administrator")]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult AdminBookPanel()
         {
             var model = _bookService.GetAllBooksForList(10, 1, "");
@@ -56,6 +57,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult AdminBookPanel(int pageSize, int? pageNumber, string searchString)
         {
             if (!pageNumber.HasValue)
@@ -91,6 +93,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult AddNewBook()
         {
             var addNewModel = _bookService.GetInfoForAddNewBook();
@@ -98,6 +101,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult AddNewBook(NewBookVm model)
         {
             var result = _validator.Validate(model);
@@ -114,6 +118,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult EditBook(int id)
         {
             var editBookModel = _bookService.GetInfoForBookEdit(id);
@@ -121,6 +126,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult EditBook(NewBookVm model)
         {
             var result = _validator.Validate(model);
@@ -137,6 +143,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult DeleteBook(int id)
         {
             _bookService.DeleteBook(id);
@@ -145,6 +152,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult ViewBookForLibrarian(int id)
         {
             var bookModel = _bookService.GetBookForDetails(id);

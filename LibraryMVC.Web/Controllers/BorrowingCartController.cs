@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.Security.Claims;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 namespace LibraryMVC.Web.Controllers
 {
     [AutoValidateAntiforgeryToken]
+    [Authorize]
     public class BorrowingCartController : Controller
     {
         private readonly ILoanService _loanService;

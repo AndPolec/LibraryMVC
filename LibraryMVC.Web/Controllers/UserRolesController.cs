@@ -1,8 +1,10 @@
 ﻿using LibraryMVC.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryMVC.Web.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class UserRolesController : Controller
     {
         private readonly IIdentityUserRolesService _rolesService; 

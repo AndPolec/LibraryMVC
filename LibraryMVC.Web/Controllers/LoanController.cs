@@ -6,6 +6,7 @@ using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
@@ -13,6 +14,7 @@ using System.Security.Claims;
 namespace LibraryMVC.Web.Controllers
 {
     [AutoValidateAntiforgeryToken]
+    [Authorize]
     public class LoanController : Controller
     {
         private readonly ILoanService _loanService;
@@ -93,6 +95,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz")]
         public IActionResult ConfirmCheckOut()
         {
             var model = _loanService.GetAllLoansForConfirmCheckOutList();
@@ -100,6 +103,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Bibliotekarz")]
         public IActionResult ConfirmCheckOut(int loanId)
         {
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -109,6 +113,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult ConfirmReturnIndex()
         {
             var model = _loanService.GetAllLoansForConfirmReturnList();
@@ -116,6 +121,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz")]
         public IActionResult ConfirmReturn(int loanId)
         {
             var model = _loanService.GetInfoForConfirmReturn(loanId);
@@ -123,6 +129,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Bibliotekarz")]
         public IActionResult ConfirmReturn(NewReturnRecordVm model)
         {
             if (model.ReturnedBooksId == null)
@@ -146,6 +153,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult ViewReturnRecord(int returnRecordId)
         {
             returnRecordId = 1;
@@ -154,6 +162,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public IActionResult ChangeGlobalLoanSettings()
         {
             var model =_loanService.GetGlobalLoanSettings();
@@ -161,6 +170,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult ChangeGlobalLoanSettings(LoanSettingsVm model)
         {
             var result = _validatorLoanSettingsVm.Validate(model);

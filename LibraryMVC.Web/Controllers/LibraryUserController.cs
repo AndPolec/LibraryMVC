@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.User;
 using LibraryMVC.Domain.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -19,6 +20,7 @@ namespace LibraryMVC.Web.Controllers
             _validator = validator;
         }
 
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult Index()
         {
             var model = _userService.GetAllLibraryUsersForList();
@@ -26,12 +28,14 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddNewUser() 
         {
             return View(new NewLibraryUserVm());
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult AddNewUser(NewLibraryUserVm model)
         {
             var result = _validator.Validate(model);
@@ -79,6 +83,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult ViewLoggedUserDetails()
         {
             var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -88,6 +93,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult BlockUser(int userId) 
         { 
             _userService.BlockUser(userId);
@@ -96,6 +102,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult UnblockUser(int userId)
         {
             _userService.UnblockUser(userId);
