@@ -15,6 +15,8 @@ namespace LibraryMVC.Application.ViewModels.Loan
         [DisplayName("Nr zamówienia")]
         public int Id { get; set; }
 
+        public int LibraryUserId { get; set; }
+
         [DisplayName("Data utworzenia")]
         public DateTime CreationDate { get; set; }
 
