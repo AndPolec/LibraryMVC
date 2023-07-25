@@ -5,6 +5,7 @@ using LibraryMVC.Application.Mapping;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Infrastructure;
 using LibraryMVC.Infrastructure.Repositories;
+using LibraryMVC.Web.Filters;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

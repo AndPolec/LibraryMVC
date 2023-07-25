@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -22,7 +23,7 @@ namespace LibraryMVC.Web.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var model = _loanService.GetBorrowingCartForDetailsByIndentityUserId(userId);
-            
+
             return View(model);
         }
 
@@ -37,26 +38,28 @@ namespace LibraryMVC.Web.Controllers
                 return RedirectToAction("ViewBook", "Book", new { id = bookId });
             }
 
-            if (_loanService.IsBookInBorrowingCart(bookId,userId))
+            if (_loanService.IsBookInBorrowingCart(bookId, userId))
             {
                 TempData["warning"] = "Książka już znajduje się w koszyku.";
                 return RedirectToAction("ViewBook", "Book", new { id = bookId });
             }
 
-            _loanService.AddToBorrowingCart(bookId,userId);
+            _loanService.AddToBorrowingCart(bookId, userId);
             TempData["success"] = "Książka dodana do koszyka.";
-            
-            return RedirectToAction("ViewBook", "Book", new {id = bookId});
+
+            return RedirectToAction("ViewBook", "Book", new { id = bookId });
         }
 
-        [HttpGet]
+        [HttpGet("RemoveFromBorrowingCart/{bookId}/{borrowingCartId}")]
+        [CheckBorrowingCartPermission]
         public IActionResult RemoveFromBorrowingCart(int bookId, int borrowingCartId)
         {
             _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
+        [HttpGet("RemoveAllFromBorrowingCart/{borrowingCartId}")]
+        [CheckBorrowingCartPermission]
         public IActionResult RemoveAllFromBorrowingCart(int borrowingCartId)
         {
             _loanService.ClearBorrowingCart(borrowingCartId);
