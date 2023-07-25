@@ -38,36 +38,44 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="BorrowingCart" asp-action="Index">Koszyk</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
-                                Profil
-                            </a>
-                            <ul class="dropdown-menu custom-dropdown-bg-color">
-                                <li><a class="dropdown-item" asp-controller="Loan" asp-action="Index">Moje zamówienia</a></li>
-                                <li><a class="dropdown-item" asp-controller="LibraryUser" asp-action="ViewLoggedUserDetails">Moje dane</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"> 
-                                Bibliotekarz
-                            </a>
-                            <ul class="dropdown-menu custom-dropdown-bg-color">
-                                <li><a class="dropdown-item" asp-controller="Loan" asp-action="ConfirmCheckOut">Potwierdź wydanie</a></li>
-                                <li><a class="dropdown-item" asp-controller="Loan" asp-action="ConfirmReturnIndex">Potwierdź zwrot</a></li>
-                                <li><a class="dropdown-item" asp-controller="Book" asp-action="AdminBookPanel">Zarządzaj książkami</a></li>
-                                <li><a class="dropdown-item" asp-controller="LibraryUser" asp-action="Index">Zarządzaj użytkownikami</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"> 
-                                Administrator
-                            </a>
-                            <ul class="dropdown-menu custom-dropdown-bg-color">
-                                <li><a class="dropdown-item" asp-controller="Loan" asp-action="ChangeGlobalLoanSettings">Ustawienia</a></li>
-                                <li><a class="dropdown-item" asp-controller="UserRoles" asp-action="Index">Zmień uprawnienia użytkownika</a></li>
-                            </ul>
-                        </li>
-                        
+                        @if (User.IsInRole("Czytelnik") || User.IsInRole("Bibliotekarz") || User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                                    Profil
+                                </a>
+                                <ul class="dropdown-menu custom-dropdown-bg-color">
+                                    <li><a class="dropdown-item" asp-controller="Loan" asp-action="Index">Moje zamówienia</a></li>
+                                    <li><a class="dropdown-item" asp-controller="LibraryUser" asp-action="ViewLoggedUserDetails">Moje dane</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Bibliotekarz") || User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                                    Bibliotekarz
+                                </a>
+                                <ul class="dropdown-menu custom-dropdown-bg-color">
+                                    <li><a class="dropdown-item" asp-controller="Loan" asp-action="ConfirmCheckOut">Potwierdź wydanie</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Loan" asp-action="ConfirmReturnIndex">Potwierdź zwrot</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Book" asp-action="AdminBookPanel">Zarządzaj książkami</a></li>
+                                    <li><a class="dropdown-item" asp-controller="LibraryUser" asp-action="Index">Zarządzaj użytkownikami</a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                                    Administrator
+                                </a>
+                                <ul class="dropdown-menu custom-dropdown-bg-color">
+                                    <li><a class="dropdown-item" asp-controller="Loan" asp-action="ChangeGlobalLoanSettings">Ustawienia</a></li>
+                                    <li><a class="dropdown-item" asp-controller="UserRoles" asp-action="Index">Zmień uprawnienia użytkownika</a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
