@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.User;
 using LibraryMVC.Domain.Model;
+using LibraryMVC.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -10,6 +11,7 @@ using System.Security.Claims;
 namespace LibraryMVC.Web.Controllers
 {
     [AutoValidateAntiforgeryToken]
+    [Authorize]
     public class LibraryUserController : Controller
     {
         private readonly ILibraryUserService _userService;
@@ -53,11 +55,12 @@ namespace LibraryMVC.Web.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        
-        [HttpGet]
-        public IActionResult EditUserData(int id)
+
+        [HttpGet("EditUserData/{libraryUserId}")]
+        [CheckViewUserDataPermission]
+        public IActionResult EditUserData(int libraryUserId)
         {
-            var model = _userService.GetInfoForUserEdit(id);
+            var model = _userService.GetInfoForUserEdit(libraryUserId);
             return View(model);
         }
 
@@ -75,7 +78,8 @@ namespace LibraryMVC.Web.Controllers
             return RedirectToAction("ViewUserDetails");
         }
 
-        [HttpGet]
+        [HttpGet("ViewUserDetails/{libraryUserId}")]
+        [CheckViewUserDataPermission]
         public IActionResult ViewUserDetails(int libraryUserId)
         {
             var model = _userService.GetLibraryUserForDetails(libraryUserId);
@@ -83,7 +87,6 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult ViewLoggedUserDetails()
         {
             var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -6,6 +6,7 @@ using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Model;
+using LibraryMVC.Web.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -52,6 +53,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpPost]
+        [CheckCreateLoanPermission]
         public IActionResult CreateNewLoan(int borrowingCartId, int userId)
         {
             if (_libraryUserService.IsBlocked(userId))

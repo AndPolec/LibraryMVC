@@ -15,7 +15,6 @@ namespace LibraryMVC.Application.Interfaces
     public interface ILoanService
     {
         BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId);
-        BorrowingCart GetBorrowingCartById(int borrowingCartId);
         void AddToBorrowingCart(int bookId,string identityUserId);
         bool IsBookInBorrowingCart(int bookId, string identityUserId);
         bool IsBorrowingCartFull(string identityUserId);

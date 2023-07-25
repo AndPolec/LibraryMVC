@@ -57,7 +57,7 @@ namespace LibraryMVC.Application.Services
             var borrowingCartVm = _mapper.Map<BorrowingCartDetailsVm>(borrowingCart);
             return borrowingCartVm;
         }
-        public BorrowingCart GetBorrowingCartById(int borrowingCartId)
+        private BorrowingCart GetBorrowingCartById(int borrowingCartId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
             return borrowingCart;
