@@ -74,6 +74,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [CheckViewLoanPermission]
         public IActionResult ViewLoan(int loanId)
         {
             var model = _loanService.GetLoanForDetails(loanId);
@@ -81,6 +82,7 @@ namespace LibraryMVC.Web.Controllers
         }
 
         [HttpGet]
+        [CheckViewLoanPermission]
         public IActionResult CancelLoan(int loanId)
         {
             var result = _loanService.CancelLoan(loanId);

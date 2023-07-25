@@ -9,6 +9,11 @@ namespace LibraryMVC.Web.Filters
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            if (context.HttpContext.User.IsInRole("Bibliotekarz") || context.HttpContext.User.IsInRole("Administrator"))
+            {
+                return;
+            }
+
             var libraryUserService = context.HttpContext.RequestServices.GetRequiredService<ILibraryUserService>();
             var identityUserId = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userId = context.HttpContext.Request.RouteValues["libraryUserId"].ToString();
