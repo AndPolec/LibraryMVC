@@ -15,13 +15,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{F8C71B28-A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{66A8CC10-CDA8-46D8-A43B-FEC779E75EFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryMVC.Application", "LibraryMVC.Application\LibraryMVC.Application.csproj", "{250AFB9D-C24E-42AB-B011-64CFD8A679E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryMVC.Application", "LibraryMVC.Application\LibraryMVC.Application.csproj", "{250AFB9D-C24E-42AB-B011-64CFD8A679E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryMVC.Domain", "LibraryMVC.Domain\LibraryMVC.Domain.csproj", "{2226C4EC-BCBE-4E49-ADD6-8C9EEFC2ACCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryMVC.Domain", "LibraryMVC.Domain\LibraryMVC.Domain.csproj", "{2226C4EC-BCBE-4E49-ADD6-8C9EEFC2ACCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryMVC.Infrastructure", "LibraryMVC.Infrastructure\LibraryMVC.Infrastructure.csproj", "{1EBC8C22-2BD5-4CCA-86D6-18AF9F3FFD36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryMVC.Infrastructure", "LibraryMVC.Infrastructure\LibraryMVC.Infrastructure.csproj", "{1EBC8C22-2BD5-4CCA-86D6-18AF9F3FFD36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryMVC.Tests", "LibraryMVC.Tests\LibraryMVC.Tests.csproj", "{5F0B4320-1A39-491D-833E-C1558BAB98CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryMVC.Tests", "LibraryMVC.Tests\LibraryMVC.Tests.csproj", "{5F0B4320-1A39-491D-833E-C1558BAB98CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{38ECD6C0-0BE3-4225-B951-16CF327FB874}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryApi", "LibraryApi\LibraryApi.csproj", "{E404FA52-C91A-48EF-A470-2D3E3D1086A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +53,10 @@ Global
 		{5F0B4320-1A39-491D-833E-C1558BAB98CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F0B4320-1A39-491D-833E-C1558BAB98CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0B4320-1A39-491D-833E-C1558BAB98CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E404FA52-C91A-48EF-A470-2D3E3D1086A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E404FA52-C91A-48EF-A470-2D3E3D1086A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E404FA52-C91A-48EF-A470-2D3E3D1086A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E404FA52-C91A-48EF-A470-2D3E3D1086A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +67,7 @@ Global
 		{2226C4EC-BCBE-4E49-ADD6-8C9EEFC2ACCA} = {30DE534B-B6CD-41CA-A30B-759A83CD557D}
 		{1EBC8C22-2BD5-4CCA-86D6-18AF9F3FFD36} = {B631176B-341E-47E2-9718-92625B985BB3}
 		{5F0B4320-1A39-491D-833E-C1558BAB98CF} = {F8C71B28-A9A4-40DC-91EE-7998090B4C15}
+		{E404FA52-C91A-48EF-A470-2D3E3D1086A8} = {38ECD6C0-0BE3-4225-B951-16CF327FB874}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B1E2B96-4CDE-420D-8AAB-E7233D1236D9}
