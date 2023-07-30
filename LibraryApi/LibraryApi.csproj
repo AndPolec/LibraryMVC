@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LibraryMVC.Application\LibraryMVC.Application.csproj" />
     <ProjectReference Include="..\LibraryMVC.Infrastructure\LibraryMVC.Infrastructure.csproj" />
   </ItemGroup>
 
