@@ -36,7 +36,7 @@
                             <a class="nav-link" asp-controller="Book" asp-action="Index">Katalog</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="BorrowingCart" asp-action="Index">Koszyk</a>
+                            <a class="nav-link" asp-controller="BorrowingCart" asp-action="Index"><i class="fa-solid fa-cart-shopping"></i> Koszyk</a>
                         </li>
                         @if (User.IsInRole("Czytelnik") || User.IsInRole("Bibliotekarz") || User.IsInRole("Administrator"))
                         {

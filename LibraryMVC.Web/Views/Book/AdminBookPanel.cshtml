@@ -8,10 +8,22 @@
 
 <h1 class="fw-bold">Zarządzaj książkami</h1>
 
-<div class="my-4">
-    <a class="btn btn-success btn-lg" asp-controller="Book" asp-action="AddNewBook"> 
-        <i class="bi bi-plus-square"></i> Dodaj nową książkę
-    </a>
+<div class="row justify-content-start my-4">
+    <div class="col-auto">
+        <a class="btn btn-success btn-lg" asp-controller="Book" asp-action="AddNewBook">
+            <i class="fa-solid fa-book"></i>&nbsp Dodaj książkę
+        </a>
+    </div>
+    <div class="col-auto">
+        <a class="btn btn-success btn-lg" asp-controller="Book" asp-action="AddNewPublisher">
+            <i class="fa-solid fa-address-book"></i>&nbsp Dodaj wydawcę
+        </a>
+    </div>
+    <div class="col-auto">
+        <a class="btn btn-success btn-lg" asp-controller="Book" asp-action="AddNewGenre">
+            <i class="fa-solid fa-square-plus"></i>&nbsp Dodaj gatunek
+        </a>
+    </div>
 </div>
 
 <div class="container p-4 bg-light bg-opacity-75 rounded-3 shadow-lg border">

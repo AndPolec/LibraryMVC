@@ -158,5 +158,19 @@ namespace LibraryMVC.Web.Controllers
             var bookModel = _bookService.GetBookForDetails(id);
             return View(bookModel);
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
+        public IActionResult AddNewPublisher(int id)
+        {
+            
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
+        public IActionResult AddNewGenre(int id)
+        {
+            
+        }
     }
 }

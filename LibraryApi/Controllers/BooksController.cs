@@ -18,7 +18,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<ListOfBookForListVm> GetBooks(int pageSize = 10, int pageNumber = 1, string searchString = "")
+        public ActionResult<ListOfBookForListVm> GetBooks(string? searchString, int pageSize = 10, int pageNumber = 1)
         {
             var result = _bookService.GetAllBooksForList(pageSize, pageNumber, searchString ?? string.Empty);
             if (result.Count == 0)
