@@ -104,6 +104,13 @@ namespace LibraryMVC.Application.Services
             return genreList;
         }
 
+        public int AddGenre(GenreForListVm model)
+        {
+            var genre = _mapper.Map<Genre>(model);
+            int id = _genreRepository.AddGenre(genre);
+            return id;
+        }
+
         public ListOfPublisherForListVm GetAllPublishersForList()
         {
             var publishers = _publisherRepository.GetAllPublishers().OrderBy(p => p.Name).ProjectTo<PublisherForListVm>(_mapper.ConfigurationProvider).ToList();
@@ -114,6 +121,13 @@ namespace LibraryMVC.Application.Services
             return publishersList;
         }
 
+        public int AddPublisher(PublisherForListVm model)
+        {
+            var publisher = _mapper.Map<Publisher>(model);
+            int id = _publisherRepository.AddPublisher(publisher);
+            return id;
+        }
+
         public ListOfAuthorForListVm GetAllAuthorsForList()
         {
             var authors = _authorRepository.GetAllAuthors().OrderBy(a => a.FirstName).ProjectTo<AuthorForListVm>(_mapper.ConfigurationProvider).ToList();
@@ -122,6 +136,13 @@ namespace LibraryMVC.Application.Services
                 Authors = authors 
             };
             return authorList;
+        }
+
+        public int AddAuthor(NewAuthorVm model)
+        {
+            var author = _mapper.Map<Author>(model);
+            int id = _authorRepository.AddAuthor(author);
+            return id;
         }
 
         public NewBookVm SetParametersToVm(NewBookVm model)

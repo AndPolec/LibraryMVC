@@ -18,6 +18,9 @@ namespace LibraryMVC.Application.Interfaces
         BookDetailsVm GetBookForDetails(int bookId);
         NewBookVm GetInfoForAddNewBook();
         ListOfGenreForListVm GetAllGenresForList();
+        int AddGenre(GenreForListVm model);
+        int AddPublisher(PublisherForListVm model);
+        int AddAuthor(NewAuthorVm model);
         ListOfAuthorForListVm GetAllAuthorsForList();
         ListOfPublisherForListVm GetAllPublishersForList();
         NewBookVm GetInfoForBookEdit(int id);

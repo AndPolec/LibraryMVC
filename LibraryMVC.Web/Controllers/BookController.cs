@@ -2,7 +2,10 @@
 using FluentValidation.AspNetCore;
 using FluentValidation.Results;
 using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Application.ViewModels.Author;
 using LibraryMVC.Application.ViewModels.Book;
+using LibraryMVC.Application.ViewModels.Genre;
+using LibraryMVC.Application.ViewModels.Publisher;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Packaging.Signing;
@@ -161,16 +164,71 @@ namespace LibraryMVC.Web.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
-        public IActionResult AddNewPublisher(int id)
+        public IActionResult AddNewPublisher()
         {
-            
+            var model = new PublisherForListVm();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
+        public IActionResult AddNewPublisher(PublisherForListVm model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            _bookService.AddPublisher(model);
+            TempData["success"] = "Wydawca został dodany.";
+
+            return RedirectToAction("AdminBookPanel");
         }
 
         [HttpGet]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
-        public IActionResult AddNewGenre(int id)
+        public IActionResult AddNewGenre()
         {
-            
+            var model = new GenreForListVm();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
+        public IActionResult AddNewGenre(GenreForListVm model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            _bookService.AddGenre(model);
+            TempData["success"] = "Gatunek został dodany.";
+
+            return RedirectToAction("AdminBookPanel");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
+        public IActionResult AddNewAuthor()
+        {
+            var model = new NewAuthorVm();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
+        public IActionResult AddNewAuthor(NewAuthorVm model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            _bookService.AddAuthor(model);
+            TempData["success"] = "Autor został dodany.";
+
+            return RedirectToAction("AdminBookPanel");
         }
     }
 }
