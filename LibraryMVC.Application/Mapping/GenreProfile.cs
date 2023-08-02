@@ -15,6 +15,7 @@ namespace LibraryMVC.Application.Mapping
         public GenreProfile()
         {
             CreateMap<Genre, GenreForListVm>();
+            CreateMap<GenreForListVm, Genre>();
 
             
         }

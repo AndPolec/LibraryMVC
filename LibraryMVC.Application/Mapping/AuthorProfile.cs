@@ -15,6 +15,7 @@ namespace LibraryMVC.Application.Mapping
         {
             CreateMap<LibraryMVC.Domain.Model.Author, AuthorForListVm>()
                 .ForMember(d => d.FullName, opt => opt.MapFrom(s => s.LastName + " " + s.FirstName));
+            CreateMap<NewAuthorVm, LibraryMVC.Domain.Model.Author>();
 
         }
     }

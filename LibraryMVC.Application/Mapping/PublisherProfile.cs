@@ -13,6 +13,7 @@ namespace LibraryMVC.Application.Mapping
         public PublisherProfile()
         {
             CreateMap<LibraryMVC.Domain.Model.Publisher, PublisherForListVm>();
+            CreateMap<PublisherForListVm, LibraryMVC.Domain.Model.Publisher>();
         }
     }
 }
