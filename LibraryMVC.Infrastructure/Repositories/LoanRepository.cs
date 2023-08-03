@@ -46,8 +46,7 @@ namespace LibraryMVC.Infrastructure.Repositories
                 .Include(l => l.Books)
                 .Include(l => l.Status)
                 .Include(l => l.ReturnRecord)
-                .Include(l => l.LibraryUser)
-                .AsNoTracking();
+                .Include(l => l.LibraryUser);
             return loan;
         }
 

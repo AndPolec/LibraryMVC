@@ -141,7 +141,7 @@ namespace LibraryMVC.Application.Services
 
         public void UpdateOverduePenaltyAndStatusForAllLoans()
         {
-            var loans = _loanRepository.GetAllLoans().Where(l => l.StatusId == 2 || l.StatusId == 4); // Get all Loans with Status == "Wypożyczone" || Status == "Zaległe" || ReturnDueDate < DateTime.Now.Date
+            var loans = _loanRepository.GetAllLoans().Where(l => l.StatusId == 2 || l.StatusId == 4).ToList(); // Get all Loans with Status == "Wypożyczone" || Status == "Zaległe" || ReturnDueDate < DateTime.Now.Date
             var loansToUpdate = new List<Loan>();
 
             foreach (var loan in loans)
@@ -155,8 +155,8 @@ namespace LibraryMVC.Application.Services
                 }
                 else if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone" || DateTime.Now.Date > loan.ReturnDueDate.Date
                 {
-                    if(loan.ReturnRecord == null)
-                        loan.ReturnRecord = new ReturnRecord() { Id = 0 };
+                    if (loan.ReturnRecord == null)
+                        loan.ReturnRecord = new ReturnRecord() { Comments = "" };
 
                     decimal calculatedPenalty = CalculateOverduePenalty(loan);
                     loan.ReturnRecord.OverduePenalty = calculatedPenalty;

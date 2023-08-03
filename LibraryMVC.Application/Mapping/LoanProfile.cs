@@ -52,7 +52,8 @@ namespace LibraryMVC.Application.Mapping
                 .ForMember(d => d.Date, opt => opt.MapFrom(s => DateTime.Now));
 
             CreateMap<ReturnRecord, ReturnRecordDetailsVm>()
-                .ForMember(d => d.FullNameOfConfirmingLibrarian, opt => opt.MapFrom(s => s.AdditionalLibrarianInfo.LibraryUser.FirstName + " " + s.AdditionalLibrarianInfo.LibraryUser.LastName));
+                .ForMember(d => d.FullNameOfConfirmingLibrarian, opt => opt.MapFrom(s => s.AdditionalLibrarianInfo.LibraryUser.FirstName + " " + s.AdditionalLibrarianInfo.LibraryUser.LastName))
+                .ForMember(d => d.TotalAmountOfPaidPenalty, opt => opt.MapFrom(s => s.TotalPenalty));
 
 
 
