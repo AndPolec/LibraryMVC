@@ -20,7 +20,8 @@ The application is built in Clean Architecture and Service-Repository pattern.
 
 ## Technologies
 * .NET 6.0
-* ASP.NET MVC, HTML5, CSS, MSSQL
+* ASP.NET, HTML5, CSS, MSSQL
+* WebAPI
 * Depedency Injection
 * Entity Framework Core 6.0.10
 * LINQ

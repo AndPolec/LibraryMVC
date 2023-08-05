@@ -35,10 +35,6 @@ namespace LibraryMVC.Application.ViewModels.Book
 
         [DisplayName("Wydawca")]
         public int? PublisherId { get; set; }
-
-        public ListOfAuthorForListVm AllAuthors { get; set; }
-        public ListOfGenreForListVm AllGenres { get; set; }
-        public ListOfPublisherForListVm AllPublishers { get; set; }
     }
 
     public class NewBookVmValidator : AbstractValidator<NewBookVm>

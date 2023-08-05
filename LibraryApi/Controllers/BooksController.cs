@@ -1,4 +1,6 @@
-﻿using LibraryMVC.Application.Interfaces;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Book;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,13 @@ namespace LibraryApi.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly IValidator<NewBookVm> _validator;
 
-        public BooksController(IBookService bookService)
+
+        public BooksController(IBookService bookService, IValidator<NewBookVm> newBookValidator)
         {
             _bookService = bookService;
+            _validator = newBookValidator;
         }
 
         [HttpGet]
@@ -38,6 +43,8 @@ namespace LibraryApi.Controllers
             }
             return Ok(result);
         }
+
+     
         
     }
 }

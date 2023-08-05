@@ -16,15 +16,15 @@ namespace LibraryMVC.Application.Interfaces
         void DeleteBook(int id);
         ListOfBookForListVm GetAllBooksForList(int pageSize, int pageNumber, string searchString);
         BookDetailsVm GetBookForDetails(int bookId);
-        NewBookVm GetInfoForAddNewBook();
+        CreateBookVm GetInfoForAddNewBook();
         ListOfGenreForListVm GetAllGenresForList();
         int AddGenre(GenreForListVm model);
         int AddPublisher(PublisherForListVm model);
         int AddAuthor(NewAuthorVm model);
         ListOfAuthorForListVm GetAllAuthorsForList();
         ListOfPublisherForListVm GetAllPublishersForList();
-        NewBookVm GetInfoForBookEdit(int id);
+        CreateBookVm GetInfoForBookEdit(int id);
         void UpdateBook(NewBookVm model);
-        NewBookVm SetParametersToVm(NewBookVm model);
+        BookFormListsVm GetBookFormLists();
     }
 }

@@ -105,17 +105,17 @@ namespace LibraryMVC.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
-        public IActionResult AddNewBook(NewBookVm model)
+        public IActionResult AddNewBook(CreateBookVm model)
         {
-            var result = _validator.Validate(model);
+            var result = _validator.Validate(model.NewBook);
             if (!result.IsValid)
             {
                 result.AddToModelState(ModelState);
-                model = _bookService.SetParametersToVm(model);
+                model.BookFormLists = _bookService.GetBookFormLists();
                 return View(model);
             }
 
-            var bookId = _bookService.AddBook(model);
+            var bookId = _bookService.AddBook(model.NewBook);
             TempData["success"] = "Książka została dodana.";
             return RedirectToAction("ViewBookForLibrarian", new { id = bookId });
         }
@@ -130,19 +130,19 @@ namespace LibraryMVC.Web.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
-        public IActionResult EditBook(NewBookVm model)
+        public IActionResult EditBook(CreateBookVm model)
         {
-            var result = _validator.Validate(model);
+            var result = _validator.Validate(model.NewBook);
             if (!result.IsValid)
             {
                 result.AddToModelState(ModelState);
-                model = _bookService.SetParametersToVm(model);
+                model.BookFormLists = _bookService.GetBookFormLists();
                 return View(model);
             }
 
-            _bookService.UpdateBook(model);
+            _bookService.UpdateBook(model.NewBook);
             TempData["success"] = "Zmiany zostały zapisane.";
-            return RedirectToAction("ViewBookForLibrarian", new {id = model.Id});
+            return RedirectToAction("ViewBookForLibrarian", new {id = model.NewBook.Id});
         }
 
         [HttpGet]
