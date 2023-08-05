@@ -99,6 +99,12 @@ namespace LibraryMVC.Application.Services
             _bookRepository.DeleteBook(id);
         }
 
+        public bool IsBookInDatabase(int bookId)
+        {
+            var book = _bookRepository.GetBookById(bookId);
+            return book != null;
+        }
+
         public ListOfGenreForListVm GetAllGenresForList()
         {
             var genres = _genreRepository.GetAllGenres().OrderBy(g => g.Name).ProjectTo<GenreForListVm>(_mapper.ConfigurationProvider).ToList();
