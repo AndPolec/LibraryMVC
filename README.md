@@ -6,7 +6,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Features](#features)
-* [Sreenshots](#screenshots)
+* [Screenshots](#screenshots)
 
 ## Status
 The project is not yet completed. It is still under development.
@@ -41,3 +41,22 @@ The application is built in Clean Architecture and Service-Repository pattern.
 7. Role System – includes Reader, Librarian and Administrator roles.
 8. User Role Management – administrators can manage user roles.
 
+## Screenshots
+### Home Page
+![Home Page](/LibraryMVC.Web/wwwroot/screenshots/home_page.png)
+### Login
+![Login](/LibraryMVC.Web/wwwroot/screenshots/login_page.png)
+### Registration
+![Registration](/LibraryMVC.Web/wwwroot/screenshots/registration_page.png)
+### Library Catalog
+![Library catalog](/LibraryMVC.Web/wwwroot/screenshots/library_catalog.png)
+### Catalog Management
+![Catalog management](/LibraryMVC.Web/wwwroot/screenshots/catalog_management.png)
+### User Details
+![User Details](/LibraryMVC.Web/wwwroot/screenshots/user_details.png)
+### Loan Check-Out Confirmation Page
+![Loan Check-Out Confirmation Page](/LibraryMVC.Web/wwwroot/screenshots/loan_check_out_confirmation.png)
+### Loan Return Confirmation Page
+![Loan Return Confirmation Page](/LibraryMVC.Web/wwwroot/screenshots/loan_return_confirmation.png)
+### Order Overview
+![Order Overview](/LibraryMVC.Web/wwwroot/screenshots/order_overview.png)
