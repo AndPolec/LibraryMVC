@@ -12,7 +12,7 @@
 The project is not yet completed. It is still under development.
 
 ## General info
-The application is designed to enhance the operations of small to medium-sized libraries in an online environment. It allows users to browse the library catalog and simplifies the book lending process. The application allows for tracking the entire loan proces, from the initiation of an order online, through the physical collection of the book at the library, to its eventual return. Users can also view their borrowing history and any potential fees incurred for overdue items or damages/loss of borrowed books.
+The application is designed to enhance the operations of small to medium-sized libraries in an online environment. It allows users to browse the library catalog and simplifies the book lending process. The application allows for tracking the entire loan process, from the initiation of an order online, through the physical collection of the book at the library, to its eventual return. Users can also view their borrowing history and any potential fees incurred for overdue items or damages/loss of borrowed books.
 
 Librarians confirm all lending and return transactions in the system and have access to information about overdue loans and corresponding fees.
 
@@ -22,7 +22,7 @@ The application is built in Clean Architecture and Service-Repository pattern.
 * .NET 6.0
 * ASP.NET, HTML5, CSS, MSSQL
 * WebAPI
-* Depedency Injection
+* Dependency Injection
 * Entity Framework Core 6.0.10
 * LINQ
 * Fluent Validation 11.2.2
