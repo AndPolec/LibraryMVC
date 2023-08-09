@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace LibraryApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     [Authorize]
+    [ApiController]
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
@@ -27,6 +27,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<ListOfBookForListVm> GetBooks(string? searchString, int pageSize = 10, int pageNumber = 1)
         {
             var result = _bookService.GetAllBooksForList(pageSize, pageNumber, searchString ?? string.Empty);
@@ -49,6 +50,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public ActionResult AddBook([FromBody] NewBookVm book)
         {
             var validationResult = _validator.Validate(book);
@@ -68,6 +70,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public ActionResult DeleteBook(int id)
         {
             if (!_bookService.IsBookInDatabase(id))
@@ -80,6 +83,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public ActionResult EditBook([FromBody] NewBookVm book)
         {
             var validationResult = _validator.Validate(book);
