@@ -1,11 +1,9 @@
 ﻿using LibraryMVC.Application.Interfaces;
-using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Security.Claims;
 
-namespace LibraryMVC.Web.Filters
+namespace LibraryApi.Filters
 {
     public class CheckBorrowingCartPermission : Attribute, IAuthorizationFilter
     {

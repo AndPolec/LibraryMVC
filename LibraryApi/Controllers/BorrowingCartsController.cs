@@ -1,4 +1,5 @@
-﻿using LibraryMVC.Application.Interfaces;
+﻿using LibraryApi.Filters;
+using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpDelete("{borrowingCartId}/{bookId}")]
+        [CheckBorrowingCartPermission]
         public IActionResult RemoveFromBorrowingCart(int borrowingCartId, int bookId)
         {
             var result = _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
@@ -57,6 +59,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpDelete("{borrowingCartId}")]
+        [CheckBorrowingCartPermission]
         public IActionResult RemoveAllFromBorrowingCart(int borrowingCartId)
         {
             var result = _loanService.ClearBorrowingCart(borrowingCartId);
