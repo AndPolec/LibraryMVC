@@ -1,4 +1,5 @@
 ﻿using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Application.ViewModels.BorrowingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,15 +19,20 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetBorrowingCart()
+        public ActionResult<BorrowingCartDetailsVm> GetBorrowingCart()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId is null)
+            {
+                return BadRequest("Brak Id użytkownika.");
+            }
+
             var model = _loanService.GetBorrowingCartForDetailsByIndentityUserId(userId);
             return Ok(model);
         }
 
         [HttpPost("{bookId}")]
-        public IActionResult AddToBorrowingCart(int bookId)
+        public ActionResult AddToBorrowingCart(int bookId)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -40,18 +46,24 @@ namespace LibraryApi.Controllers
             return Ok("Książka dodana do koszyka.");
         }
 
-        [HttpDelete("{bookId}/{borrowingCartId}")]
-        public IActionResult RemoveFromBorrowingCart(int bookId, int borrowingCartId)
+        [HttpDelete("{borrowingCartId}/{bookId}")]
+        public IActionResult RemoveFromBorrowingCart(int borrowingCartId, int bookId)
         {
-            _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
-            return Ok("Książka usunięta z koszyka.");
+            var result = _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
+            if (result)
+                return Ok("Książka usunięta z koszyka.");
+            else
+                return BadRequest("Książka lub koszyk nie został znaleziony.");
         }
 
-        [HttpDelete("all/{borrowingCartId}")]
+        [HttpDelete("{borrowingCartId}")]
         public IActionResult RemoveAllFromBorrowingCart(int borrowingCartId)
         {
-            _loanService.ClearBorrowingCart(borrowingCartId);
-            return Ok("Wszystkie książki usunięte z koszyka.");
+            var result = _loanService.ClearBorrowingCart(borrowingCartId);
+            if (result)
+                return Ok("Wszystkie książki usunięte z koszyka.");
+            else
+                return BadRequest("Koszyk nie został znaleziony.");
         }
     }
 }

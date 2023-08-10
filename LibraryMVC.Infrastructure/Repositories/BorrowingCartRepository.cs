@@ -73,12 +73,8 @@ namespace LibraryMVC.Infrastructure.Repositories
             }
         }
 
-        public void RemoveAllFromBorrowingCart(int borrowingCartId)
+        public void RemoveAllFromBorrowingCart(BorrowingCart borrowingCart)
         {
-            var borrowingCart = _context.BorrowingCarts
-                .Include(bc => bc.Books)
-                .FirstOrDefault(bc => bc.Id == borrowingCartId);
-
             if (borrowingCart != null)
             {
                 borrowingCart.Books.Clear();

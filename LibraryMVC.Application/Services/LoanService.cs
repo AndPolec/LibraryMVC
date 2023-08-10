@@ -63,7 +63,7 @@ namespace LibraryMVC.Application.Services
             return borrowingCart;
         }
 
-        public void RemoveFromBorrowingCart(int bookId, int borrowingCartId)
+        public bool RemoveFromBorrowingCart(int bookId, int borrowingCartId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
             if (borrowingCart != null)
@@ -73,13 +73,21 @@ namespace LibraryMVC.Application.Services
                 {
                     borrowingCart.Books.Remove(bookToRemove);
                     _borrowingCartRepository.UpdateBorrowingCart(borrowingCart);
+                    return true;
                 }
             }
+            return false;
         }
 
-        public void ClearBorrowingCart(int borrowingCartId)
+        public bool ClearBorrowingCart(int borrowingCartId)
         {
-            _borrowingCartRepository.RemoveAllFromBorrowingCart(borrowingCartId);
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
+            if (borrowingCart != null)
+            {
+                _borrowingCartRepository.RemoveAllFromBorrowingCart(borrowingCart);
+                return true;
+            }
+            return false;
         }
 
         public bool IsBookInBorrowingCart(int bookId, string identityUserId)

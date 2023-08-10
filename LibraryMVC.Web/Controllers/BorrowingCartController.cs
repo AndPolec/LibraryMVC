@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.Security.Claims;
 
-namespace LibraryMVC.Web.Controllers
+namespace LibraryMVC.Web.Controllers;
 {
     [AutoValidateAntiforgeryToken]
     [Authorize]

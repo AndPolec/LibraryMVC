@@ -12,6 +12,6 @@ namespace LibraryMVC.Domain.Interfaces
         BorrowingCart GetBorrowingCartByIndentityUserId(string id);
         BorrowingCart GetBorrowingCartById(int borrowingCartId);
         public void UpdateBorrowingCart(BorrowingCart borrowingCart);
-        void RemoveAllFromBorrowingCart(int borrowingCartId);
+        void RemoveAllFromBorrowingCart(BorrowingCart borrowingCart);
     }
 }
