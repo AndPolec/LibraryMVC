@@ -32,8 +32,8 @@ namespace LibraryApi.Controllers
             return Ok(model);
         }
 
-        [HttpPost("{bookId}")]
-        public ActionResult AddToBorrowingCart(int bookId)
+        [HttpPost]
+        public IActionResult AddToBorrowingCart([FromBody] int bookId)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

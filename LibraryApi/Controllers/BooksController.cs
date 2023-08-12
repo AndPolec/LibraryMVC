@@ -51,17 +51,18 @@ namespace LibraryApi.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
-        public ActionResult AddBook([FromBody] NewBookVm book)
+        public IActionResult AddBook([FromBody] NewBookVm book)
         {
             var validationResult = _validator.Validate(book);
             validationResult.AddToModelState(ModelState);
 
-            if (ModelState.IsValid && book.Id != 0)
+            if (ModelState.IsValid && book.Id == 0)
             {
                 int id = _bookService.AddBook(book);
-                return Ok(id);
+                return CreatedAtAction(nameof(GetBook), new { id }, null);
             }
-            else if (book.Id != 0)
+            
+            if (book.Id != 0)
             {
                 ModelState.AddModelError("Id", "Id musi być równe 0.");
             }
@@ -71,7 +72,7 @@ namespace LibraryApi.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
-        public ActionResult DeleteBook(int id)
+        public IActionResult DeleteBook(int id)
         {
             if (!_bookService.IsBookInDatabase(id))
             {
@@ -84,7 +85,7 @@ namespace LibraryApi.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
-        public ActionResult EditBook([FromBody] NewBookVm book)
+        public IActionResult EditBook([FromBody] NewBookVm book)
         {
             var validationResult = _validator.Validate(book);
             validationResult.AddToModelState(ModelState);

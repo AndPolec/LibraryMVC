@@ -160,7 +160,6 @@ namespace LibraryMVC.Web.Controllers
         [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult ViewReturnRecord(int returnRecordId)
         {
-            returnRecordId = 1;
             var model = _loanService.GetReturnRecordForDetails(returnRecordId);
             return View(model);
         }

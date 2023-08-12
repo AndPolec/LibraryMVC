@@ -259,6 +259,10 @@ namespace LibraryMVC.Application.Services
         {
             var librarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
             var loan = _loanRepository.GetLoanById(loanId);
+
+            if (loan is null)
+                return -1;
+
             loan.StatusId = 2; //Status = "Wypożyczone"
             loan.ReturnDueDate = DateTime.Now.AddDays(_durationOfFreeLoanInDays);
             loan.CheckOutRecord = new CheckOutRecord()
