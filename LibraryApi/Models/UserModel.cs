@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace LibraryApi
+namespace LibraryApi.Models
 {
     public class UserModel
     {

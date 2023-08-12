@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using LibraryApi.Filters;
+using LibraryApi.Models;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
@@ -54,14 +56,15 @@ namespace LibraryApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateLoan([FromBody] int borrowingCartId, [FromBody] int userId)
+        [CheckCreateLoanPermission]
+        public IActionResult CreateLoan([FromBody] CreateLoanModel createRequest)
         {
-            if (_libraryUserService.IsBlocked(userId))
+            if (_libraryUserService.IsBlocked(createRequest.UserId))
             {
                 return Forbid("Użytkownik zablokowany.");
             }
 
-            var loanId = _loanService.AddNewLoan(borrowingCartId, userId);
+            var loanId = _loanService.AddNewLoan(createRequest.BorrowingCartId, createRequest.UserId);
             if (loanId == -1)
             {
                 return BadRequest("Zamówienie nie zostało utworzone. Wybrane książki są niedostępne.");
