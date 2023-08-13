@@ -66,18 +66,30 @@ namespace LibraryMVC.Application.Services
             return user.isBlocked;
         }
 
-        public void BlockUser(int userId)
+        public bool BlockUser(int userId)
         {
             var user = _libraryUserRepository.GetUserById(userId);
+            if (user is null)
+            {
+                return false;
+            }
+
             user.isBlocked = true;
             _libraryUserRepository.UpdateUser(user);
+            return true;
         }
 
-        public void UnblockUser(int userId)
+        public bool UnblockUser(int userId)
         {
             var user = _libraryUserRepository.GetUserById(userId);
+            if (user is null)
+            {
+                return false;
+            }
+
             user.isBlocked = false;
             _libraryUserRepository.UpdateUser(user);
+            return true;
         }
 
         public async Task ChangeLibraryUserType(string userId, List<string> newRoles)

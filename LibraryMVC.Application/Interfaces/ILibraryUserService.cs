@@ -20,8 +20,8 @@ namespace LibraryMVC.Application.Interfaces
         NewLibraryUserVm GetInfoForUserEdit(int id);
         bool IsBlocked(int userId);
         bool IsBlocked(string identityUserId);
-        void BlockUser(int userId);
-        void UnblockUser(int userId);
+        bool BlockUser(int userId);
+        bool UnblockUser(int userId);
         Task ChangeLibraryUserType(string userId, List<string> newRoles);
     }
 }

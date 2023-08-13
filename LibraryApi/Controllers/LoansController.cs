@@ -14,7 +14,7 @@ using System.Security.Claims;
 namespace LibraryApi.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class LoansController : ControllerBase
     {
@@ -45,6 +45,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [CheckViewLoanPermission]
         public ActionResult<LoanDetailsVm> GetLoan(int id)
         {
             var model = _loanService.GetLoanForDetails(id);
@@ -74,6 +75,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [CheckViewLoanPermission]
         public IActionResult CancelLoan(int id) 
         {
             var result = _loanService.CancelLoan(id);
@@ -88,15 +90,17 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet("confirm-checkout")]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public ActionResult<LoanForConfirmCheckOutListVm> GetLoansForConfirmCheckOut()
         {
             var model = _loanService.GetAllLoansForConfirmCheckOutList();
             if(model.Count == 0)
-                return NotFound();
+                return NoContent();
             return Ok(model);
         }
 
         [HttpPut("{loanId}/confirm-checkout")]
+        [Authorize(Roles = "Bibliotekarz")]
         public IActionResult ConfirmCheckOut(int loanId)
         {
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -108,15 +112,17 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet("confirm-return")]
+        [Authorize(Roles = "Bibliotekarz,Administrator")]
         public ActionResult<LoanForConfirmCheckOutListVm> GetLoansForConfirmReturn()
         {
             var model = _loanService.GetAllLoansForConfirmReturnList();
             if (model.Count == 0)
-                return NotFound();
+                return NoContent();
             return Ok(model);
         }
 
         [HttpPut("{loanId}/confirm-return")]
+        [Authorize(Roles = "Bibliotekarz")]
         public IActionResult ConfirmReturn(int loanId, [FromBody] NewReturnRecordVm returnRecord) 
         {
             var result = _validatorNewReturnRecordVm.Validate(returnRecord);
