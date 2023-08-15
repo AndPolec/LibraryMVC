@@ -307,6 +307,12 @@ namespace LibraryMVC.Application.Services
 
         public int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId)
         {
+            var loan = _loanRepository.GetLoanById(model.LoanId);
+            if (loan is null)
+            {
+                return -1;
+            }
+
             var returnRecord = _mapper.Map<ReturnRecord>(model);
             returnRecord.AdditionalLibrarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
             returnRecord.ReturnedBooks = new List<Book>();
@@ -320,7 +326,6 @@ namespace LibraryMVC.Application.Services
                 returnRecord.LostOrDestroyedBooks.Add(_bookRepository.GetBookById(i));
             }
 
-            var loan = _loanRepository.GetLoanById(model.LoanId);
             loan.StatusId = 3; //Status = "Zakończone"
             loan.ReturnRecord = returnRecord;
             _loanRepository.UpdateLoan(loan);

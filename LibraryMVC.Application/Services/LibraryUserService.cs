@@ -120,7 +120,7 @@ namespace LibraryMVC.Application.Services
         private bool IsAdditionalLibrarianInfoExists(int libraryUserId)
         {
             var additionalLibrarianInfo = _additionalLibrarianInfoRepository.GetInfoByLibraryUserId(libraryUserId);
-            return additionalLibrarianInfo == null ? false : true;
+            return additionalLibrarianInfo != null;
         }
 
         public LibraryUserForPersonalDataVm GetLibraryUserForPersonalData(int id)

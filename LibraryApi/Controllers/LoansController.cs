@@ -121,9 +121,9 @@ namespace LibraryApi.Controllers
             return Ok(model);
         }
 
-        [HttpPut("{loanId}/confirm-return")]
+        [HttpPut("confirm-return")]
         [Authorize(Roles = "Bibliotekarz")]
-        public IActionResult ConfirmReturn(int loanId, [FromBody] NewReturnRecordVm returnRecord) 
+        public IActionResult ConfirmReturn([FromBody] NewReturnRecordVm returnRecord) 
         {
             var result = _validatorNewReturnRecordVm.Validate(returnRecord);
             result.AddToModelState(ModelState);
@@ -133,8 +133,11 @@ namespace LibraryApi.Controllers
             }
 
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            _loanService.ConfirmReturn(returnRecord, librarianId);
-            return Ok();
+            var returnRecordId = _loanService.ConfirmReturn(returnRecord, librarianId);
+            if (returnRecordId == -1)
+                return NotFound("Nie znaleziono zamówienia o podanym id.");
+            else
+                return Ok();
         }
     }
 }

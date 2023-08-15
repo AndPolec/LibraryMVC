@@ -42,6 +42,10 @@ namespace LibraryMVC.Application.Services
         public BookDetailsVm GetBookForDetails(int bookId)
         {
             var book = _bookRepository.GetBookById(bookId);
+            if (book is null)
+            {
+                return null;
+            }
             var bookVm = _mapper.Map<BookDetailsVm>(book);
             return bookVm;
         }
