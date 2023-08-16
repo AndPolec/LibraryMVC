@@ -82,5 +82,48 @@ namespace LibraryMVC.Tests
 
             Assert.Null(result);
         }
+
+        [Fact]
+        public void GetAllBooksForList_ValidArguments_ReturnsFilteredBooksVm()
+        {
+            var mockMapper = new Mock<IMapper>();
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockGenreRepo = new Mock<IGenreRepository>();
+            var mockAuthorRepo = new Mock<IAuthorRepository>();
+            var mockPublisherRepo = new Mock<IPublisherRepository>();
+            int testPageSize = 2;
+            int testPageNumber = 1;
+            string testSearchString = "SearchString";
+
+            var books = new List<Book>
+            {
+                new Book { Title = "TestBook1" },
+                new Book { Title = "TestBook2" },
+                new Book { Title = "SearchStringBook" }
+            };
+            mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
+
+            var booksVm = new List<BookForListVm>
+            {
+                new BookForListVm { Title = "TestBook1" },
+                new BookForListVm { Title = "TestBook2" },
+                new BookForListVm { Title = "SearchStringBook" }
+            };
+            mockMapper.Setup(m => m.Map<List<BookForListVm>>(It.IsAny<IQueryable<Book>>()))
+                      .Returns(booksVm);
+
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object,mockAuthorRepo.Object,mockPublisherRepo.Object, mockMapper.Object);
+
+            var result = service.GetAllBooksForList(testPageSize, testPageNumber, testSearchString);
+
+            Assert.NotNull(result);
+            Assert.Equal(testPageSize, result.PageSize);
+            Assert.Equal(testPageNumber, result.CurrentPage);
+            Assert.Equal(testSearchString, result.SearchString);
+            Assert.Equal(1, result.Count);
+            Assert.Single(result.Books);
+            Assert.Contains(testSearchString, result.Books.First().Title);
+
+        }
     }
 }

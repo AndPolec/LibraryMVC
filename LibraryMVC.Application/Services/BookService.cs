@@ -52,6 +52,15 @@ namespace LibraryMVC.Application.Services
 
         public ListOfBookForListVm GetAllBooksForList(int pageSize, int pageNumber, string searchString)
         {
+            if (pageSize < 1 || pageNumber < 1)
+            {
+                return new ListOfBookForListVm();
+            }
+            if (searchString is null)
+            {
+                searchString = string.Empty;
+            }
+
             var books = _bookRepository.GetAllBooks().Where(b => b.Title.StartsWith(searchString))
                 .ProjectTo<BookForListVm>(_mapper.ConfigurationProvider).ToList();
 
@@ -65,7 +74,6 @@ namespace LibraryMVC.Application.Services
                 Count = books.Count
             };
             return bookList;
-           
         }
 
         public CreateBookVm GetInfoForAddNewBook()
