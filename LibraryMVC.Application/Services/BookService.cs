@@ -160,7 +160,8 @@ namespace LibraryMVC.Application.Services
             var authors = _authorRepository.GetAllAuthors().OrderBy(a => a.FirstName).ProjectTo<AuthorForListVm>(_mapper.ConfigurationProvider).ToList();
             var authorList = new ListOfAuthorForListVm() 
             { 
-                Authors = authors 
+                Authors = authors,
+                Count = authors.Count               
             };
             return authorList;
         }

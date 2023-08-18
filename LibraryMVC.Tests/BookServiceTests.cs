@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentAssertions;
 using LibraryMVC.Application.Mapping;
 using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Book;
@@ -121,6 +122,9 @@ namespace LibraryMVC.Tests
             var mapperConfig = new MapperConfiguration(config =>
             {
                 config.AddProfile(new BookProfile());
+                config.AddProfile(new GenreProfile());
+                config.AddProfile(new AuthorProfile());
+                config.AddProfile(new PublisherProfile());
             });
             return mapperConfig.CreateMapper();
         }
@@ -147,7 +151,7 @@ namespace LibraryMVC.Tests
             var result = service.AddBook(testModel);
 
             // Assert
-            Assert.Equal(testId, result);
+            result.Should().Be(testId);
             mockMapper.Verify(m => m.Map<Book>(testModel), Times.Once);
             mockBookRepo.Verify(r => r.AddBook(testBook), Times.Once);
         }
@@ -171,7 +175,7 @@ namespace LibraryMVC.Tests
 
             var result = service.GetBookForDetails(testId);
 
-            Assert.Equal(testBookVm, result);
+            result.Should().Be(testBookVm);
         }
 
         [Fact]
@@ -190,46 +194,54 @@ namespace LibraryMVC.Tests
 
             var result = service.GetBookForDetails(testId);
 
-            Assert.Null(result);
+            result.Should().BeNull();
         }
 
         [Fact]
         public void GetAllBooksForList_ValidArguments_ReturnsFilteredBooksVm()
         {
-            var mapper = GetMapper();
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
             var mockAuthorRepo = new Mock<IAuthorRepository>();
             var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mapper = GetMapper();
             int testPageSize = 2;
             int testPageNumber = 1;
             string testSearchString = "Pride";
+            var expectedBook = new BookForListVm()
+            {
+                Id = 2,
+                Title = "Pride and Prejudice",
+                AuthorFullName = "Jane Austen",
+                Genre = "Romance",
+                RelaseYear = 1813
+            };
 
             var books = GetBooks();
             mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object,mockAuthorRepo.Object,mockPublisherRepo.Object, mapper);
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
 
             var result = service.GetAllBooksForList(testPageSize, testPageNumber, testSearchString);
 
-            Assert.NotNull(result);
-            Assert.Equal(testPageSize, result.PageSize);
-            Assert.Equal(testPageNumber, result.CurrentPage);
-            Assert.Equal(testSearchString, result.SearchString);
-            Assert.Equal(1, result.Count);
-            Assert.Single(result.Books);
-            Assert.Contains(testSearchString, result.Books.First().Title);
+            result.Should().NotBeNull();
+            result.PageSize.Should().Be(testPageSize);
+            result.CurrentPage.Should().Be(testPageNumber);
+            result.SearchString.Should().Be(testSearchString);
+            result.Count.Should().Be(1);
+            result.Books.Should().HaveCount(1);
+            result.Books.FirstOrDefault().Should().BeEquivalentTo(expectedBook);
 
         }
 
         [Fact]
         public void GetAllBooksForList_NullSearchString_ReturnsAllBooksForPageSize()
         {
-            var mapper = GetMapper();
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
             var mockAuthorRepo = new Mock<IAuthorRepository>();
             var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mapper = GetMapper();
             int testPageSize = 2;
             int testPageNumber = 1;
 
@@ -240,22 +252,22 @@ namespace LibraryMVC.Tests
 
             var result = service.GetAllBooksForList(testPageSize, testPageNumber, searchString: null);
 
-            Assert.NotNull(result);
-            Assert.Equal(testPageSize, result.PageSize);
-            Assert.Equal(testPageNumber, result.CurrentPage);
-            Assert.Equal(string.Empty, result.SearchString);
-            Assert.Equal(books.Count, result.Count);
-            Assert.Equal(testPageSize, result.Books.Count);
+            result.Should().NotBeNull();
+            result.PageSize.Should().Be(testPageSize);
+            result.CurrentPage.Should().Be(testPageNumber);
+            result.SearchString.Should().BeEmpty();
+            result.Count.Should().Be(books.Count);
+            result.Books.Should().HaveCount(testPageSize);
         }
 
         [Fact]
         public void GetAllBooksForList_NegativePageSize_ReturnsEmptyList()
         {
-            var mapper = GetMapper();
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
             var mockAuthorRepo = new Mock<IAuthorRepository>();
             var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mapper = GetMapper();
             int testPageSize = -2;
             int testPageNumber = 1;
 
@@ -266,18 +278,18 @@ namespace LibraryMVC.Tests
 
             var result = service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
 
-            Assert.NotNull(result);
-            Assert.Empty(result.Books);
+            result.Should().NotBeNull();
+            result.Books.Should().BeEmpty();
         }
 
         [Fact]
         public void GetAllBooksForList_NegativePageNumber_ReturnsEmptyList()
         {
-            var mapper = GetMapper();
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
             var mockAuthorRepo = new Mock<IAuthorRepository>();
             var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mapper = GetMapper();
             int testPageSize = 2;
             int testPageNumber = -1;
 
@@ -288,8 +300,51 @@ namespace LibraryMVC.Tests
 
             var result = service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
 
-            Assert.NotNull(result);
-            Assert.Empty(result.Books);
+            result.Should().NotBeNull();
+            result.Books.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void GetInfoForAddNewBook_WhenCalled_ReturnsProperlyInitializedModel()
+        {
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockGenreRepo = new Mock<IGenreRepository>();
+            var mockAuthorRepo = new Mock<IAuthorRepository>();
+            var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mapper = GetMapper();
+
+            var genres = new List<Genre>
+            {
+                new Genre { Id = 1, Name = "Fantasy" },
+                new Genre { Id = 2, Name = "Science Fiction" }
+            };
+
+            var authors = new List<Author>
+            {
+                new Author { Id = 1, FirstName = "George", LastName = "Martin" },
+                new Author { Id = 2, FirstName = "Isaac", LastName = "Asimov" }
+            };
+
+            var publishers = new List<Publisher>
+            {
+                new Publisher { Id = 1, Name = "Penguin Books" },
+                new Publisher { Id = 2, Name = "HarperCollins" }
+            };
+
+            mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable());
+            mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable());
+            mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable());
+
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+
+            var result = service.GetInfoForAddNewBook();
+
+            result.Should().NotBeNull();
+            result.NewBook.Should().NotBeNull();
+            result.BookFormLists.Should().NotBeNull();
+            result.BookFormLists.AllAuthors.Authors.Count.Should().Be(authors.Count);
+            result.BookFormLists.AllGenres.Genres.Count.Should().Be(genres.Count);
+            result.BookFormLists.AllPublishers.Publishers.Count.Should().Be(publishers.Count);
         }
     }
 }
