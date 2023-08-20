@@ -28,6 +28,9 @@ The application is built in Clean Architecture and Service-Repository pattern.
 * Fluent Validation 11.2.2
 * AutoMapper 12.0.0
 * Bootstrap 5.1
+* XUnit 2.4.2
+* Moq 4.20.69
+* Fluent Assertions 6.11.0
 
 ## Features
 1. Book Catalog Management – CRUD operations for librarians.
