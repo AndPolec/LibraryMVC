@@ -30,7 +30,16 @@ namespace LibraryApi.Controllers
         [AllowAnonymous]
         public ActionResult<ListOfBookForListVm> GetBooks(string? searchString, int pageSize = 10, int pageNumber = 1)
         {
-            var result = _bookService.GetAllBooksForList(pageSize, pageNumber, searchString ?? string.Empty);
+            ListOfBookForListVm result;
+            try
+            {
+                result = _bookService.GetAllBooksForList(pageSize, pageNumber, searchString ?? string.Empty);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }            
+            
             if (result.Count == 0)
             {
                 return NoContent();

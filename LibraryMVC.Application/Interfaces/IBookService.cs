@@ -16,7 +16,7 @@ namespace LibraryMVC.Application.Interfaces
         void DeleteBook(int id);
         bool IsBookInDatabase(int bookId);
         ListOfBookForListVm GetAllBooksForList(int pageSize, int pageNumber, string searchString);
-        BookDetailsVm GetBookForDetails(int bookId);
+        BookDetailsVm? GetBookForDetails(int bookId);
         CreateBookVm GetInfoForAddNewBook();
         ListOfGenreForListVm GetAllGenresForList();
         int AddGenre(GenreForListVm model);

@@ -39,7 +39,7 @@ namespace LibraryMVC.Application.Services
             return newBookId;
         }
 
-        public BookDetailsVm GetBookForDetails(int bookId)
+        public BookDetailsVm? GetBookForDetails(int bookId)
         {
             var book = _bookRepository.GetBookById(bookId);
             if (book is null)
@@ -57,25 +57,26 @@ namespace LibraryMVC.Application.Services
                 searchString = string.Empty;
             }
 
-            List<BookForListVm> books;
             if (pageSize < 1 || pageNumber < 1)
             {
-                books = new();
-            }
-            else
-            {
-                books = _bookRepository.GetAllBooks().Where(b => b.Title.StartsWith(searchString))
-                    .ProjectTo<BookForListVm>(_mapper.ConfigurationProvider).ToList();
+                throw new ArgumentException("Values for pageSize and pageNumber must be greater than zero.");
             }
 
-            var booksToShow = books.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            var booksQuery = _bookRepository.GetAllBooks().Where(b => b.Title.StartsWith(searchString));
+            var totalBooksCount = booksQuery.Count();
+            var booksToReturn = booksQuery
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ProjectTo<BookForListVm>(_mapper.ConfigurationProvider)
+                .ToList();
+
             var bookList = new ListOfBookForListVm()
             {
                 PageSize = pageSize,
                 CurrentPage = pageNumber,
                 SearchString = searchString,
-                Books = booksToShow,
-                Count = books.Count
+                Books = booksToReturn,
+                Count = totalBooksCount
             };
             return bookList;
         }
