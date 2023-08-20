@@ -261,47 +261,39 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void GetAllBooksForList_NegativePageSize_ReturnsEmptyList()
+        public void GetAllBooksForList_NegativePageSize_ThrowsArgumentException()
         {
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
             var mockAuthorRepo = new Mock<IAuthorRepository>();
             var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mapper = GetMapper();
+            var mockMapper = new Mock<IMapper>();
             int testPageSize = -2;
             int testPageNumber = 1;
 
-            var books = GetBooks();
-            mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            Action result = () => service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
 
-            var result = service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
-
-            result.Should().NotBeNull();
-            result.Books.Should().BeEmpty();
+            result.Should().Throw<ArgumentException>().WithMessage("Values for pageSize and pageNumber must be greater than zero.");
         }
 
         [Fact]
-        public void GetAllBooksForList_NegativePageNumber_ReturnsEmptyList()
+        public void GetAllBooksForList_NegativePageNumber_ThrowsArgumentException()
         {
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
             var mockAuthorRepo = new Mock<IAuthorRepository>();
             var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mapper = GetMapper();
+            var mockMapper = new Mock<IMapper>();
             int testPageSize = 2;
             int testPageNumber = -1;
 
-            var books = GetBooks();
-            mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            Action result = () => service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
 
-            var result = service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
-
-            result.Should().NotBeNull();
-            result.Books.Should().BeEmpty();
+            result.Should().Throw<ArgumentException>().WithMessage("Values for pageSize and pageNumber must be greater than zero.");
         }
 
         [Fact]
