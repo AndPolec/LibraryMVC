@@ -24,7 +24,7 @@ namespace LibraryMVC.Application.Interfaces
         int AddAuthor(NewAuthorVm model);
         ListOfAuthorForListVm GetAllAuthorsForList();
         ListOfPublisherForListVm GetAllPublishersForList();
-        CreateBookVm GetInfoForBookEdit(int id);
+        CreateBookVm? GetInfoForBookEdit(int id);
         void UpdateBook(NewBookVm model);
         BookFormListsVm GetBookFormLists();
     }

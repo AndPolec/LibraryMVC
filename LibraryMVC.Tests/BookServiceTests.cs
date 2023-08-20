@@ -5,6 +5,7 @@ using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace LibraryMVC.Tests
                     Publisher = new Publisher { Id = 1, Name = "Wyndham Books" },
                     BookGenres = new List<BookGenre>
                     {
-                        new BookGenre { Book = null, Genre = new Genre { Id = 1, Name = "Adventure" } }
+                        new BookGenre { Book = null, Genre = new Genre { Id = 1, Name = "Adventure" }, GenreId = 1 }
                     }
                 },
                 new Book
@@ -56,7 +57,7 @@ namespace LibraryMVC.Tests
                     Publisher = new Publisher { Id = 2, Name = "Classic Reads" },
                     BookGenres = new List<BookGenre>
                     {
-                        new BookGenre { Book = null, Genre = new Genre { Id = 2, Name = "Romance" } }
+                        new BookGenre { Book = null, Genre = new Genre { Id = 2, Name = "Romance" },GenreId = 2 }
                     }
                 },
                 new Book
@@ -74,7 +75,7 @@ namespace LibraryMVC.Tests
                     Publisher = new Publisher { Id = 3, Name = "Sea Tales" },
                     BookGenres = new List<BookGenre>
                     {
-                        new BookGenre { Book = null, Genre = new Genre { Id = 3, Name = "Adventure" } }
+                        new BookGenre { Book = null, Genre = new Genre { Id = 3, Name = "Adventure" }, GenreId = 3 }
                     }
                 },
                 new Book
@@ -92,7 +93,7 @@ namespace LibraryMVC.Tests
                     Publisher = new Publisher { Id = 4, Name = "Middle-Earth Publishing" },
                     BookGenres = new List<BookGenre>
                     {
-                        new BookGenre { Book = null, Genre = new Genre { Id = 4, Name = "Fantasy" } }
+                        new BookGenre { Book = null, Genre = new Genre { Id = 4, Name = "Fantasy" }, GenreId = 4 }
                     }
                 },
                 new Book
@@ -110,7 +111,7 @@ namespace LibraryMVC.Tests
                     Publisher = new Publisher { Id = 5, Name = "Russian Classics" },
                     BookGenres = new List<BookGenre>
                     {
-                        new BookGenre { Book = null, Genre = new Genre { Id = 5, Name = "Drama" } }
+                        new BookGenre { Book = null, Genre = new Genre { Id = 5, Name = "Drama" }, GenreId = 5 }
                     }
                 }
             };
@@ -337,6 +338,81 @@ namespace LibraryMVC.Tests
             result.BookFormLists.AllAuthors.Authors.Count.Should().Be(authors.Count);
             result.BookFormLists.AllGenres.Genres.Count.Should().Be(genres.Count);
             result.BookFormLists.AllPublishers.Publishers.Count.Should().Be(publishers.Count);
+        }
+
+        [Fact]
+        public void GetInfoForBookEdit_ValidId_ReturnsInfoForBookEdit()
+        {
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockGenreRepo = new Mock<IGenreRepository>();
+            var mockAuthorRepo = new Mock<IAuthorRepository>();
+            var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mapper = GetMapper();
+            var testBook = GetBooks().First();
+            int testBookId = testBook.Id;
+            var expectedBook = new NewBookVm()
+            {
+                Id = testBook.Id,
+                Title = testBook.Title,
+                ISBN = testBook.ISBN,
+                AuthorId = testBook.AuthorId,
+                GenreIds = testBook.BookGenres.Select(g => g.Genre.Id).ToList(),
+                PublisherId = testBook.PublisherId,
+                Quantity = testBook.Quantity,
+                RelaseYear = testBook.RelaseYear
+            };
+
+            var genres = new List<Genre>
+            {
+                new Genre { Id = 1, Name = "Fantasy" },
+                new Genre { Id = 2, Name = "Science Fiction" }
+            };
+
+            var authors = new List<Author>
+            {
+                new Author { Id = 1, FirstName = "George", LastName = "Martin" },
+                new Author { Id = 2, FirstName = "Isaac", LastName = "Asimov" }
+            };
+
+            var publishers = new List<Publisher>
+            {
+                new Publisher { Id = 1, Name = "Penguin Books" },
+                new Publisher { Id = 2, Name = "HarperCollins" }
+            };
+
+            mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
+            mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable());
+            mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable());
+            mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable());
+
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+
+            var result = service.GetInfoForBookEdit(testBookId);
+
+            result.Should().NotBeNull();
+            result.NewBook.Should().NotBeNull();
+            result.NewBook.Should().BeEquivalentTo(expectedBook);
+            result.BookFormLists.Should().NotBeNull();
+            result.BookFormLists.AllAuthors.Authors.Count.Should().Be(authors.Count);
+            result.BookFormLists.AllGenres.Genres.Count.Should().Be(genres.Count);
+            result.BookFormLists.AllPublishers.Publishers.Count.Should().Be(publishers.Count);
+        }
+
+        [Fact]
+        public void GetInfoForBookEdit_InvalidId_ReturnsNull()
+        {
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockGenreRepo = new Mock<IGenreRepository>();
+            var mockAuthorRepo = new Mock<IAuthorRepository>();
+            var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mockMapper = new Mock<IMapper>();
+            int testBookId = -1;
+
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+
+            var result = service.GetInfoForBookEdit(testBookId);
+
+            result.Should().BeNull();
         }
     }
 }

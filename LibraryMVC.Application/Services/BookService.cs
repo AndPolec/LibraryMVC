@@ -91,11 +91,15 @@ namespace LibraryMVC.Application.Services
             return model;
         }
 
-        public CreateBookVm GetInfoForBookEdit(int id)
+        public CreateBookVm? GetInfoForBookEdit(int id)
         {
             var book = _bookRepository.GetBookById(id);
-            var bookModel = _mapper.Map<NewBookVm>(book);
+            if (book is null)
+            {
+                return null;
+            }
 
+            var bookModel = _mapper.Map<NewBookVm>(book);
             var editBookModel = new CreateBookVm()
             {
                 NewBook = bookModel,
