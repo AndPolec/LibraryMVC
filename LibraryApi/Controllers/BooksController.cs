@@ -35,7 +35,7 @@ namespace LibraryApi.Controllers
             {
                 result = _bookService.GetAllBooksForList(pageSize, pageNumber, searchString ?? string.Empty);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }            
@@ -44,6 +44,7 @@ namespace LibraryApi.Controllers
             {
                 return NoContent();
             }
+
             return Ok(result);
         }
 
@@ -83,12 +84,17 @@ namespace LibraryApi.Controllers
         [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult DeleteBook(int id)
         {
-            if (!_bookService.IsBookInDatabase(id))
+            try
             {
-                return NotFound();
+                _bookService.DeleteBook(id);
+
+            }
+            catch (KeyNotFoundException ex)
+            {
+
+                return NotFound(ex.Message);
             }
 
-            _bookService.DeleteBook(id);
             return Ok();
         }
 
@@ -104,12 +110,15 @@ namespace LibraryApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_bookService.IsBookInDatabase(book.Id))
+            try
             {
-                return NotFound();
+                _bookService.UpdateBook(book);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
 
-            _bookService.UpdateBook(book);
             return Ok();
         }
 

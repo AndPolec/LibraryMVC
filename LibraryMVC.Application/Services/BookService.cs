@@ -10,6 +10,7 @@ using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -111,12 +112,22 @@ namespace LibraryMVC.Application.Services
 
         public void UpdateBook(NewBookVm model)
         {
+            if (!IsBookInDatabase(model.Id))
+            {
+                throw new KeyNotFoundException($"Book with ID {model.Id} was not found.");
+            }
+
             var book = _mapper.Map<Book>(model);
             _bookRepository.UpdateBook(book);
         }
 
         public void DeleteBook(int id)
         {
+            if (!IsBookInDatabase(id))
+            {
+                throw new KeyNotFoundException($"Book with ID {id} was not found.");
+            }
+
             _bookRepository.DeleteBook(id);
         }
 

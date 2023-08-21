@@ -53,7 +53,7 @@ namespace LibraryMVC.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public Book GetBookById(int bookId)
+        public Book? GetBookById(int bookId)
         {
             var book = _context.Books
                 .Include(b => b.Author)

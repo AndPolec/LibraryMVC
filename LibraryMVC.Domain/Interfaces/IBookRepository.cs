@@ -7,7 +7,7 @@ namespace LibraryMVC.Domain.Interfaces
         int AddBook(Book book);
         void DeleteBook(int bookId);
         IQueryable<Book> GetAllBooks();
-        Book GetBookById(int bookId);
+        Book? GetBookById(int bookId);
         IQueryable<Book> GetBooksByAuthorId(int authorId);
         IQueryable<Book> GetBooksByGenreId(int genreId);
         IQueryable<Book> GetBooksByPublisherId(int publisherId);
