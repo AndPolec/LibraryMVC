@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,18 +43,27 @@ namespace LibraryMVC.Application.Services
         //BorrowingCart
         public void AddToBorrowingCart(int bookId, string identityUserId)
         {
-            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
             var book = _bookRepository.GetBookById(bookId);
-            if (borrowingCart != null && book != null)
+
+            if (borrowingCart == null)
             {
-                borrowingCart.Books.Add(book);
-                _borrowingCartRepository.UpdateBorrowingCart(borrowingCart);
+                throw new KeyNotFoundException($"No borrowing cart found for user with ID: {identityUserId}");
             }
+
+            if (book == null)
+            {
+                throw new KeyNotFoundException($"No book found with ID: {bookId}");
+            }
+
+            borrowingCart.Books.Add(book);
+            _borrowingCartRepository.UpdateBorrowingCart(borrowingCart);
         }
+
 
         public BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId)
         {
-            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
             var borrowingCartVm = _mapper.Map<BorrowingCartDetailsVm>(borrowingCart);
             return borrowingCartVm;
         }
@@ -92,13 +102,13 @@ namespace LibraryMVC.Application.Services
 
         public bool IsBookInBorrowingCart(int bookId, string identityUserId)
         {
-            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
             return borrowingCart.Books.Any(b => b.Id == bookId);
         }
 
         public bool IsBorrowingCartFull(string identityUserId)
         {
-            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIndentityUserId(identityUserId);
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
             var count = borrowingCart.Books.Count();
             
             if (count < _maxBooksInOrder)

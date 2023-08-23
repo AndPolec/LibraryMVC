@@ -43,7 +43,15 @@ namespace LibraryApi.Controllers
             if (_loanService.IsBookInBorrowingCart(bookId, userId))
                 return BadRequest("Książka już znajduje się w koszyku.");
 
-            _loanService.AddToBorrowingCart(bookId, userId);
+            try
+            {
+                _loanService.AddToBorrowingCart(bookId, userId);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+
             return Ok("Książka dodana do koszyka.");
         }
 

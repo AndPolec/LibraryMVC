@@ -48,7 +48,7 @@ namespace LibraryMVC.Infrastructure.Repositories
             return borrowingCart;
         }
 
-        public BorrowingCart GetBorrowingCartByIndentityUserId(string id)
+        public BorrowingCart GetBorrowingCartByIdentityUserId(string id)
         {
             var user = _context.LibraryUsers
                 .Include(u => u.BorrowingCart).ThenInclude(bc => bc.Books).ThenInclude(b => b.Author)
