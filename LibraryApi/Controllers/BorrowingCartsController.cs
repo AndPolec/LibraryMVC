@@ -1,6 +1,7 @@
 ﻿using LibraryApi.Filters;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
+using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,10 +14,12 @@ namespace LibraryApi.Controllers
     public class BorrowingCartsController : ControllerBase
     {
         private readonly ILoanService _loanService;
+        private readonly ILogger<BorrowingCartsController> _logger;
 
-        public BorrowingCartsController(ILoanService loanService)
+        public BorrowingCartsController(ILoanService loanService, ILogger<BorrowingCartsController> logger)
         {
             _loanService = loanService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -28,8 +31,16 @@ namespace LibraryApi.Controllers
                 return BadRequest("Brak Id użytkownika.");
             }
 
-            var model = _loanService.GetBorrowingCartForDetailsByIndentityUserId(userId);
-            return Ok(model);
+            try
+            {
+                var model = _loanService.GetBorrowingCartForDetailsByIndentityUserId(userId);
+                return Ok(model);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Error while fetching borrowing cart for userId = {userId}", userId);
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]

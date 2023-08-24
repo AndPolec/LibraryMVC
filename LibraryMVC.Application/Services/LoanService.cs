@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,9 +65,15 @@ namespace LibraryMVC.Application.Services
         public BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
+            if (borrowingCart == null)
+            {
+                throw new KeyNotFoundException($"No borrowing cart found for user with ID: {identityUserId}");
+            }
+
             var borrowingCartVm = _mapper.Map<BorrowingCartDetailsVm>(borrowingCart);
             return borrowingCartVm;
         }
+
         private BorrowingCart GetBorrowingCartById(int borrowingCartId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
