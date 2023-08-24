@@ -16,12 +16,14 @@ namespace LibraryApi.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
+        private readonly ILogger<BooksController> _logger;
         private readonly IBookService _bookService;
         private readonly IValidator<NewBookVm> _validator;
 
 
-        public BooksController(IBookService bookService, IValidator<NewBookVm> newBookValidator)
+        public BooksController(ILogger<BooksController> logger,IBookService bookService, IValidator<NewBookVm> newBookValidator)
         {
+            _logger = logger;
             _bookService = bookService;
             _validator = newBookValidator;
         }
@@ -37,6 +39,7 @@ namespace LibraryApi.Controllers
             }
             catch (ArgumentException ex)
             {
+                _logger.LogInformation(ex, "Error while fetching books for searchString={searchString}, pageSize={pageSize}, pageNumber={pageNumber}.",searchString,pageSize,pageNumber);
                 return BadRequest(ex.Message);
             }            
             
@@ -87,15 +90,14 @@ namespace LibraryApi.Controllers
             try
             {
                 _bookService.DeleteBook(id);
+                return Ok();
 
             }
             catch (KeyNotFoundException ex)
             {
-
+                _logger.LogInformation(ex, "Error while deleting book for ID = {id}", id);
                 return NotFound(ex.Message);
             }
-
-            return Ok();
         }
 
         [HttpPut]
@@ -113,13 +115,13 @@ namespace LibraryApi.Controllers
             try
             {
                 _bookService.UpdateBook(book);
+                return Ok();
             }
             catch (KeyNotFoundException ex)
             {
+                _logger.LogInformation(ex, "Error while updating book for ID = {id}", book.Id);
                 return NotFound(ex.Message);
             }
-
-            return Ok();
         }
 
         [HttpGet("authors")]
