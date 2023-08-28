@@ -36,6 +36,7 @@ namespace LibraryApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
+        [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<List<LibraryUserForListVm>> GetAllLibraryUsers()
         {
             var model = _userService.GetAllLibraryUsersForList();
@@ -44,6 +45,7 @@ namespace LibraryApi.Controllers
 
         [HttpGet("{id}")]
         [CheckViewUserDataPermission]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LibraryUserDetailsVm> GetLibraryUser(int id)
         {
             var model = _userService.GetLibraryUserForDetails(id);

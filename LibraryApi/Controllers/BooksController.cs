@@ -30,6 +30,7 @@ namespace LibraryApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfBookForListVm> GetBooks(string? searchString, int pageSize = 10, int pageNumber = 1)
         {
             ListOfBookForListVm result;
@@ -52,6 +53,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<BookDetailsVm> GetBook(int id)
         {
             var result = _bookService.GetBookForDetails(id);
@@ -125,6 +127,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet("authors")]
+        [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfAuthorForListVm> GetAuthors()
         {
             var authors = _bookService.GetAllAuthorsForList();
@@ -132,6 +135,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet("genres")]
+        [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfGenreForListVm> GetGenres()
         {
             var genres = _bookService.GetAllGenresForList();
@@ -139,6 +143,7 @@ namespace LibraryApi.Controllers
         }
 
         [HttpGet("publishers")]
+        [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfPublisherForListVm> GetPublishers()
         {
             var publishers = _bookService.GetAllPublishersForList();

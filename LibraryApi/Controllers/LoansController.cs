@@ -46,6 +46,7 @@ namespace LibraryApi.Controllers
 
         [HttpGet("{id}")]
         [CheckViewLoanPermission]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LoanDetailsVm> GetLoan(int id)
         {
             var model = _loanService.GetLoanForDetails(id);
@@ -91,6 +92,7 @@ namespace LibraryApi.Controllers
 
         [HttpGet("confirm-checkout")]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LoanForConfirmCheckOutListVm> GetLoansForConfirmCheckOut()
         {
             var model = _loanService.GetAllLoansForConfirmCheckOutList();
@@ -113,6 +115,7 @@ namespace LibraryApi.Controllers
 
         [HttpGet("confirm-return")]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LoanForConfirmCheckOutListVm> GetLoansForConfirmReturn()
         {
             var model = _loanService.GetAllLoansForConfirmReturnList();
