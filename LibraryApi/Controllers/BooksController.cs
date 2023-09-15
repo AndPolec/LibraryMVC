@@ -41,8 +41,13 @@ namespace LibraryApi.Controllers
             catch (ArgumentException ex)
             {
                 _logger.LogInformation(ex, "Error while fetching books for searchString={searchString}, pageSize={pageSize}, pageNumber={pageNumber}.",searchString,pageSize,pageNumber);
-                return BadRequest(ex.Message);
+                return BadRequest();
             }            
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetBooks with searchString={searchString}, pageSize={pageSize}, and pageNumber={pageNumber}.", searchString, pageSize, pageNumber);
+                return StatusCode(500);
+            }
             
             if (result.Count == 0)
             {
@@ -52,16 +57,27 @@ namespace LibraryApi.Controllers
             return Ok(result);
         }
 
+
         [HttpGet("{id}")]
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<BookDetailsVm> GetBook(int id)
         {
-            var result = _bookService.GetBookForDetails(id);
-            if (result is null)
+            try
             {
-                return NotFound();
+                var result = _bookService.GetBookForDetails(id);
+
+                if (result is null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetBook with id={id}.", id);
+                return StatusCode(500);
+            }
         }
 
         [HttpPost]
@@ -73,8 +89,16 @@ namespace LibraryApi.Controllers
 
             if (ModelState.IsValid && book.Id == 0)
             {
-                int id = _bookService.AddBook(book);
-                return CreatedAtAction(nameof(GetBook), new { id }, null);
+                try
+                {
+                    int id = _bookService.AddBook(book);
+                    return CreatedAtAction(nameof(GetBook), new { id }, null);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error while using AddBook with book={book}.", book);
+                    return StatusCode(500);
+                }
             }
             
             if (book.Id != 0)
@@ -97,8 +121,13 @@ namespace LibraryApi.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogInformation(ex, "Error while deleting book for ID = {id}", id);
-                return NotFound(ex.Message);
+                _logger.LogInformation(ex, "Error while deleting book for id = {id}", id);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using DeleteBook with id={id}.", id);
+                return StatusCode(500);
             }
         }
 
@@ -122,7 +151,12 @@ namespace LibraryApi.Controllers
             catch (KeyNotFoundException ex)
             {
                 _logger.LogInformation(ex, "Error while updating book for ID = {id}", book.Id);
-                return NotFound(ex.Message);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using EditBook with book={book}.", book);
+                return StatusCode(500);
             }
         }
 
@@ -130,24 +164,49 @@ namespace LibraryApi.Controllers
         [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfAuthorForListVm> GetAuthors()
         {
-            var authors = _bookService.GetAllAuthorsForList();
-            return Ok(authors);
+            try
+            {
+                var authors = _bookService.GetAllAuthorsForList();
+                return Ok(authors);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetAuthors.");
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("genres")]
         [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfGenreForListVm> GetGenres()
         {
-            var genres = _bookService.GetAllGenresForList();
-            return Ok(genres);
+            try
+            {
+                var genres = _bookService.GetAllGenresForList();
+                return Ok(genres);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetGenres.");
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("publishers")]
         [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfPublisherForListVm> GetPublishers()
         {
-            var publishers = _bookService.GetAllPublishersForList();
-            return Ok(publishers);
+            try
+            {
+                var publishers = _bookService.GetAllPublishersForList();
+                return Ok(publishers);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetPublishers.");
+                return StatusCode(500);
+            }
         }
+
     }
 }
