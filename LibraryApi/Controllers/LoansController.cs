@@ -21,14 +21,16 @@ namespace LibraryApi.Controllers
         private readonly ILoanService _loanService;
         private readonly IValidator<LoanSettingsVm> _validatorLoanSettingsVm;
         private readonly IValidator<NewReturnRecordVm> _validatorNewReturnRecordVm;
+        private readonly ILogger _logger;
         private readonly ILibraryUserService _libraryUserService;
 
-        public LoansController(ILoanService loanService, IValidator<LoanSettingsVm> validatorLoanSettingsVm, ILibraryUserService libraryUserService, IValidator<NewReturnRecordVm> validatorNewReturnRecordVm)
+        public LoansController(ILoanService loanService, IValidator<LoanSettingsVm> validatorLoanSettingsVm, ILibraryUserService libraryUserService, IValidator<NewReturnRecordVm> validatorNewReturnRecordVm, ILogger logger)
         {
             _loanService = loanService;
             _validatorLoanSettingsVm = validatorLoanSettingsVm;
             _libraryUserService = libraryUserService;
             _validatorNewReturnRecordVm = validatorNewReturnRecordVm;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -40,8 +42,16 @@ namespace LibraryApi.Controllers
                 return BadRequest("Brak Id użytkownika.");
             }
 
-            var model = _loanService.GetAllLoansForListByIndentityUserId(userId, pageSize, pageNumber);
-            return Ok(model);
+            try
+            {
+                var model = _loanService.GetAllLoansForListByIndentityUserId(userId, pageSize, pageNumber);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using UnblockUser with userId={userId}.", userId);
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("{id}")]
@@ -49,12 +59,20 @@ namespace LibraryApi.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LoanDetailsVm> GetLoan(int id)
         {
-            var model = _loanService.GetLoanForDetails(id);
-            if(model is null)
+            try
             {
-                return NotFound();
+                var model = _loanService.GetLoanForDetails(id);
+                if (model is null)
+                {
+                    return NotFound();
+                }
+                return Ok(model);
             }
-            return Ok(model);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetLoan with id={id}.", id);
+                return StatusCode(500);
+            }
         }
 
         [HttpPost]
@@ -66,27 +84,43 @@ namespace LibraryApi.Controllers
                 return Forbid("Użytkownik zablokowany.");
             }
 
-            var loanId = _loanService.AddNewLoan(createRequest.BorrowingCartId, createRequest.UserId);
-            if (loanId == -1)
+            try
             {
-                return BadRequest("Zamówienie nie zostało utworzone. Wybrane książki są niedostępne.");
-            }
+                var loanId = _loanService.AddNewLoan(createRequest.BorrowingCartId, createRequest.UserId);
+                if (loanId == -1)
+                {
+                    return BadRequest("Zamówienie nie zostało utworzone. Wybrane książki są niedostępne.");
+                }
 
-            return CreatedAtAction(nameof(GetLoan), new { id = loanId }, null);
+                return CreatedAtAction(nameof(GetLoan), new { id = loanId }, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using CreateLoan with createRequest={createRequest}.", createRequest);
+                return StatusCode(500);
+            }
         }
 
         [HttpDelete("{id}")]
         [CheckViewLoanPermission]
         public IActionResult CancelLoan(int id) 
         {
-            var result = _loanService.CancelLoan(id);
-            if (result)
+            try
             {
-                return Ok("Zamówienie anulowane.");
+                var result = _loanService.CancelLoan(id);
+                if (result)
+                {
+                    return Ok("Zamówienie anulowane.");
+                }
+                else
+                {
+                    return BadRequest("Nie znaleziono zamówienia o podanym id.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Nie znaleziono zamówienia o podanym id.");
+                _logger.LogError(ex, "Error while using CancelLoan with id={id}.", id);
+                return StatusCode(500);
             }
         }
 
@@ -95,10 +129,20 @@ namespace LibraryApi.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LoanForConfirmCheckOutListVm> GetLoansForConfirmCheckOut()
         {
-            var model = _loanService.GetAllLoansForConfirmCheckOutList();
-            if(model.Count == 0)
-                return NoContent();
-            return Ok(model);
+            try
+            {
+                var model = _loanService.GetAllLoansForConfirmCheckOutList();
+                if (model.Count == 0)
+                {
+                    return NoContent();
+                }
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetLoansForConfirmCheckOut.");
+                return StatusCode(500);
+            }
         }
 
         [HttpPut("{loanId}/confirm-checkout")]
@@ -106,11 +150,24 @@ namespace LibraryApi.Controllers
         public IActionResult ConfirmCheckOut(int loanId)
         {
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            int result = _loanService.ConfirmCheckOut(loanId, librarianId);
-            if (result == -1)
-                return BadRequest("Nie znaleziono zamówienia o podanym id.");
-            else
-                return Ok();
+
+            try
+            {
+                int result = _loanService.ConfirmCheckOut(loanId, librarianId);
+                if (result == -1)
+                {
+                    return BadRequest("Nie znaleziono zamówienia o podanym id.");
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using ConfirmCheckOut with loanId={loanId}.", loanId);
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("confirm-return")]
@@ -118,10 +175,20 @@ namespace LibraryApi.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LoanForConfirmCheckOutListVm> GetLoansForConfirmReturn()
         {
-            var model = _loanService.GetAllLoansForConfirmReturnList();
-            if (model.Count == 0)
-                return NoContent();
-            return Ok(model);
+            try
+            {
+                var model = _loanService.GetAllLoansForConfirmReturnList();
+                if (model.Count == 0)
+                {
+                    return NoContent();
+                }
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetLoansForConfirmReturn.");
+                return StatusCode(500);
+            }
         }
 
         [HttpPut("confirm-return")]
@@ -136,11 +203,24 @@ namespace LibraryApi.Controllers
             }
 
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var returnRecordId = _loanService.ConfirmReturn(returnRecord, librarianId);
-            if (returnRecordId == -1)
-                return NotFound("Nie znaleziono zamówienia o podanym id.");
-            else
-                return Ok();
+
+            try
+            {
+                var returnRecordId = _loanService.ConfirmReturn(returnRecord, librarianId);
+                if (returnRecordId == -1) 
+                {
+                    return NotFound("Nie znaleziono zamówienia o podanym id.");
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using ConfirmReturn with returnRecord={returnRecord}.", returnRecord);
+                return StatusCode(500);
+            }
         }
     }
 }

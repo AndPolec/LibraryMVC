@@ -16,9 +16,12 @@ namespace LibraryApi.Controllers
     public class LibraryUsersController : ControllerBase
     {
         private readonly ILibraryUserService _userService;
-        public LibraryUsersController(ILibraryUserService userService)
+        private readonly ILogger _logger;
+
+        public LibraryUsersController(ILibraryUserService userService, ILogger logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpGet("me")]
@@ -29,9 +32,18 @@ namespace LibraryApi.Controllers
             {
                 return BadRequest("Brak Id użytkownika.");
             }
-            var libraryUserId = _userService.GetLibraryUserIdByIdentityUserId(identityUserId);
-            var model = _userService.GetLibraryUserForPersonalData(libraryUserId);
-            return Ok(model);
+
+            try
+            {
+                var libraryUserId = _userService.GetLibraryUserIdByIdentityUserId(identityUserId);
+                var model = _userService.GetLibraryUserForPersonalData(libraryUserId);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetLoggedUserDetails.");
+                return StatusCode(500);
+            }
         }
 
         [HttpGet]
@@ -39,8 +51,17 @@ namespace LibraryApi.Controllers
         [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<List<LibraryUserForListVm>> GetAllLibraryUsers()
         {
-            var model = _userService.GetAllLibraryUsersForList();
-            return Ok(model);
+            try
+            {
+                var model = _userService.GetAllLibraryUsersForList();
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error while using GetAllLibraryUsers.");
+                return StatusCode(500);
+            }
         }
 
         [HttpGet("{id}")]
@@ -48,37 +69,61 @@ namespace LibraryApi.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<LibraryUserDetailsVm> GetLibraryUser(int id)
         {
-            var model = _userService.GetLibraryUserForDetails(id);
-            if(model is null)
+            try
             {
-                return NotFound();
-            }
+                var model = _userService.GetLibraryUserForDetails(id);
+                if (model is null)
+                {
+                    return NotFound();
+                }
 
-            return Ok(model);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetLibraryUser with id={id}.", id);
+                return StatusCode(500);
+            }
         }
 
         [HttpPatch("{userId}/block")]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult BlockUser(int userId)
         {
-            bool result = _userService.BlockUser(userId);
-            if (!result)
+            try
             {
-                return NotFound("Użytkowniko podanym id nie został znaleziony.");
+                bool result = _userService.BlockUser(userId);
+                if (!result)
+                {
+                    return NotFound("Użytkowniko podanym id nie został znaleziony.");
+                }
+                return Ok();
             }
-            return Ok();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using BlockUser with userId={userId}.", userId);
+                return StatusCode(500);
+            }
         }
 
         [HttpPatch("{userId}/unblock")]
         [Authorize(Roles = "Bibliotekarz,Administrator")]
         public IActionResult UnblockUser(int userId)
         {
-            bool result = _userService.UnblockUser(userId);
-            if (!result)
+            try
             {
-                return NotFound("Użytkowniko podanym id nie został znaleziony.");
+                bool result = _userService.UnblockUser(userId);
+                if (!result)
+                {
+                    return NotFound("Użytkownik o podanym id nie został znaleziony.");
+                }
+                return Ok();
             }
-            return Ok();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using UnblockUser with userId={userId}.", userId);
+                return StatusCode(500);
+            }
         }
     }
 }

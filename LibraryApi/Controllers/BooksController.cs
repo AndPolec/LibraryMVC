@@ -33,10 +33,16 @@ namespace LibraryApi.Controllers
         [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
         public ActionResult<ListOfBookForListVm> GetBooks(string? searchString, int pageSize = 10, int pageNumber = 1)
         {
-            ListOfBookForListVm result;
             try
             {
-                result = _bookService.GetAllBooksForList(pageSize, pageNumber, searchString ?? string.Empty);
+                var result = _bookService.GetAllBooksForList(pageSize, pageNumber, searchString ?? string.Empty);
+
+                if (result.Count == 0)
+                {
+                    return NoContent();
+                }
+
+                return Ok(result);
             }
             catch (ArgumentException ex)
             {
@@ -48,13 +54,6 @@ namespace LibraryApi.Controllers
                 _logger.LogError(ex, "Error while using GetBooks with searchString={searchString}, pageSize={pageSize}, and pageNumber={pageNumber}.", searchString, pageSize, pageNumber);
                 return StatusCode(500);
             }
-            
-            if (result.Count == 0)
-            {
-                return NoContent();
-            }
-
-            return Ok(result);
         }
 
 

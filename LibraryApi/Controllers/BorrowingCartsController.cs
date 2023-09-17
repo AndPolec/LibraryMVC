@@ -4,6 +4,7 @@ using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 
 namespace LibraryApi.Controllers
@@ -26,6 +27,7 @@ namespace LibraryApi.Controllers
         public ActionResult<BorrowingCartDetailsVm> GetBorrowingCart()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (userId is null)
             {
                 return BadRequest("Brak Id użytkownika.");
@@ -39,7 +41,12 @@ namespace LibraryApi.Controllers
             catch (KeyNotFoundException ex)
             {
                 _logger.LogInformation(ex, "Error while fetching borrowing cart for userId = {userId}", userId);
-                return NotFound(ex.Message);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using GetBorrowingCart");
+                return StatusCode(500);
             }
         }
 
@@ -57,35 +64,55 @@ namespace LibraryApi.Controllers
             try
             {
                 _loanService.AddToBorrowingCart(bookId, userId);
+                return Ok("Książka dodana do koszyka.");
             }
             catch (KeyNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
-
-            return Ok("Książka dodana do koszyka.");
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using AddToBorrowingCart with bookId={bookId}", bookId);
+                return StatusCode(500);
+            }
         }
 
         [HttpDelete("{borrowingCartId}/{bookId}")]
         [CheckBorrowingCartPermission]
         public IActionResult RemoveFromBorrowingCart(int borrowingCartId, int bookId)
         {
-            var result = _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
-            if (result)
-                return Ok("Książka usunięta z koszyka.");
-            else
-                return BadRequest("Książka lub koszyk nie został znaleziony.");
+            try
+            {
+                var result = _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
+                if (result)
+                    return Ok("Książka usunięta z koszyka.");
+                else
+                    return BadRequest("Książka lub koszyk nie został znaleziony.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using RemoveFromBorrowingCart with borrowingCartId={borrowingCartId}, bookId={bookId}.", borrowingCartId, bookId);
+                return StatusCode(500);
+            }
         }
 
         [HttpDelete("{borrowingCartId}")]
         [CheckBorrowingCartPermission]
         public IActionResult RemoveAllFromBorrowingCart(int borrowingCartId)
         {
-            var result = _loanService.ClearBorrowingCart(borrowingCartId);
-            if (result)
-                return Ok("Wszystkie książki usunięte z koszyka.");
-            else
-                return BadRequest("Koszyk nie został znaleziony.");
+            try
+            {
+                var result = _loanService.ClearBorrowingCart(borrowingCartId);
+                if (result)
+                    return Ok("Wszystkie książki usunięte z koszyka.");
+                else
+                    return BadRequest("Koszyk nie został znaleziony.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while using RemoveAllFromBorrowingCart with borrowingCartId={borrowingCartId}.", borrowingCartId);
+                return StatusCode(500);
+            }
         }
     }
 }
