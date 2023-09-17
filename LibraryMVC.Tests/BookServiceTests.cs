@@ -737,6 +737,61 @@ namespace LibraryMVC.Tests
             mockPublisherRepo.Verify(r => r.AddPublisher(publisher), Times.Once());
         }
 
+        [Fact]
+        public void GetBookFormLists_WhenCalled_ReturnsModelWithCorrectData()
+        {
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockGenreRepo = new Mock<IGenreRepository>();
+            var mockAuthorRepo = new Mock<IAuthorRepository>();
+            var mockPublisherRepo = new Mock<IPublisherRepository>();
+            var mapper = GetMapper();
 
+            var publishers = new List<Publisher>
+            {
+                new Publisher { Id = 1, Name = "Publisher 1" },
+                new Publisher { Id = 2, Name = "Publisher 2" }
+            };
+
+            var expectedPublishers = new List<PublisherForListVm>
+            {
+                new PublisherForListVm { Id = 1, Name = "Publisher 1" },
+                new PublisherForListVm { Id = 2, Name = "Publisher 2" }
+            };
+
+            var authors = new List<Author>
+            {
+                new Author { Id = 1, FirstName = "George", LastName = "Martin" },
+                new Author { Id = 2, FirstName = "Isaac", LastName = "Asimov" }
+            };
+
+            var expectedAuthors = new List<AuthorForListVm>
+            {
+                new AuthorForListVm { Id = 1, FullName = "Martin George" },
+                new AuthorForListVm { Id = 2, FullName = "Asimov Isaac" }
+            };
+            var genres = new List<Genre>
+            {
+                new Genre { Id = 1, Name = "Fantasy" },
+                new Genre { Id = 2, Name = "Science Fiction" }
+            };
+
+            var expectedGenres = new List<GenreForListVm>
+            {
+                new GenreForListVm { Id = 1, Name = "Fantasy" },
+                new GenreForListVm { Id = 2, Name = "Science Fiction" }
+            };
+
+            mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable);
+            mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable);
+            mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable);
+
+            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            
+            var result = service.GetBookFormLists();
+
+            result.AllAuthors.Authors.Should().BeEquivalentTo(expectedAuthors);
+            result.AllGenres.Genres.Should().BeEquivalentTo(expectedGenres);
+            result.AllPublishers.Publishers.Should().BeEquivalentTo(expectedPublishers);
+        }
     }
 }
