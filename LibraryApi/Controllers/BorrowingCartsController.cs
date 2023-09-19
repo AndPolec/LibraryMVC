@@ -36,12 +36,11 @@ namespace LibraryApi.Controllers
             try
             {
                 var model = _loanService.GetBorrowingCartForDetailsByIndentityUserId(userId);
+                if (model == null)
+                {
+                    return NoContent();
+                }
                 return Ok(model);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                _logger.LogInformation(ex, "Error while fetching borrowing cart for userId = {userId}", userId);
-                return NotFound();
             }
             catch (Exception ex)
             {
@@ -83,11 +82,12 @@ namespace LibraryApi.Controllers
         {
             try
             {
-                var result = _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
-                if (result)
-                    return Ok("Książka usunięta z koszyka.");
-                else
-                    return BadRequest("Książka lub koszyk nie został znaleziony.");
+                _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
+                return Ok("Książka usunięta z koszyka.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -106,7 +106,7 @@ namespace LibraryApi.Controllers
                 if (result)
                     return Ok("Wszystkie książki usunięte z koszyka.");
                 else
-                    return BadRequest("Koszyk nie został znaleziony.");
+                    return NotFound("Koszyk nie został znaleziony.");
             }
             catch (Exception ex)
             {

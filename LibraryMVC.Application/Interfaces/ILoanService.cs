@@ -14,11 +14,11 @@ namespace LibraryMVC.Application.Interfaces
 {
     public interface ILoanService
     {
-        BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId);
+        BorrowingCartDetailsVm? GetBorrowingCartForDetailsByIndentityUserId(string identityUserId);
         void AddToBorrowingCart(int bookId,string identityUserId);
         bool IsBookInBorrowingCart(int bookId, string identityUserId);
         bool IsBorrowingCartFull(string identityUserId);
-        bool RemoveFromBorrowingCart(int bookId, int borrowingCartId);
+        void RemoveFromBorrowingCart(int bookId, int borrowingCartId);
         bool ClearBorrowingCart(int borrowingCartId);
         int AddNewLoan(int borrowingCartId, int userId);
         ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber);

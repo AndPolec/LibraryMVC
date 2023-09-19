@@ -62,12 +62,12 @@ namespace LibraryMVC.Application.Services
         }
 
 
-        public BorrowingCartDetailsVm GetBorrowingCartForDetailsByIndentityUserId(string identityUserId)
+        public BorrowingCartDetailsVm? GetBorrowingCartForDetailsByIndentityUserId(string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
             if (borrowingCart == null)
             {
-                throw new KeyNotFoundException($"No borrowing cart found for user with ID: {identityUserId}");
+                return null;
             }
 
             var borrowingCartVm = _mapper.Map<BorrowingCartDetailsVm>(borrowingCart);
@@ -80,20 +80,22 @@ namespace LibraryMVC.Application.Services
             return borrowingCart;
         }
 
-        public bool RemoveFromBorrowingCart(int bookId, int borrowingCartId)
+        public void RemoveFromBorrowingCart(int bookId, int borrowingCartId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
-            if (borrowingCart != null)
+            if (borrowingCart == null)
             {
-                var bookToRemove = borrowingCart.Books.FirstOrDefault(b => b.Id == bookId);
-                if (bookToRemove != null)
-                {
-                    borrowingCart.Books.Remove(bookToRemove);
-                    _borrowingCartRepository.UpdateBorrowingCart(borrowingCart);
-                    return true;
-                }
+                throw new KeyNotFoundException($"No borrowing cart found for ID: {borrowingCartId}");
             }
-            return false;
+
+            var bookToRemove = borrowingCart.Books.FirstOrDefault(b => b.Id == bookId);
+            if (bookToRemove == null)
+            {
+                throw new KeyNotFoundException($"No book found for ID: {bookId} in borrowing cart with ID: {borrowingCartId}");
+            }
+
+            borrowingCart.Books.Remove(bookToRemove);
+            _borrowingCartRepository.UpdateBorrowingCart(borrowingCart);
         }
 
         public bool ClearBorrowingCart(int borrowingCartId)

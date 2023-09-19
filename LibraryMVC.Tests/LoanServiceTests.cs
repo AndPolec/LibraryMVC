@@ -10,6 +10,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -122,7 +123,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void GetBorrowingCartForDetailsByIndentityUserId_BorrowingCartNotFound_ShouldThrowKeyNotFoundException()
+        public void GetBorrowingCartForDetailsByIndentityUserId_BorrowingCartNotFound_ShouldReturnNull()
         {
             var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
             var mockLoanRepo = new Mock<ILoanRepository>();
@@ -136,9 +137,117 @@ namespace LibraryMVC.Tests
 
             var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object);
 
-            Action result = () => service.GetBorrowingCartForDetailsByIndentityUserId(testUserId);
+            var result = service.GetBorrowingCartForDetailsByIndentityUserId(testUserId);
 
-            result.Should().Throw<KeyNotFoundException>().WithMessage($"No borrowing cart found for user with ID: {testUserId}");
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void RemoveFromBorrowingCart_BorrowingCartNotFound_ShouldThrowKeyNotFoundException()
+        {
+            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
+            var mockLoanRepo = new Mock<ILoanRepository>();
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
+            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
+            var mockMapper = new Mock<IMapper>();
+            int testBorrowingCartId = 1;
+            int testBookId = 2;
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns((BorrowingCart)null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object);
+
+            Action result = () => service.RemoveFromBorrowingCart(testBookId,testBorrowingCartId);
+
+            result.Should().Throw<KeyNotFoundException>().WithMessage($"No borrowing cart found for ID: {testBorrowingCartId}");
+        }
+
+        [Fact]
+        public void RemoveFromBorrowingCart_BookNotFoundInBorrowingCart_ShouldThrowKeyNotFoundException()
+        {
+            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
+            var mockLoanRepo = new Mock<ILoanRepository>();
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
+            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
+            var mockMapper = new Mock<IMapper>();
+            int testBorrowingCartId = 1;
+            int testBookId = 2;
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns(new BorrowingCart() { Id = testBorrowingCartId, Books = new List<Book>() });
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object);
+
+            Action result = () => service.RemoveFromBorrowingCart(testBookId, testBorrowingCartId);
+
+            result.Should().Throw<KeyNotFoundException>().WithMessage($"No book found for ID: {testBookId} in borrowing cart with ID: {testBorrowingCartId}");
+        }
+
+        [Fact]
+        public void RemoveFromBorrowingCart_ValidInput_ShouldRemoveBookAndCallUpdate()
+        {
+            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
+            var mockLoanRepo = new Mock<ILoanRepository>();
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
+            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
+            var mockMapper = new Mock<IMapper>();
+            int testBorrowingCartId = 1;
+            int testBookId = 2;
+            var testBorrowingCart = new BorrowingCart() { Id = testBorrowingCartId, Books = new List<Book>() { new Book() { Id = testBookId }, new Book() { Id = 3 } } };
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns(testBorrowingCart);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object);
+
+            service.RemoveFromBorrowingCart(testBookId,testBorrowingCartId);
+
+            testBorrowingCart.Books.Should().HaveCount(1);
+            testBorrowingCart.Books.Should().NotContain(b => b.Id == testBookId);
+            mockBorrowingCartRepo.Verify(r => r.UpdateBorrowingCart(testBorrowingCart), Times.Once());
+        }
+
+        [Fact]
+        public void ClearBorrowingCart_BorrowingCartNotFound_ShouldReturnFalse()
+        {
+            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
+            var mockLoanRepo = new Mock<ILoanRepository>();
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
+            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
+            var mockMapper = new Mock<IMapper>();
+            int testBorrowingCartId = 1;
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns((BorrowingCart)null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object);
+
+            var result = service.ClearBorrowingCart(testBorrowingCartId);
+
+            result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ClearBorrowingCart_BorrowingCartFound_ShouldCallRemoveMethodAndReturnTrue()
+        {
+            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
+            var mockLoanRepo = new Mock<ILoanRepository>();
+            var mockBookRepo = new Mock<IBookRepository>();
+            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
+            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
+            var mockMapper = new Mock<IMapper>();
+            int testBorrowingCartId = 1;
+            var testBorrowingCart = new BorrowingCart() { Id = testBorrowingCartId, Books = new List<Book>() { new Book() { Id = 2 }, new Book() { Id = 3 } } };
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns(testBorrowingCart);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object);
+
+            var result = service.ClearBorrowingCart(testBorrowingCartId);
+
+            result.Should().BeTrue();
+            mockBorrowingCartRepo.Verify(r => r.RemoveAllFromBorrowingCart(testBorrowingCart),Times.Once());
         }
 
     }
