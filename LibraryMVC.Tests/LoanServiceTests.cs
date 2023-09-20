@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using LibraryMVC.Application.Exceptions;
 using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
@@ -44,7 +45,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void AddToBorrowingCart_BorrowingCartNotFound_ShouldThrowKeyNotFoundException()
+        public void AddToBorrowingCart_BorrowingCartNotFound_ShouldThrowNotFoundException()
         {
             var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
             var mockLoanRepo = new Mock<ILoanRepository>();
@@ -60,11 +61,11 @@ namespace LibraryMVC.Tests
 
             Action result = () => service.AddToBorrowingCart(1, testUserId);
 
-            result.Should().Throw<KeyNotFoundException>().WithMessage($"No borrowing cart found for user with ID: {testUserId}");
+            result.Should().Throw<NotFoundException>().WithMessage($"No borrowing cart found for user with ID: {testUserId}");
         }
 
         [Fact]
-        public void AddToBorrowingCart_BookNotFound_ShouldThrowKeyNotFoundException()
+        public void AddToBorrowingCart_BookNotFound_ShouldThrowNotFoundException()
         {
             var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
             var mockLoanRepo = new Mock<ILoanRepository>();
@@ -83,7 +84,7 @@ namespace LibraryMVC.Tests
 
             Action result = () => service.AddToBorrowingCart(testBookId, "userId");
 
-            result.Should().Throw<KeyNotFoundException>().WithMessage($"No book found with ID: {testBookId}");
+            result.Should().Throw<NotFoundException>().WithMessage($"No book found with ID: {testBookId}");
         }
 
         [Fact]
@@ -143,7 +144,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void RemoveFromBorrowingCart_BorrowingCartNotFound_ShouldThrowKeyNotFoundException()
+        public void RemoveFromBorrowingCart_BorrowingCartNotFound_ShouldThrowNotFoundException()
         {
             var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
             var mockLoanRepo = new Mock<ILoanRepository>();
@@ -160,11 +161,11 @@ namespace LibraryMVC.Tests
 
             Action result = () => service.RemoveFromBorrowingCart(testBookId,testBorrowingCartId);
 
-            result.Should().Throw<KeyNotFoundException>().WithMessage($"No borrowing cart found for ID: {testBorrowingCartId}");
+            result.Should().Throw<NotFoundException>().WithMessage($"No borrowing cart found for ID: {testBorrowingCartId}");
         }
 
         [Fact]
-        public void RemoveFromBorrowingCart_BookNotFoundInBorrowingCart_ShouldThrowKeyNotFoundException()
+        public void RemoveFromBorrowingCart_BookNotFoundInBorrowingCart_ShouldThrowNotFoundException()
         {
             var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
             var mockLoanRepo = new Mock<ILoanRepository>();
@@ -181,7 +182,7 @@ namespace LibraryMVC.Tests
 
             Action result = () => service.RemoveFromBorrowingCart(testBookId, testBorrowingCartId);
 
-            result.Should().Throw<KeyNotFoundException>().WithMessage($"No book found for ID: {testBookId} in borrowing cart with ID: {testBorrowingCartId}");
+            result.Should().Throw<NotFoundException>().WithMessage($"No book found for ID: {testBookId} in borrowing cart with ID: {testBorrowingCartId}");
         }
 
         [Fact]

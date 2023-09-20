@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using LibraryMVC.Application.Exceptions;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Author;
 using LibraryMVC.Application.ViewModels.Book;
@@ -114,7 +115,7 @@ namespace LibraryMVC.Application.Services
         {
             if (!IsBookInDatabase(model.Id))
             {
-                throw new KeyNotFoundException($"Book with ID {model.Id} was not found.");
+                throw new NotFoundException($"Book with ID {model.Id} was not found.");
             }
 
             var book = _mapper.Map<Book>(model);
@@ -125,7 +126,7 @@ namespace LibraryMVC.Application.Services
         {
             if (!IsBookInDatabase(id))
             {
-                throw new KeyNotFoundException($"Book with ID {id} was not found.");
+                throw new NotFoundException($"Book with ID {id} was not found.");
             }
 
             _bookRepository.DeleteBook(id);

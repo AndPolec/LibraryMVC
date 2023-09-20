@@ -9,12 +9,14 @@ using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using LibraryMVC.Application.Exceptions;
 
 namespace LibraryMVC.Application.Services
 {
@@ -49,12 +51,12 @@ namespace LibraryMVC.Application.Services
 
             if (borrowingCart == null)
             {
-                throw new KeyNotFoundException($"No borrowing cart found for user with ID: {identityUserId}");
+                throw new NotFoundException($"No borrowing cart found for user with ID: {identityUserId}");
             }
 
             if (book == null)
             {
-                throw new KeyNotFoundException($"No book found with ID: {bookId}");
+                throw new NotFoundException($"No book found with ID: {bookId}");
             }
 
             borrowingCart.Books.Add(book);
@@ -85,13 +87,13 @@ namespace LibraryMVC.Application.Services
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartById(borrowingCartId);
             if (borrowingCart == null)
             {
-                throw new KeyNotFoundException($"No borrowing cart found for ID: {borrowingCartId}");
+                throw new NotFoundException($"No borrowing cart found for ID: {borrowingCartId}");
             }
 
             var bookToRemove = borrowingCart.Books.FirstOrDefault(b => b.Id == bookId);
             if (bookToRemove == null)
             {
-                throw new KeyNotFoundException($"No book found for ID: {bookId} in borrowing cart with ID: {borrowingCartId}");
+                throw new NotFoundException($"No book found for ID: {bookId} in borrowing cart with ID: {borrowingCartId}");
             }
 
             borrowingCart.Books.Remove(bookToRemove);
@@ -112,6 +114,10 @@ namespace LibraryMVC.Application.Services
         public bool IsBookInBorrowingCart(int bookId, string identityUserId)
         {
             var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
+            if (borrowingCart == null)
+            {
+                throw new NotFoundException($"No borrowing cart found for UserId: {identityUserId}");
+            }
             return borrowingCart.Books.Any(b => b.Id == bookId);
         }
 

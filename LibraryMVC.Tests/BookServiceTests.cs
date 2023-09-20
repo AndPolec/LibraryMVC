@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using LibraryMVC.Application.Exceptions;
 using LibraryMVC.Application.Mapping;
 using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Author;
@@ -443,7 +444,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void UpdateBook_BookNotExistInDatabase_ThrowsKeyNotFoundException()
+        public void UpdateBook_BookNotExistInDatabase_ThrowsNotFoundException()
         {
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
@@ -458,7 +459,7 @@ namespace LibraryMVC.Tests
 
             Action result = () => service.UpdateBook(testBookVm);
 
-            result.Should().Throw<KeyNotFoundException>().WithMessage($"Book with ID {testBookVm.Id} was not found.");
+            result.Should().Throw<NotFoundException>().WithMessage($"Book with ID {testBookVm.Id} was not found.");
         }
 
         [Fact]
@@ -483,7 +484,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void DeleteBook_BookNotExistInDatabase_ThrowsKeyNotFoundException()
+        public void DeleteBook_BookNotExistInDatabase_ThrowsNotFoundException()
         {
             var mockBookRepo = new Mock<IBookRepository>();
             var mockGenreRepo = new Mock<IGenreRepository>();
@@ -498,7 +499,7 @@ namespace LibraryMVC.Tests
 
             Action result = () => service.DeleteBook(testBookId);
 
-            result.Should().Throw<KeyNotFoundException>().WithMessage($"Book with ID {testBookId} was not found.");
+            result.Should().Throw<NotFoundException>().WithMessage($"Book with ID {testBookId} was not found.");
         }
 
         [Fact]

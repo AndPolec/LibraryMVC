@@ -1,4 +1,5 @@
 ﻿using LibraryApi.Filters;
+using LibraryMVC.Application.Exceptions;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Domain.Model;
@@ -59,13 +60,13 @@ namespace LibraryApi.Controllers
 
             if (_loanService.IsBookInBorrowingCart(bookId, userId))
                 return BadRequest("Książka już znajduje się w koszyku.");
-
+            
             try
             {
                 _loanService.AddToBorrowingCart(bookId, userId);
                 return Ok("Książka dodana do koszyka.");
             }
-            catch (KeyNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -85,7 +86,7 @@ namespace LibraryApi.Controllers
                 _loanService.RemoveFromBorrowingCart(bookId, borrowingCartId);
                 return Ok("Książka usunięta z koszyka.");
             }
-            catch (KeyNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }

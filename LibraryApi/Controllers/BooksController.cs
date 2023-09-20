@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using LibraryMVC.Application.Exceptions;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Author;
 using LibraryMVC.Application.ViewModels.Book;
@@ -118,7 +119,7 @@ namespace LibraryApi.Controllers
                 return Ok();
 
             }
-            catch (KeyNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 _logger.LogInformation(ex, "Error while deleting book for id = {id}", id);
                 return NotFound();
@@ -147,7 +148,7 @@ namespace LibraryApi.Controllers
                 _bookService.UpdateBook(book);
                 return Ok();
             }
-            catch (KeyNotFoundException ex)
+            catch (NotFoundException ex)
             {
                 _logger.LogInformation(ex, "Error while updating book for ID = {id}", book.Id);
                 return NotFound();
