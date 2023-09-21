@@ -27,6 +27,7 @@ namespace LibraryMVC.Infrastructure
         public DbSet<LibraryUser> LibraryUsers { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
+        public DbSet<GlobalLoanSettings> GlobalLoanSettings { get; set; }
 
 
         public Context(DbContextOptions options) : base(options)
@@ -79,6 +80,10 @@ namespace LibraryMVC.Infrastructure
                 .WithMany(b => b.ReturnRecordsWhereCopyOfBookWasReturned)
                 .UsingEntity(j => j.ToTable("ReturnRecordReturnedBooks"));
 
+            builder.Entity<GlobalLoanSettings>()
+                .Property(g => g.OverduePenaltyRatePerDayForOneBook)
+                .HasColumnType("decimal(8,2)");
+
             builder.Entity<Status>()
                 .HasData(new Status { Id = 1, Name = "Nowe" },
                          new Status { Id = 2, Name = "Wypożyczone" },
@@ -95,6 +100,9 @@ namespace LibraryMVC.Infrastructure
                .HasData(new IdentityRole { Id = "Reader", Name = "Czytelnik", NormalizedName = "Czytelnik" },
                         new IdentityRole { Id = "Librarian", Name = "Bibliotekarz", NormalizedName = "Bibliotekarz" },
                         new IdentityRole { Id = "Administrator", Name = "Administrator", NormalizedName = "Administrator" });
+
+            builder.Entity<GlobalLoanSettings>()
+                .HasData(new GlobalLoanSettings {DurationOfFreeLoanInDays = 21, MaxBooksInOrder = 5, OverduePenaltyRatePerDayForOneBook = 0.2M });
         }
 
     }

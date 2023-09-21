@@ -54,15 +54,15 @@ namespace LibraryApi.Controllers
         public IActionResult AddToBorrowingCart([FromBody] int bookId)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (_loanService.IsBorrowingCartFull(userId))
-                return BadRequest("Koszyk jest pełny.");
-
-            if (_loanService.IsBookInBorrowingCart(bookId, userId))
-                return BadRequest("Książka już znajduje się w koszyku.");
             
             try
             {
+                if (_loanService.IsBorrowingCartFull(userId))
+                    return BadRequest("Koszyk jest pełny.");
+
+                if (_loanService.IsBookInBorrowingCart(bookId, userId))
+                    return BadRequest("Książka już znajduje się w koszyku.");
+
                 _loanService.AddToBorrowingCart(bookId, userId);
                 return Ok("Książka dodana do koszyka.");
             }

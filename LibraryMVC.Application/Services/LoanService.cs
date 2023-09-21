@@ -22,18 +22,15 @@ namespace LibraryMVC.Application.Services
 {
     public class LoanService : ILoanService
     {
-        private decimal _OverduePenaltyRatePerDayForOneBook = 0.2M;
-        private int _durationOfFreeLoanInDays = 21;
-        private int _maxBooksInOrder = 5;
         private readonly IMapper _mapper;
         private readonly IBorrowingCartRepository _borrowingCartRepository;
         private readonly ILoanRepository _loanRepository;
         private readonly IBookRepository _bookRepository;
         private readonly IAdditionalLibrarianInfoRepository _additionalLibrarianInfoRepository;
         private readonly IReturnRecordRepository _returnRecordRepository;
+        private readonly IGlobalLoanSettingsRepository _loanSettingsRepository;
 
-        
-        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository, IReturnRecordRepository returnRecordRepository)
+        public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository, IReturnRecordRepository returnRecordRepository, IGlobalLoanSettingsRepository loanSettingsRepository)
         {
             _borrowingCartRepository = borrowingCartRepository;
             _mapper = mapper;
@@ -41,6 +38,7 @@ namespace LibraryMVC.Application.Services
             _bookRepository = bookRepository;
             _additionalLibrarianInfoRepository = additionalLibrarianInfoRepository;
             _returnRecordRepository = returnRecordRepository;
+            _loanSettingsRepository = loanSettingsRepository;
         }
 
         //BorrowingCart
@@ -123,13 +121,24 @@ namespace LibraryMVC.Application.Services
 
         public bool IsBorrowingCartFull(string identityUserId)
         {
-            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
-            var count = borrowingCart.Books.Count();
             
-            if (count < _maxBooksInOrder)
-                return false;
+            var borrowingCart = _borrowingCartRepository.GetBorrowingCartByIdentityUserId(identityUserId);
+            if (borrowingCart == null)
+            {
+                throw new NotFoundException($"No borrowing cart found for UserId: {identityUserId}");
+            }
 
-            return true;
+            var count = borrowingCart.Books.Count();
+            int maxBooksInOrder = _loanSettingsRepository.GetSettings().MaxBooksInOrder;
+
+            if (count < maxBooksInOrder)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         //Loan
@@ -139,7 +148,9 @@ namespace LibraryMVC.Application.Services
             foreach (var book in books)
             {
                 if (book.Quantity > 0)
+                {
                     availableBooks.Add(book);
+                }
             }
             return availableBooks;
         }
@@ -166,9 +177,10 @@ namespace LibraryMVC.Application.Services
 
         private decimal CalculateOverduePenalty(Loan loan)
         {
+            decimal overduePenaltyRatePerDayForOneBook = _loanSettingsRepository.GetSettings().OverduePenaltyRatePerDayForOneBook;
             int numberOfOverdueDays = (DateTime.Now - loan.ReturnDueDate).Days;
             int numberOfBooks = loan.Books.Count();
-            decimal penalty = numberOfOverdueDays * numberOfBooks * _OverduePenaltyRatePerDayForOneBook;
+            decimal penalty = numberOfOverdueDays * numberOfBooks * overduePenaltyRatePerDayForOneBook;
             return penalty;
         } 
 
@@ -287,9 +299,9 @@ namespace LibraryMVC.Application.Services
 
             if (loan is null)
                 return -1;
-
+            int durationOfFreeLoanInDays = _loanSettingsRepository.GetSettings().DurationOfFreeLoanInDays;
             loan.StatusId = 2; //Status = "Wypożyczone"
-            loan.ReturnDueDate = DateTime.Now.AddDays(_durationOfFreeLoanInDays);
+            loan.ReturnDueDate = DateTime.Now.AddDays(durationOfFreeLoanInDays);
             loan.CheckOutRecord = new CheckOutRecord()
             {
                 Id = 0,
@@ -368,20 +380,23 @@ namespace LibraryMVC.Application.Services
 
         public LoanSettingsVm GetGlobalLoanSettings()
         {
-            var settings = new LoanSettingsVm()
+            var settings = _loanSettingsRepository.GetSettings();
+            var settingsVm = new LoanSettingsVm()
             {
-                penaltyRatePerDay = _OverduePenaltyRatePerDayForOneBook,
-                durationOfFreeLoan = _durationOfFreeLoanInDays,
-                maxBooksInOrder = _maxBooksInOrder
+                penaltyRatePerDay = settings.OverduePenaltyRatePerDayForOneBook,
+                durationOfFreeLoan = settings.DurationOfFreeLoanInDays,
+                maxBooksInOrder = settings.MaxBooksInOrder
             };
-            return settings;
+            return settingsVm;
         }
 
         public void SetGlobalLoanSettings(LoanSettingsVm model)
         {
-            _OverduePenaltyRatePerDayForOneBook = model.penaltyRatePerDay;
-            _durationOfFreeLoanInDays = model.durationOfFreeLoan;
-            _maxBooksInOrder = model.maxBooksInOrder;
+            var settings = _loanSettingsRepository.GetSettings();
+            settings.OverduePenaltyRatePerDayForOneBook = model.penaltyRatePerDay;
+            settings.DurationOfFreeLoanInDays = model.durationOfFreeLoan;
+            settings.MaxBooksInOrder = model.maxBooksInOrder;
+            _loanSettingsRepository.UpdateSettings(settings);
         }
 
     }
