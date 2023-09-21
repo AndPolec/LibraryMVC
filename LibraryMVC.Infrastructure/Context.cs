@@ -102,7 +102,7 @@ namespace LibraryMVC.Infrastructure
                         new IdentityRole { Id = "Administrator", Name = "Administrator", NormalizedName = "Administrator" });
 
             builder.Entity<GlobalLoanSettings>()
-                .HasData(new GlobalLoanSettings {DurationOfFreeLoanInDays = 21, MaxBooksInOrder = 5, OverduePenaltyRatePerDayForOneBook = 0.2M });
+                .HasData(new GlobalLoanSettings {Id = 1, DurationOfFreeLoanInDays = 21, MaxBooksInOrder = 5, OverduePenaltyRatePerDayForOneBook = 0.2M });
         }
 
     }

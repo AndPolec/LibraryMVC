@@ -24,6 +24,7 @@ namespace LibraryMVC.Infrastructure
             services.AddTransient<IAdditionalLibrarianInfoRepository, AdditionalLibrarianInfoRepository>();
             services.AddTransient<IReturnRecordRepository, ReturnRecordRepository>();
             services.AddTransient<IUserTypeRepository, UserTypeRepository>();
+            services.AddTransient<IGlobalLoanSettingsRepository, GlobalLoanSettingsRepository>();
             return services;
         }
     }
