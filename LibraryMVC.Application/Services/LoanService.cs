@@ -29,6 +29,15 @@ namespace LibraryMVC.Application.Services
         private readonly IAdditionalLibrarianInfoRepository _additionalLibrarianInfoRepository;
         private readonly IReturnRecordRepository _returnRecordRepository;
         private readonly IGlobalLoanSettingsRepository _loanSettingsRepository;
+        private enum LoanStatusId
+        {
+            New = 1,
+            Borrowed = 2,
+            Completed = 3,
+            Overdue = 4,
+            Cancelled = 5
+        }
+
 
         public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository, IReturnRecordRepository returnRecordRepository, IGlobalLoanSettingsRepository loanSettingsRepository)
         {
@@ -182,32 +191,37 @@ namespace LibraryMVC.Application.Services
             int numberOfBooks = loan.Books.Count();
             decimal penalty = numberOfOverdueDays * numberOfBooks * overduePenaltyRatePerDayForOneBook;
             return penalty;
-        } 
+        }
+
+        private void UpdatePenalty(Loan loan)
+        {
+            decimal calculatedPenalty = CalculateOverduePenalty(loan);
+            loan.ReturnRecord.OverduePenalty = calculatedPenalty;
+            loan.ReturnRecord.TotalPenalty = calculatedPenalty;
+        }
 
         public void UpdateOverduePenaltyAndStatusForAllLoans()
         {
-            var loans = _loanRepository.GetAllLoans().Where(l => l.StatusId == 2 || l.StatusId == 4).ToList(); // Get all Loans with Status == "Wypożyczone" || Status == "Zaległe" || ReturnDueDate < DateTime.Now.Date
+            var loans = _loanRepository.GetAllLoans().Where(l => l.StatusId == (int)LoanStatusId.Borrowed || l.StatusId == (int)LoanStatusId.Overdue).ToList(); 
             var loansToUpdate = new List<Loan>();
 
             foreach (var loan in loans)
             {
-                if (loan.StatusId == 4) // if Status == "Zaległe"
+                if (loan.StatusId == (int)LoanStatusId.Overdue)
                 {
-                    decimal calculatedPenalty = CalculateOverduePenalty(loan);
-                    loan.ReturnRecord.OverduePenalty = calculatedPenalty;
-                    loan.ReturnRecord.TotalPenalty = calculatedPenalty;
+                    UpdatePenalty(loan);
                     loansToUpdate.Add(loan);
                 }
-                else if (loan.StatusId == 2 && (DateTime.Now.Date > loan.ReturnDueDate.Date)) // if Status == "Wypożyczone" || DateTime.Now.Date > loan.ReturnDueDate.Date
+                else if (loan.StatusId == (int)LoanStatusId.Borrowed && (DateTime.Now.Date > loan.ReturnDueDate.Date))
                 {
                     if (loan.ReturnRecord == null)
+                    {
                         loan.ReturnRecord = new ReturnRecord() { Comments = "" };
+                    }
 
-                    decimal calculatedPenalty = CalculateOverduePenalty(loan);
-                    loan.ReturnRecord.OverduePenalty = calculatedPenalty;
-                    loan.ReturnRecord.TotalPenalty = calculatedPenalty;
+                    UpdatePenalty(loan);
                     loan.isOverdue = true;
-                    loan.StatusId = 4; //Status == "Zaległe"
+                    loan.StatusId = (int)LoanStatusId.Overdue;
                     loansToUpdate.Add(loan);
                 }
             }
