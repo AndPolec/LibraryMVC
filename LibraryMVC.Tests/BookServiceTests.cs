@@ -24,6 +24,25 @@ namespace LibraryMVC.Tests
 {
     public class BookServiceTests
     {
+        private Mock<IBookRepository> _mockBookRepo;
+        private Mock<IGenreRepository> _mockGenreRepo;
+        private Mock<IAuthorRepository> _mockAuthorRepo;
+        private Mock<IPublisherRepository> _mockPublisherRepo;
+        private Mock<IMapper> _mockMapper;
+
+        public BookServiceTests()
+        {
+            SetupMocks();
+        }
+
+        private void SetupMocks()
+        {
+            _mockBookRepo = new Mock<IBookRepository>();
+            _mockGenreRepo = new Mock<IGenreRepository>();
+            _mockAuthorRepo = new Mock<IAuthorRepository>();
+            _mockPublisherRepo = new Mock<IPublisherRepository>();
+            _mockMapper = new Mock<IMapper>();
+        }
 
         private List<Book> GetBooks()
         {
@@ -139,45 +158,35 @@ namespace LibraryMVC.Tests
         public void AddBook_ValidModel_ReturnsId()
         {
             // Arrange
-            var mockMapper = new Mock<IMapper>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var testModel = new NewBookVm();
             var testBook = new Book();
             var testId = 1;
 
-            mockMapper.Setup(m => m.Map<Book>(testModel)).Returns(testBook);
-            mockBookRepo.Setup(r => r.AddBook(testBook)).Returns(testId);
+            _mockMapper.Setup(m => m.Map<Book>(testModel)).Returns(testBook);
+            _mockBookRepo.Setup(r => r.AddBook(testBook)).Returns(testId);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             // Act
             var result = service.AddBook(testModel);
 
             // Assert
             result.Should().Be(testId);
-            mockMapper.Verify(m => m.Map<Book>(testModel), Times.Once);
-            mockBookRepo.Verify(r => r.AddBook(testBook), Times.Once);
+            _mockMapper.Verify(m => m.Map<Book>(testModel), Times.Once);
+            _mockBookRepo.Verify(r => r.AddBook(testBook), Times.Once);
         }
 
         [Fact]
         public void GetBookForDetails_ValidId_ReturnsBookDetailsVm()
         {
-            var mockMapper = new Mock<IMapper>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             int testId = 1;
             var testBook = new Book();
             var testBookVm = new BookDetailsVm();
 
-            mockBookRepo.Setup(r => r.GetBookById(testId)).Returns(testBook);
-            mockMapper.Setup(r => r.Map<BookDetailsVm>(testBook)).Returns(testBookVm);
+            _mockBookRepo.Setup(r => r.GetBookById(testId)).Returns(testBook);
+            _mockMapper.Setup(r => r.Map<BookDetailsVm>(testBook)).Returns(testBookVm);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.GetBookForDetails(testId);
 
@@ -187,16 +196,11 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetBookForDetails_InvalidId_ReturnsNull()
         {
-            var mockMapper = new Mock<IMapper>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             int testId = 1;
 
-            mockBookRepo.Setup(r => r.GetBookById(testId)).Returns((Book?)null);
+            _mockBookRepo.Setup(r => r.GetBookById(testId)).Returns((Book?)null);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.GetBookForDetails(testId);
 
@@ -206,10 +210,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetAllBooksForList_ValidArguments_ReturnsFilteredBooksVm()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
             int testPageSize = 2;
             int testPageNumber = 1;
@@ -224,9 +224,9 @@ namespace LibraryMVC.Tests
             };
 
             var books = GetBooks();
-            mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
+            _mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
 
             var result = service.GetAllBooksForList(testPageSize, testPageNumber, testSearchString);
 
@@ -243,18 +243,14 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetAllBooksForList_NullSearchString_ReturnsAllBooksForPageSize()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
             int testPageSize = 2;
             int testPageNumber = 1;
 
             var books = GetBooks();
-            mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
+            _mockBookRepo.Setup(r => r.GetAllBooks()).Returns(books.AsQueryable());
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
 
             var result = service.GetAllBooksForList(testPageSize, testPageNumber, searchString: null);
 
@@ -269,15 +265,10 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetAllBooksForList_NegativePageSize_ThrowsArgumentException()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testPageSize = -2;
             int testPageNumber = 1;
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             Action result = () => service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
 
@@ -287,15 +278,10 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetAllBooksForList_NegativePageNumber_ThrowsArgumentException()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testPageSize = 2;
             int testPageNumber = -1;
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             Action result = () => service.GetAllBooksForList(testPageSize, testPageNumber, string.Empty);
 
@@ -305,10 +291,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetInfoForAddNewBook_WhenCalled_ReturnsProperlyInitializedModel()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
 
             var genres = new List<Genre>
@@ -329,11 +311,11 @@ namespace LibraryMVC.Tests
                 new Publisher { Id = 2, Name = "HarperCollins" }
             };
 
-            mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable());
-            mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable());
-            mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable());
+            _mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable());
+            _mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable());
+            _mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable());
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
 
             var result = service.GetInfoForAddNewBook();
 
@@ -348,10 +330,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetInfoForBookEdit_ValidId_ReturnsInfoForBookEdit()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
             var testBook = GetBooks().First();
             int testBookId = testBook.Id;
@@ -385,12 +363,12 @@ namespace LibraryMVC.Tests
                 new Publisher { Id = 2, Name = "HarperCollins" }
             };
 
-            mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
-            mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable());
-            mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable());
-            mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable());
+            _mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
+            _mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable());
+            _mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable());
+            _mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable());
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
 
             var result = service.GetInfoForBookEdit(testBookId);
 
@@ -406,14 +384,9 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetInfoForBookEdit_InvalidIdBookIsNotFound_ReturnsNull()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBookId = -1;
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.GetInfoForBookEdit(testBookId);
 
@@ -423,39 +396,29 @@ namespace LibraryMVC.Tests
         [Fact]
         public void UpdateBook_BookExistInDatabase_UpdatesBook()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             var testBookId = 123;
             var testBookVm = new NewBookVm { Id = testBookId };
             var testBook = new Book { Id = testBookId };
 
-            mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
-            mockMapper.Setup(m => m.Map<Book>(testBookVm)).Returns(testBook);
-            mockBookRepo.Setup(r => r.UpdateBook(testBook));
+            _mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
+            _mockMapper.Setup(m => m.Map<Book>(testBookVm)).Returns(testBook);
+            _mockBookRepo.Setup(r => r.UpdateBook(testBook));
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             service.UpdateBook(testBookVm);
 
-            mockBookRepo.Verify(r => r.UpdateBook(testBook), Times.Once);
+            _mockBookRepo.Verify(r => r.UpdateBook(testBook), Times.Once);
         }
 
         [Fact]
         public void UpdateBook_BookNotExistInDatabase_ThrowsNotFoundException()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             var testBookVm = new NewBookVm { Id = 123 };
 
-            mockBookRepo.Setup(r => r.GetBookById(testBookVm.Id)).Returns((Book?)null);
+            _mockBookRepo.Setup(r => r.GetBookById(testBookVm.Id)).Returns((Book?)null);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             Action result = () => service.UpdateBook(testBookVm);
 
@@ -465,37 +428,27 @@ namespace LibraryMVC.Tests
         [Fact]
         public void DeleteBook_BookExistInDatabase_DeletesBook()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             var testBookId = 123;
             var testBook = new Book { Id = testBookId };
 
-            mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
-            mockBookRepo.Setup(r => r.DeleteBook(testBookId));
+            _mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
+            _mockBookRepo.Setup(r => r.DeleteBook(testBookId));
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             service.DeleteBook(testBookId);
 
-            mockBookRepo.Verify(r => r.DeleteBook(testBookId), Times.Once);
+            _mockBookRepo.Verify(r => r.DeleteBook(testBookId), Times.Once);
         }
 
         [Fact]
         public void DeleteBook_BookNotExistInDatabase_ThrowsNotFoundException()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             var testBookId = 123;
 
-            mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns((Book?)null);
+            _mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns((Book?)null);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             Action result = () => service.DeleteBook(testBookId);
 
@@ -505,17 +458,12 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBookInDatabase_BookExistsInDatabase_ReturnsTrue()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBookId = 1;
             var testBook = new Book { Id = testBookId };
 
-            mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
+            _mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns(testBook);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.IsBookInDatabase(testBookId);
 
@@ -525,17 +473,12 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBookInDatabase_BookDoesNotExistInDatabase_ReturnsFalse()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBookId = 1;
             var testBook = new Book { Id = testBookId };
 
-            mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns((Book?)null);
+            _mockBookRepo.Setup(r => r.GetBookById(testBookId)).Returns((Book?)null);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.IsBookInDatabase(testBookId);
 
@@ -545,10 +488,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetAllGenresForList_WhenCalled_ReturnsList()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
 
             var genres = new List<Genre>
@@ -563,9 +502,9 @@ namespace LibraryMVC.Tests
                 new GenreForListVm { Id = 2, Name = "Science Fiction" }
             };
 
-            mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable);
+            _mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
 
             var result = service.GetAllGenresForList();
 
@@ -577,12 +516,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void AddGenre_ValidModel_AddsGenreAndReturnsId()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
-
             var genreVm = new GenreForListVm
             {
                 Id = 0,
@@ -595,25 +528,21 @@ namespace LibraryMVC.Tests
                 Name = "Fantasy"
             };
 
-            mockMapper.Setup(m => m.Map<Genre>(genreVm)).Returns(genre);
-            mockGenreRepo.Setup(r => r.AddGenre(genre)).Returns(1);
+            _mockMapper.Setup(m => m.Map<Genre>(genreVm)).Returns(genre);
+            _mockGenreRepo.Setup(r => r.AddGenre(genre)).Returns(1);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.AddGenre(genreVm);
 
             result.Should().Be(1);
-            mockGenreRepo.Verify(r => r.AddGenre(genre), Times.Once());
+            _mockGenreRepo.Verify(r => r.AddGenre(genre), Times.Once());
         }
 
 
         [Fact]
         public void GetAllAuthorsForList_WhenCalled_ReturnsList()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
 
             var authors = new List<Author>
@@ -628,9 +557,9 @@ namespace LibraryMVC.Tests
                 new AuthorForListVm { Id = 2, FullName = "Asimov Isaac" }
             };
 
-            mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable);
+            _mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
 
             var result = service.GetAllAuthorsForList();
 
@@ -642,12 +571,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void AddAuthor_ValidModel_AddsAuthorAndReturnsId()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
-
             var authorVm = new NewAuthorVm
             {
                 Id = 0,
@@ -662,25 +585,21 @@ namespace LibraryMVC.Tests
                 LastName = "Martin"
             };
 
-            mockMapper.Setup(m => m.Map<Author>(authorVm)).Returns(author);
-            mockAuthorRepo.Setup(r => r.AddAuthor(author)).Returns(1);
+            _mockMapper.Setup(m => m.Map<Author>(authorVm)).Returns(author);
+            _mockAuthorRepo.Setup(r => r.AddAuthor(author)).Returns(1);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.AddAuthor(authorVm);
 
             result.Should().Be(1);
-            mockAuthorRepo.Verify(r => r.AddAuthor(author), Times.Once());
+            _mockAuthorRepo.Verify(r => r.AddAuthor(author), Times.Once());
         }
 
 
         [Fact]
         public void GetAllPublishersForList_WhenCalled_ReturnsList()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
 
             var publishers = new List<Publisher>
@@ -695,9 +614,9 @@ namespace LibraryMVC.Tests
                 new PublisherForListVm { Id = 2, Name = "Publisher 2" }
             };
 
-            mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable);
+            _mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
 
             var result = service.GetAllPublishersForList();
 
@@ -709,12 +628,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void AddPublisher_ValidModel_AddsPublisherAndReturnsId()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
-            var mockMapper = new Mock<IMapper>();
-
             var publisherVm = new PublisherForListVm
             {
                 Id = 0,
@@ -727,24 +640,20 @@ namespace LibraryMVC.Tests
                 Name = "Publisher"
             };
 
-            mockMapper.Setup(m => m.Map<Publisher>(publisherVm)).Returns(publisher);
-            mockPublisherRepo.Setup(r => r.AddPublisher(publisher)).Returns(1);
+            _mockMapper.Setup(m => m.Map<Publisher>(publisherVm)).Returns(publisher);
+            _mockPublisherRepo.Setup(r => r.AddPublisher(publisher)).Returns(1);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mockMapper.Object);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, _mockMapper.Object);
 
             var result = service.AddPublisher(publisherVm);
 
             result.Should().Be(1);
-            mockPublisherRepo.Verify(r => r.AddPublisher(publisher), Times.Once());
+            _mockPublisherRepo.Verify(r => r.AddPublisher(publisher), Times.Once());
         }
 
         [Fact]
         public void GetBookFormLists_WhenCalled_ReturnsModelWithCorrectData()
         {
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockGenreRepo = new Mock<IGenreRepository>();
-            var mockAuthorRepo = new Mock<IAuthorRepository>();
-            var mockPublisherRepo = new Mock<IPublisherRepository>();
             var mapper = GetMapper();
 
             var publishers = new List<Publisher>
@@ -782,11 +691,11 @@ namespace LibraryMVC.Tests
                 new GenreForListVm { Id = 2, Name = "Science Fiction" }
             };
 
-            mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable);
-            mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable);
-            mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable);
+            _mockGenreRepo.Setup(r => r.GetAllGenres()).Returns(genres.AsQueryable);
+            _mockAuthorRepo.Setup(r => r.GetAllAuthors()).Returns(authors.AsQueryable);
+            _mockPublisherRepo.Setup(r => r.GetAllPublishers()).Returns(publishers.AsQueryable);
 
-            var service = new BookService(mockBookRepo.Object, mockGenreRepo.Object, mockAuthorRepo.Object, mockPublisherRepo.Object, mapper);
+            var service = new BookService(_mockBookRepo.Object, _mockGenreRepo.Object, _mockAuthorRepo.Object, _mockPublisherRepo.Object, mapper);
             
             var result = service.GetBookFormLists();
 
