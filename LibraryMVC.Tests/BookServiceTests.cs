@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using LibraryMVC.Application.Exceptions;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Mapping;
 using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Author;

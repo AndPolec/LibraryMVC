@@ -1,5 +1,5 @@
 ﻿using LibraryApi.Filters;
-using LibraryMVC.Application.Exceptions;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Domain.Model;

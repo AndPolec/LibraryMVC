@@ -16,7 +16,7 @@ using System.Net;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using LibraryMVC.Application.Exceptions;
+using LibraryMVC.Application.Helpers;
 
 namespace LibraryMVC.Application.Services
 {
@@ -29,14 +29,7 @@ namespace LibraryMVC.Application.Services
         private readonly IAdditionalLibrarianInfoRepository _additionalLibrarianInfoRepository;
         private readonly IReturnRecordRepository _returnRecordRepository;
         private readonly IGlobalLoanSettingsRepository _loanSettingsRepository;
-        private enum LoanStatusId
-        {
-            New = 1,
-            Borrowed = 2,
-            Completed = 3,
-            Overdue = 4,
-            Cancelled = 5
-        }
+        
 
 
         public LoanService(IMapper mapper,IBorrowingCartRepository borrowingCartRepository, ILoanRepository loanRepository, IBookRepository bookRepository, IAdditionalLibrarianInfoRepository additionalLibrarianInfoRepository, IReturnRecordRepository returnRecordRepository, IGlobalLoanSettingsRepository loanSettingsRepository)
@@ -233,6 +226,11 @@ namespace LibraryMVC.Application.Services
         public int AddNewLoan(int borrowingCartId, int userId)
         {
             var borrowingCart = GetBorrowingCartById(borrowingCartId);
+            if(borrowingCart == null)
+            {
+                throw new NotFoundException($"No borrowing cart found for Id: {borrowingCartId}");
+            }
+
             var availableBooks = FilterAndReturnAvailableBooks(borrowingCart.Books);
             if (availableBooks.Any())
             {

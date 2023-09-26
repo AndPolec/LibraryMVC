@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using LibraryMVC.Application.Exceptions;
+using FluentAssertions.Common;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
+using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;
@@ -14,22 +16,39 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static LibraryMVC.Application.Services.LoanService;
 
 namespace LibraryMVC.Tests
 {
     public class LoanServiceTests
     {
+        private Mock<IBorrowingCartRepository> mockBorrowingCartRepo;
+        private Mock<ILoanRepository> mockLoanRepo;
+        private Mock<IBookRepository> mockBookRepo;
+        private Mock<IAdditionalLibrarianInfoRepository> mockAdditionalLibrarianInfoRepo;
+        private Mock<IReturnRecordRepository> mockReturnRecordRepo;
+        private Mock<IGlobalLoanSettingsRepository> mockGlobalLoanSettingsRepo;
+        private Mock<IMapper> mockMapper;
+
+        public LoanServiceTests()
+        {
+            SetupMocks();
+        }
+
+        private void SetupMocks()
+        {
+            mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
+            mockLoanRepo = new Mock<ILoanRepository>();
+            mockBookRepo = new Mock<IBookRepository>();
+            mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
+            mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
+            mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
+            mockMapper = new Mock<IMapper>();
+        }
+
         [Fact]
         public void AddToBorrowingCart_ValidInput_ShouldUpdateBorrowingCart()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
-
             var testBorrowingCart = new BorrowingCart { Books = new List<Book>() };
             var testBook = new Book();
 
@@ -48,13 +67,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void AddToBorrowingCart_BorrowingCartNotFound_ShouldThrowNotFoundException()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testUserId = "id";
 
             mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartByIdentityUserId(It.IsAny<string>())).Returns((BorrowingCart)null);
@@ -68,13 +80,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void AddToBorrowingCart_BookNotFound_ShouldThrowNotFoundException()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBookId = 1;
 
             var testBorrowingCart = new BorrowingCart { Books = new List<Book>() };
@@ -91,13 +96,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetBorrowingCartForDetailsByIndentityUserId_ValidUserId_ShouldReturnBorrowingCartModel()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testUserId = "id";
             var testBorrowingCart = new BorrowingCart
             {
@@ -127,13 +125,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void GetBorrowingCartForDetailsByIndentityUserId_BorrowingCartNotFound_ShouldReturnNull()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testUserId = "id";
 
             mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartByIdentityUserId(testUserId)).Returns((BorrowingCart)null);
@@ -147,13 +138,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void RemoveFromBorrowingCart_BorrowingCartNotFound_ShouldThrowNotFoundException()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBorrowingCartId = 1;
             int testBookId = 2;
 
@@ -168,13 +152,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void RemoveFromBorrowingCart_BookNotFoundInBorrowingCart_ShouldThrowNotFoundException()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBorrowingCartId = 1;
             int testBookId = 2;
 
@@ -189,13 +166,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void RemoveFromBorrowingCart_ValidInput_ShouldRemoveBookAndCallUpdate()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBorrowingCartId = 1;
             int testBookId = 2;
             var testBorrowingCart = new BorrowingCart() { Id = testBorrowingCartId, Books = new List<Book>() { new Book() { Id = testBookId }, new Book() { Id = 3 } } };
@@ -213,13 +183,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void ClearBorrowingCart_BorrowingCartNotFound_ShouldReturnFalse()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBorrowingCartId = 1;
 
             mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns((BorrowingCart)null);
@@ -233,13 +196,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void ClearBorrowingCart_BorrowingCartFound_ShouldCallRemoveMethodAndReturnTrue()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             int testBorrowingCartId = 1;
             var testBorrowingCart = new BorrowingCart() { Id = testBorrowingCartId, Books = new List<Book>() { new Book() { Id = 2 }, new Book() { Id = 3 } } };
 
@@ -255,13 +211,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBookInBorrowingCart_BorrowingCartNotFound_ShouldThrowNotFoundException()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testIdentityUserId = "testId";
             int testBookId = 1;
 
@@ -276,13 +225,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBookInBorrowingCart_BookFoundInBorrowingCart_ShouldReturnTrue()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testIdentityUserId = "testId";
             int testBookId = 2;
             var testBorrowingCart = new BorrowingCart() { Books = new List<Book>() { new Book() { Id = 2 }, new Book() { Id = 3 } } };
@@ -298,13 +240,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBookInBorrowingCart_BookNotFoundInBorrowingCart_ShouldReturnFalse()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testIdentityUserId = "testId";
             int testBookId = 1;
             var testBorrowingCart = new BorrowingCart() { Books = new List<Book>() { new Book() { Id = 2 }, new Book() { Id = 3 } } };
@@ -321,15 +256,7 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBorrowingCartFull_BorrowingCartNotFound_ShouldThrowNotFoundException()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testIdentityUserId = "testId";
-
 
             mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartByIdentityUserId(testIdentityUserId)).Returns((BorrowingCart)null);
 
@@ -342,13 +269,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBorrowingCartFull_BorrowingCartIsFull_ShouldReturnTrue()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testIdentityUserId = "testId";
             var testBorrowingCart = new BorrowingCart() { Books = new List<Book>() { new Book() { Id = 2 }, new Book() { Id = 3 } } };
             var testLoanSettings = new GlobalLoanSettings() { DurationOfFreeLoanInDays = 21, MaxBooksInOrder = 2, OverduePenaltyRatePerDayForOneBook = 0.2M };
@@ -365,13 +285,6 @@ namespace LibraryMVC.Tests
         [Fact]
         public void IsBorrowingCartFull_BorrowingCartIsNotFull_ShouldReturnFalse()
         {
-            var mockBorrowingCartRepo = new Mock<IBorrowingCartRepository>();
-            var mockLoanRepo = new Mock<ILoanRepository>();
-            var mockBookRepo = new Mock<IBookRepository>();
-            var mockAdditionalLibrarianInfoRepo = new Mock<IAdditionalLibrarianInfoRepository>();
-            var mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
-            var mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
-            var mockMapper = new Mock<IMapper>();
             string testIdentityUserId = "testId";
             var testBorrowingCart = new BorrowingCart() { Books = new List<Book>() { new Book() { Id = 2 }, new Book() { Id = 3 } } };
             var testLoanSettings = new GlobalLoanSettings() { DurationOfFreeLoanInDays = 21, MaxBooksInOrder = 5, OverduePenaltyRatePerDayForOneBook = 0.2M };
@@ -386,5 +299,140 @@ namespace LibraryMVC.Tests
             result.Should().BeFalse();
         }
 
+        [Fact]
+        public void UpdateOverduePenaltyAndStatusForAllLoans_OverdueLoanWithBorrowedStatus_ShouldUpdateStatusAndPenalty()
+        {
+            var testLoan = new Loan
+            {
+                ReturnDueDate = DateTime.Now.AddDays(-1),
+                StatusId = (int)LoanStatusId.Borrowed,
+                Books = new List<Book> { new Book(), new Book() }
+            };
+
+            var settings = new GlobalLoanSettings
+            {
+                DurationOfFreeLoanInDays = 21,
+                MaxBooksInOrder = 5,
+                OverduePenaltyRatePerDayForOneBook = 0.2M
+            };
+
+            decimal expectedPenalty = 0.4M;
+
+            mockLoanRepo.Setup(x => x.GetAllLoans()).Returns(new List<Loan> { testLoan }.AsQueryable());
+            mockGlobalLoanSettingsRepo.Setup(x => x.GetSettings()).Returns(settings);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            service.UpdateOverduePenaltyAndStatusForAllLoans();
+
+            testLoan.isOverdue.Should().BeTrue();
+            testLoan.StatusId.Should().Be((int)LoanStatusId.Overdue);
+            testLoan.ReturnRecord.OverduePenalty.Should().Be(expectedPenalty);
+            testLoan.ReturnRecord.TotalPenalty.Should().Be(expectedPenalty);
+            mockLoanRepo.Verify(x => x.UpdatePenaltyAndStatusInLoans(It.IsAny<List<Loan>>()), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateOverduePenaltyAndStatusForAllLoans_OverdueLoanWithOverdueStatus_ShouldUpdatePenalty()
+        {
+            var testLoan = new Loan
+            {
+                ReturnDueDate = DateTime.Now.AddDays(-2),
+                StatusId = (int)LoanStatusId.Overdue,
+                Books = new List<Book> { new Book(), new Book() },
+                isOverdue = true,
+                ReturnRecord = new ReturnRecord {OverduePenalty = 0.4M, TotalPenalty = 0.4M }
+            };
+
+            var settings = new GlobalLoanSettings
+            {
+                DurationOfFreeLoanInDays = 21,
+                MaxBooksInOrder = 5,
+                OverduePenaltyRatePerDayForOneBook = 0.2M
+            };
+
+            decimal expectedPenalty = 0.8M;
+
+            mockLoanRepo.Setup(x => x.GetAllLoans()).Returns(new List<Loan> { testLoan }.AsQueryable());
+            mockGlobalLoanSettingsRepo.Setup(x => x.GetSettings()).Returns(settings);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            service.UpdateOverduePenaltyAndStatusForAllLoans();
+
+            testLoan.isOverdue.Should().BeTrue();
+            testLoan.StatusId.Should().Be((int)LoanStatusId.Overdue);
+            testLoan.ReturnRecord.OverduePenalty.Should().Be(expectedPenalty);
+            testLoan.ReturnRecord.TotalPenalty.Should().Be(expectedPenalty);
+            mockLoanRepo.Verify(x => x.UpdatePenaltyAndStatusInLoans(It.IsAny<List<Loan>>()), Times.Once);
+        }
+
+        [Fact]
+        public void UpdateOverduePenaltyAndStatusForAllLoans_BorrowedLoanWithNoOverdue_ShouldDoNothing()
+        {
+            var testLoan = new Loan
+            {
+                ReturnDueDate = DateTime.Now.AddDays(7),
+                StatusId = (int)LoanStatusId.Borrowed,
+                Books = new List<Book> { new Book(), new Book() },
+                isOverdue = false,
+            };
+
+            var settings = new GlobalLoanSettings
+            {
+                DurationOfFreeLoanInDays = 21,
+                MaxBooksInOrder = 5,
+                OverduePenaltyRatePerDayForOneBook = 0.2M
+            };
+
+            mockLoanRepo.Setup(x => x.GetAllLoans()).Returns(new List<Loan> { testLoan }.AsQueryable());
+            mockGlobalLoanSettingsRepo.Setup(x => x.GetSettings()).Returns(settings);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            service.UpdateOverduePenaltyAndStatusForAllLoans();
+
+            testLoan.isOverdue.Should().BeFalse();
+            testLoan.StatusId.Should().Be((int)LoanStatusId.Borrowed);
+            testLoan.ReturnRecord.Should().BeNull();
+            mockLoanRepo.Verify(x => x.UpdatePenaltyAndStatusInLoans(It.IsAny<List<Loan>>()), Times.Never);
+        }
+
+        [Fact]
+        public void AddNewLoan_BorrowingCartNotFound_ShouldThrowNotFoundException()
+        {
+            int testBorrowingCartId = 1;
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(It.IsAny<int>())).Returns((BorrowingCart)null);
+
+            Action result = () => service.AddNewLoan(testBorrowingCartId, 1);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"No borrowing cart found for Id: {testBorrowingCartId}");
+        }
+
+        [Fact]
+        public void AddNewLoan_NoAvailableBooksForBorrow_ShouldReturnMinusOne()
+        {
+            int testBorrowingCartId = 1;
+            var testBorrowingCart = new BorrowingCart
+            {
+                Id = testBorrowingCartId,
+                Books = new List<Book> { new Book { Quantity = 0 } }
+            };
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns(testBorrowingCart);
+
+            var result = service.AddNewLoan(testBorrowingCartId, 1);
+
+            result.Should().Be(-1);
+        }
+
+        [Fact]
+        public void AddNewLoan_AvailableBooks_ShouldReturnLoanId()
+        {
+            
+        }
     }
 }

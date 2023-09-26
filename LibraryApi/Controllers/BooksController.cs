@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using LibraryMVC.Application.Exceptions;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Author;
 using LibraryMVC.Application.ViewModels.Book;

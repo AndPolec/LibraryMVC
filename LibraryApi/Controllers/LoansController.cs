@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using LibraryApi.Filters;
 using LibraryApi.Models;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.Loan;
 using LibraryMVC.Application.ViewModels.ReturnRecord;
@@ -93,6 +94,11 @@ namespace LibraryApi.Controllers
                 }
 
                 return CreatedAtAction(nameof(GetLoan), new { id = loanId }, null);
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Error while using CreateLoan with createRequest={createRequest}.", createRequest);
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
