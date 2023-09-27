@@ -48,6 +48,11 @@ namespace LibraryApi.Controllers
                 var model = _loanService.GetAllLoansForListByIndentityUserId(userId, pageSize, pageNumber);
                 return Ok(model);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogInformation(ex, "Error while fetching Loans for userId={userId}, pageSize={pageSize}, pageNumber={pageNumber}.", userId, pageSize, pageNumber);
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while using UnblockUser with userId={userId}.", userId);

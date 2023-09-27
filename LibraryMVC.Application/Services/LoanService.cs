@@ -255,17 +255,24 @@ namespace LibraryMVC.Application.Services
 
         public ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber)
         {
-            var loansVm = _loanRepository.GetAllLoans()
+            if (pageSize < 1 || pageNumber < 1)
+            {
+                throw new ArgumentException("Values for pageSize and pageNumber must be greater than zero.");
+            }
+
+            var loansQuery = _loanRepository.GetAllLoans()
                 .Where(l => l.LibraryUser.IdentityUserId == userId)
-                .OrderByDescending(l => l.CreationDate)
+                .OrderByDescending(l => l.CreationDate);
+
+            var loansToDisplay = loansQuery.Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
                 .ProjectTo<LoanForListVm>(_mapper.ConfigurationProvider)
                 .ToList();
 
-            var loansToDisplay = loansVm.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
             var loanList = new ListOfLoanForListVm()
             {
                 Loans = loansToDisplay,
-                Count = loansToDisplay.Count(),
+                Count = loansQuery.Count(),
                 PageSize = pageSize,
                 CurrentPage = pageNumber
             };

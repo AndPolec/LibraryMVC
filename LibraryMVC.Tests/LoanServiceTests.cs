@@ -2,6 +2,8 @@
 using FluentAssertions;
 using FluentAssertions.Common;
 using LibraryMVC.Application.Helpers;
+using LibraryMVC.Application.Interfaces;
+using LibraryMVC.Application.Mapping;
 using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
@@ -44,6 +46,20 @@ namespace LibraryMVC.Tests
             mockReturnRecordRepo = new Mock<IReturnRecordRepository>();
             mockGlobalLoanSettingsRepo = new Mock<IGlobalLoanSettingsRepository>();
             mockMapper = new Mock<IMapper>();
+        }
+
+        private IMapper GetMapper()
+        {
+            var mapperConfig = new MapperConfiguration(config =>
+            {
+                config.AddProfile(new BookProfile());
+                config.AddProfile(new GenreProfile());
+                config.AddProfile(new AuthorProfile());
+                config.AddProfile(new PublisherProfile());
+                config.AddProfile(new LoanProfile());
+                config.AddProfile(new UserProfile());
+            });
+            return mapperConfig.CreateMapper();
         }
 
         [Fact]
@@ -420,6 +436,7 @@ namespace LibraryMVC.Tests
                 Id = testBorrowingCartId,
                 Books = new List<Book> { new Book { Quantity = 0 } }
             };
+
             var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
 
             mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns(testBorrowingCart);
@@ -430,9 +447,58 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void AddNewLoan_AvailableBooks_ShouldReturnLoanId()
+        public void AddNewLoan_AvailableBooks_ShouldReturnLoanIdAndClearBorrowingCartAndDecrementQuantityOfBorrowedBook()
         {
+            int expectedLoanId = 2;
+            var testBook = new Book { Quantity = 1 };
+            int testBorrowingCartId = 1;
+            var testBorrowingCart = new BorrowingCart
+            {
+                Id = testBorrowingCartId,
+                Books = new List<Book> { new Book { Quantity = 1 } }
+            };
+
+            mockBorrowingCartRepo.Setup(r => r.GetBorrowingCartById(testBorrowingCartId)).Returns(testBorrowingCart);
+            mockLoanRepo.Setup(r => r.AddLoan(It.IsAny<Loan>())).Returns(expectedLoanId);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.AddNewLoan(testBorrowingCartId, 1);
+
+            result.Should().Be(expectedLoanId);
+            mockLoanRepo.Verify(r => r.AddLoan(It.IsAny<Loan>()), Times.Once);
+            mockBookRepo.Verify(r => r.UpdateBooksQuantity(It.IsAny<ICollection<Book>>()), Times.Once);
+            mockBorrowingCartRepo.Verify(r => r.RemoveAllFromBorrowingCart(testBorrowingCart), Times.Once);
+        }
+
+        [Fact]
+        public void GetAllLoansForListByIndentityUserId_ValidArguments_ShouldReturnLoanList()
+        {
+            var mapper = GetMapper();
+            string testUserId = "userId";
+            int pageSize = 2;
+            int pageNumber = 1;
+
+            var loans = new List<Loan>
+            {
+                new Loan { Id = 1, CreationDate = DateTime.Now.AddDays(-1), LibraryUser = new LibraryUser { IdentityUserId = testUserId }, Status = new Status { Name = "Borrowed"}, Books = new List<Book>() },
+                new Loan { Id = 2, CreationDate = DateTime.Now.AddDays(-2), LibraryUser = new LibraryUser { IdentityUserId = testUserId }, Status = new Status { Name = "Borrowed"}, Books = new List<Book>() },
+                new Loan { Id = 3, CreationDate = DateTime.Now.AddDays(-3), LibraryUser = new LibraryUser { IdentityUserId = testUserId }, Status = new Status { Name = "Borrowed"}, Books = new List<Book>() },
+                new Loan { Id = 4, CreationDate = DateTime.Now.AddDays(-3), LibraryUser = new LibraryUser { IdentityUserId = "test" }, Status = new Status { Name = "Borrowed"}, Books = new List<Book>() },
+            };
+
+            mockLoanRepo.Setup(repo => repo.GetAllLoans()).Returns(loans.AsQueryable());
+
+            var service = new LoanService(mapper, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
             
+            var result = service.GetAllLoansForListByIndentityUserId(testUserId, pageSize, pageNumber);
+
+            result.PageSize.Should().Be(pageSize);
+            result.CurrentPage.Should().Be(pageNumber);
+            result.Count.Should().Be(3);
+            result.Loans.Count.Should().Be(pageSize);
+            result.Loans.Should().Contain(l => l.Id == 1);
+            result.Loans.Should().Contain(l => l.Id == 2);
         }
     }
 }
