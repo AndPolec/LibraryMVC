@@ -280,9 +280,14 @@ namespace LibraryMVC.Application.Services
             return loanList;
         }
 
-        public LoanDetailsVm GetLoanForDetails(int loanId)
+        public LoanDetailsVm? GetLoanForDetails(int loanId)
         {
             var loan = _loanRepository.GetLoanById(loanId);
+            if (loan == null)
+            {
+                return null;
+            }
+
             var loanVm = _mapper.Map<LoanDetailsVm>(loan);
             return loanVm;
         }
@@ -291,10 +296,17 @@ namespace LibraryMVC.Application.Services
         {
             var loan = _loanRepository.GetLoanById(loanId);
 
-            if (loan.StatusId != 1)
-                return false;
+            if (loan == null)
+            {
+                throw new NotFoundException($"No loan found for Id: {loanId}");
+            }
 
-            loan.StatusId = 5;
+            if (loan.StatusId != (int)LoanStatusId.New)
+            {
+                return false;
+            }
+
+            loan.StatusId = (int)LoanStatusId.Cancelled;
             _loanRepository.UpdateLoan(loan);
             IncrementQuantityOfAvailableBooks(loan.Books);
             return true;

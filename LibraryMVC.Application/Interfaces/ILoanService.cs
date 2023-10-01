@@ -24,7 +24,7 @@ namespace LibraryMVC.Application.Interfaces
         ListOfLoanForListVm GetAllLoansForListByIndentityUserId(string userId, int pageSize, int pageNumber);
         List<LoanForConfirmCheckOutListVm> GetAllLoansForConfirmCheckOutList();
         List<LoanForConfirmReturnListVm> GetAllLoansForConfirmReturnList();
-        LoanDetailsVm GetLoanForDetails(int loanId);
+        LoanDetailsVm? GetLoanForDetails(int loanId);
         bool CancelLoan(int loanId);
         int ConfirmCheckOut(int loanId, string librarianIdentityUserId);
         NewReturnRecordVm GetInfoForConfirmReturn(int loanId);

@@ -500,5 +500,64 @@ namespace LibraryMVC.Tests
             result.Loans.Should().Contain(l => l.Id == 1);
             result.Loans.Should().Contain(l => l.Id == 2);
         }
+
+        [Fact]
+        public void GetAllLoansForListByIndentityUserId_NegativePageSize_ShouldThrowExepction()
+        {
+            string testUserId = "userId";
+            int pageSize = -2;
+            int pageNumber = 1;
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            Action result = () => service.GetAllLoansForListByIndentityUserId(testUserId, pageSize, pageNumber);
+
+            result.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void GetAllLoansForListByIndentityUserId_NegativePageNumber_ShouldThrowExepction()
+        {
+            string testUserId = "userId";
+            int pageSize = 2;
+            int pageNumber = -1;
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            Action result = () => service.GetAllLoansForListByIndentityUserId(testUserId, pageSize, pageNumber);
+
+            result.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void GetLoanForDetails_LoanFound_ShouldReturnLoanVm()
+        {
+            int loanId = 1;
+            var expectedVm = new LoanDetailsVm() { Id = loanId };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns(new Loan() { Id = loanId});
+            mockMapper.Setup(m => m.Map<LoanDetailsVm>(It.IsAny<Loan>())).Returns(expectedVm);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetLoanForDetails(loanId);
+
+            result.Should().BeEquivalentTo(expectedVm);
+        }
+
+        [Fact]
+        public void GetLoanForDetails_LoanNotFound_ShouldReturnNull()
+        {
+            int loanId = 1;
+            var expectedVm = new LoanDetailsVm() { Id = loanId };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns((Loan)null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetLoanForDetails(loanId);
+
+            result.Should().BeNull();
+        }
     }
 }
