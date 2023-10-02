@@ -502,7 +502,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void GetAllLoansForListByIndentityUserId_NegativePageSize_ShouldThrowExepction()
+        public void GetAllLoansForListByIndentityUserId_NegativePageSize_ShouldThrowException()
         {
             string testUserId = "userId";
             int pageSize = -2;
@@ -516,7 +516,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void GetAllLoansForListByIndentityUserId_NegativePageNumber_ShouldThrowExepction()
+        public void GetAllLoansForListByIndentityUserId_NegativePageNumber_ShouldThrowExcepction()
         {
             string testUserId = "userId";
             int pageSize = 2;
@@ -558,6 +558,57 @@ namespace LibraryMVC.Tests
             var result = service.GetLoanForDetails(loanId);
 
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public void CancelLoan_LoanNotFound_ShouldThrowNotFoundException()
+        {
+            int loanId = 1;
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns((Loan)null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            Action result = () => service.CancelLoan(loanId);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"No loan found for Id: {loanId}");
+        }
+
+        [Theory]
+        [InlineData((int)LoanStatusId.Borrowed)]
+        [InlineData((int)LoanStatusId.Completed)]
+        [InlineData((int)LoanStatusId.Overdue)]
+        [InlineData((int)LoanStatusId.Cancelled)]
+        public void CancelLoan_LoanCannotBeCancelled_ShouldReturnFalse(int loanStatus)
+        {
+            int loanId = 1;
+            Loan testLoan = new Loan() {Id = loanId, StatusId = loanStatus };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns(testLoan);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.CancelLoan(loanId);
+
+            result.Should().Be(false);
+        }
+
+        [Fact]
+        public void CancelLoan_LoanCanBeCancelled_ShouldCancelLoanAndUpdateBooksQuantityAndReturnTrue()
+        {
+            int loanId = 1;
+            Loan testLoan = new Loan() { Id = loanId, StatusId = (int)LoanStatusId.New, Books = new List<Book>() };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns(testLoan);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.CancelLoan(loanId);
+
+            result.Should().Be(true);
+            testLoan.StatusId = (int)LoanStatusId.Cancelled;
+            mockLoanRepo.Verify(r => r.UpdateLoan(testLoan), Times.Once);
+            mockBookRepo.Verify(r => r.UpdateBooksQuantity(It.IsAny<ICollection<Book>>()), Times.Once);
         }
     }
 }

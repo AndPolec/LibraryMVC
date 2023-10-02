@@ -125,8 +125,13 @@ namespace LibraryApi.Controllers
                 }
                 else
                 {
-                    return BadRequest("Nie znaleziono zamówienia o podanym id.");
+                    return BadRequest("Loan cannot be cancelled");
                 }
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Error while using CancelLoan with loanId={loanId}.", id);
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
