@@ -610,5 +610,50 @@ namespace LibraryMVC.Tests
             mockLoanRepo.Verify(r => r.UpdateLoan(testLoan), Times.Once);
             mockBookRepo.Verify(r => r.UpdateBooksQuantity(It.IsAny<ICollection<Book>>()), Times.Once);
         }
+
+        [Fact]
+        public void GetAllLoansForConfirmCheckOutList_WhenCalled_ShouldReturnLoanListVm()
+        {
+            var mapper = GetMapper();
+            var testLoanList = new List<Loan>()
+            {
+                new Loan { Id = 1, CreationDate = new DateTime(2023, 9, 1), Status = new Status {Id = (int)LoanStatusId.New, Name = "New"}, Books = new List<Book>(), LibraryUser = new LibraryUser() },
+                new Loan { Id = 4, CreationDate = new DateTime(2023, 9, 2), Status = new Status {Id = (int)LoanStatusId.New, Name = "New"}, Books = new List<Book>(), LibraryUser = new LibraryUser() },
+            };
+
+            mockLoanRepo.Setup(r => r.GetAllLoans()).Returns(testLoanList.AsQueryable());
+
+            var service = new LoanService(mapper, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetAllLoansForConfirmCheckOutList();
+
+            result.Should().NotBeNullOrEmpty();
+            result.Count.Should().Be(2);
+
+            var firstLoanVm = result.FirstOrDefault(l => l.Id == 1);
+            var secondLoanVm = result.FirstOrDefault(l => l.Id == 4);
+
+            firstLoanVm.Should().NotBeNull();
+            firstLoanVm.Status.Should().Be("New");
+            firstLoanVm.CreationDate.Should().Be(new DateTime(2023, 9, 1));
+
+            secondLoanVm.Should().NotBeNull();
+            secondLoanVm.Status.Should().Be("New");
+            secondLoanVm.CreationDate.Should().Be(new DateTime(2023, 9, 2));
+        }
+
+        [Fact]
+        public void GetAllLoansForConfirmCheckOutList_NoLoans_ShouldReturnEmptyList()
+        {
+            var mapper = GetMapper();
+            mockLoanRepo.Setup(r => r.GetAllLoans()).Returns(new List<Loan>().AsQueryable());
+
+            var service = new LoanService(mapper, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetAllLoansForConfirmCheckOutList();
+
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
+        }
     }
 }
