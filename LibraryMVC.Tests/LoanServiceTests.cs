@@ -655,5 +655,48 @@ namespace LibraryMVC.Tests
             result.Should().NotBeNull();
             result.Should().BeEmpty();
         }
+
+        [Fact]
+        public void ConfirmCheckOut_LoanNotFound_ShouldThrowNotFoundException()
+        {
+            int loanId = 1;
+            string userId = "testId";
+
+            mockAdditionalLibrarianInfoRepo.Setup(r => r.GetInfoByIdentityUserId(userId)).Returns(new AdditionalLibrarianInfo());
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns((Loan)null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            Action result = () => service.ConfirmCheckOut(loanId,userId);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"No loan found for Id: {loanId}");
+        }
+
+        [Fact]
+        public void ConfirmCheckOut_ValidArguments_ShouldUpdateLoanAndReturnCheckOutRecordId()
+        {
+            int loanId = 1;
+            string userId = "testId";
+
+            var loan = new Loan { Id = loanId };
+            var librarianInfo = new AdditionalLibrarianInfo { Id = 2 };
+            var loanSettings = new GlobalLoanSettings { DurationOfFreeLoanInDays = 21 };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns(loan);
+            mockAdditionalLibrarianInfoRepo.Setup(r => r.GetInfoByIdentityUserId(userId)).Returns(librarianInfo);
+            mockGlobalLoanSettingsRepo.Setup(r => r.GetSettings()).Returns(loanSettings);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.ConfirmCheckOut(loanId, userId);
+
+            result.Should().Be(loan.CheckOutRecord.Id);
+            loan.StatusId.Should().Be((int)LoanStatusId.Borrowed);
+            loan.CheckOutRecord.Should().NotBeNull();
+            loan.CheckOutRecord.AdditionalLibrarianInfoId.Should().Be(librarianInfo.Id);
+            loan.CheckOutRecord.LoanId.Should().Be(loanId);
+
+            mockLoanRepo.Verify(repo => repo.UpdateLoan(loan), Times.Once());
+        }
     }
 }
