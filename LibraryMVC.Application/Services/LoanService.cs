@@ -354,13 +354,14 @@ namespace LibraryMVC.Application.Services
 
         public List<LoanForConfirmReturnListVm> GetAllLoansForConfirmReturnList()
         {
-            var loansVm = _loanRepository.GetAllLoans()
+            var loans = _loanRepository.GetAllLoans()
                 .Where(l => l.StatusId == (int)LoanStatusId.Borrowed || l.StatusId == (int)LoanStatusId.Overdue)
                 .OrderBy(l => l.Id)
                 .ToList();
-            var loansToReturn = _mapper.Map<List<Loan>,List<LoanForConfirmReturnListVm>>(loansVm);
 
-            return loansToReturn;
+            var loansListVm = _mapper.Map<List<Loan>,List<LoanForConfirmReturnListVm>>(loans);
+
+            return loansListVm;
         }
 
         public NewReturnRecordVm GetInfoForConfirmReturn(int loanId)

@@ -673,6 +673,21 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
+        public void ConfirmCheckOut_LibrarianInfoNotFound_ShouldThrowNotFoundException()
+        {
+            int loanId = 1;
+            string userId = "testId";
+
+            mockAdditionalLibrarianInfoRepo.Setup(r => r.GetInfoByIdentityUserId(userId)).Returns((AdditionalLibrarianInfo) null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            Action result = () => service.ConfirmCheckOut(loanId, userId);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"No LibrarianInfo found for Id: {userId}");
+        }
+
+        [Fact]
         public void ConfirmCheckOut_ValidArguments_ShouldUpdateLoanAndReturnCheckOutRecordId()
         {
             int loanId = 1;
@@ -697,6 +712,47 @@ namespace LibraryMVC.Tests
             loan.CheckOutRecord.LoanId.Should().Be(loanId);
 
             mockLoanRepo.Verify(repo => repo.UpdateLoan(loan), Times.Once());
+        }
+
+        [Fact]
+        public void GetAllLoansForConfirmReturnList_WhenCalled_ShouldReturnLoanListVm()
+        {
+            var testLoans = new List<Loan>
+            {
+                new Loan { Id = 1, StatusId = (int)LoanStatusId.Borrowed, Books = new List<Book>{ new Book() } },
+                new Loan { Id = 2, StatusId = (int)LoanStatusId.Overdue, Books = new List<Book>{ new Book(), new Book() } },
+            };
+
+            var testLoansVm = new List<LoanForConfirmReturnListVm>
+            {
+                new LoanForConfirmReturnListVm { Id = 1, NumberOfBorrowedBooks = 1 },
+                new LoanForConfirmReturnListVm { Id = 2, NumberOfBorrowedBooks = 2 },
+            };
+
+            mockLoanRepo.Setup(r => r.GetAllLoans()).Returns(testLoans.AsQueryable());
+            mockMapper.Setup(m => m.Map<List<Loan>, List<LoanForConfirmReturnListVm>>(It.IsAny<List<Loan>>())).Returns(testLoansVm);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetAllLoansForConfirmReturnList();
+
+            result.Should().NotBeNullOrEmpty();
+            result.Count.Should().Be(testLoansVm.Count);
+            result.Should().BeEquivalentTo(testLoansVm);
+        }
+
+        [Fact]
+        public void GetAllLoansForConfirmReturnList_NoLoans_ShouldReturnEmptyList()
+        {
+            var mapper = GetMapper();
+            mockLoanRepo.Setup(r => r.GetAllLoans()).Returns(new List<Loan>().AsQueryable());
+
+            var service = new LoanService(mapper, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetAllLoansForConfirmReturnList();
+
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
         }
     }
 }
