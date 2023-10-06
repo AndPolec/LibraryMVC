@@ -169,15 +169,13 @@ namespace LibraryApi.Controllers
 
             try
             {
-                int result = _loanService.ConfirmCheckOut(loanId, librarianId);
-                if (result == -1)
-                {
-                    return BadRequest("Nie znaleziono zamówienia o podanym id.");
-                }
-                else
-                {
-                    return Ok();
-                }
+                _loanService.ConfirmCheckOut(loanId, librarianId);
+                return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Error while using ConfirmCheckOut with loanId={loanId} and librarianId=={librarianId}", loanId, librarianId);
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {

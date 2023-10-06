@@ -325,20 +325,27 @@ namespace LibraryMVC.Application.Services
 
         public int ConfirmCheckOut(int loanId, string librarianIdentityUserId)
         {
-            var librarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
-            var loan = _loanRepository.GetLoanById(loanId);
+            var librarianInfo = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId);
+            if (librarianInfo == null)
+            {
+                throw new NotFoundException($"No LibrarianInfo found for Id: {librarianIdentityUserId}");
+            }
 
-            if (loan is null)
-                return -1;
+            var loan = _loanRepository.GetLoanById(loanId);
+            if (loan == null)
+            {
+                throw new NotFoundException($"No Loan found for Id: {loanId}");
+            }
+
             int durationOfFreeLoanInDays = _loanSettingsRepository.GetSettings().DurationOfFreeLoanInDays;
-            loan.StatusId = 2; //Status = "Wypożyczone"
+            loan.StatusId = (int)LoanStatusId.Borrowed;
             loan.ReturnDueDate = DateTime.Now.AddDays(durationOfFreeLoanInDays);
             loan.CheckOutRecord = new CheckOutRecord()
             {
                 Id = 0,
                 Date = DateTime.Now,
                 LoanId = loanId,
-                AdditionalLibrarianInfoId = librarianInfoId
+                AdditionalLibrarianInfoId = librarianInfo.Id
             };
 
             _loanRepository.UpdateLoan(loan);
