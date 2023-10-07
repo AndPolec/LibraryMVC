@@ -8,6 +8,7 @@ using LibraryMVC.Application.Services;
 using LibraryMVC.Application.ViewModels.Book;
 using LibraryMVC.Application.ViewModels.BorrowingCart;
 using LibraryMVC.Application.ViewModels.Loan;
+using LibraryMVC.Application.ViewModels.ReturnRecord;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;
@@ -549,7 +550,6 @@ namespace LibraryMVC.Tests
         public void GetLoanForDetails_LoanNotFound_ShouldReturnNull()
         {
             int loanId = 1;
-            var expectedVm = new LoanDetailsVm() { Id = loanId };
 
             mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns((Loan)null);
 
@@ -755,6 +755,36 @@ namespace LibraryMVC.Tests
             result.Should().BeEmpty();
         }
 
-        
+        [Fact]
+        public void GetInfoForConfirmReturn_LoanNotFound_ShouldReturnNull()
+        {
+            int loanId = 1;
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns((Loan)null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetInfoForConfirmReturn(loanId);
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void GetInfoForConfirmReturn_LoanFound_ShouldReturnValidVm()
+        {
+            int loanId = 1;
+            var testLoan = new Loan() { Id = loanId };
+            var expectedVm = new NewReturnRecordVm() { Id = 1, LoanId = 1 };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loanId)).Returns(testLoan);
+            mockMapper.Setup(m => m.Map<NewReturnRecordVm>(testLoan)).Returns(expectedVm);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetInfoForConfirmReturn(loanId);
+
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expectedVm);
+        }
     }
 }
