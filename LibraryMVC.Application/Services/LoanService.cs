@@ -388,32 +388,47 @@ namespace LibraryMVC.Application.Services
             return model;
         }
 
-        public int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId)
+        private ReturnRecord CreateReturnRecordForConfirmReturn(NewReturnRecordVm model, int additionalLibrarianInfoId)
         {
-            var loan = _loanRepository.GetLoanById(model.LoanId);
-            if (loan is null)
-            {
-                return -1;
-            }
-
             var returnRecord = _mapper.Map<ReturnRecord>(model);
-            returnRecord.AdditionalLibrarianInfoId = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId).Id;
+            returnRecord.AdditionalLibrarianInfoId = additionalLibrarianInfoId;
             returnRecord.ReturnedBooks = new List<Book>();
             returnRecord.LostOrDestroyedBooks = new List<Book>();
+
             foreach (var i in model.ReturnedBooksId)
             {
                 returnRecord.ReturnedBooks.Add(_bookRepository.GetBookById(i));
             }
+
             foreach (var i in model.LostOrDestroyedBooksId)
             {
                 returnRecord.LostOrDestroyedBooks.Add(_bookRepository.GetBookById(i));
             }
 
-            loan.StatusId = 3; //Status = "Zakończone"
+            return returnRecord;
+        }
+
+        public int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId)
+        {
+            var loan = _loanRepository.GetLoanById(model.LoanId);
+            if (loan == null)
+            {
+                throw new NotFoundException($"No Loan found for Id: {model.LoanId}");
+            }
+
+            var librarianInfo = _additionalLibrarianInfoRepository.GetInfoByIdentityUserId(librarianIdentityUserId);
+            if (librarianInfo == null)
+            {
+                throw new NotFoundException($"No LibrarianInfo found for Id: {librarianIdentityUserId}");
+            }
+
+            var returnRecord = CreateReturnRecordForConfirmReturn(model, librarianInfo.Id);
+            loan.StatusId = (int)LoanStatusId.Completed;
             loan.ReturnRecord = returnRecord;
             _loanRepository.UpdateLoan(loan);
 
             IncrementQuantityOfAvailableBooks(returnRecord.ReturnedBooks);
+
             return returnRecord.Id;
         }
 
