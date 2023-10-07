@@ -786,5 +786,65 @@ namespace LibraryMVC.Tests
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedVm);
         }
+
+        [Fact]
+        public void SetBooksToVm_ValidCall_ShouldReturnVmWithBookList()
+        {
+            var mapper = GetMapper();
+            int loanId = 1;
+            var bookList = new List<Book>() { 
+                new Book
+                {
+                    Id = 1,
+                    Title = "The Wind in the Willows",
+                    ISBN = "9780123456478",
+                    RelaseYear = 1908,
+                    Quantity = 10,
+                    Genres = new List<Genre>
+                    {
+                        new Genre { Id = 1, Name = "Adventure" }
+                    },
+                    Author = new Author { Id = 1, FirstName = "Kenneth", LastName = "Grahame" },
+                    Publisher = new Publisher { Id = 1, Name = "Wyndham Books" },
+                    BookGenres = new List<BookGenre>
+                    {
+                        new BookGenre { Book = new Book{ Id = 1 }, Genre = new Genre { Id = 1, Name = "Adventure" }, GenreId = 1 }
+                    },
+                    Loans = new List<Loan>() { new Loan { Id = loanId } }
+                },
+                new Book
+                {
+                    Id = 2,
+                    Title = "Pride and Prejudice",
+                    ISBN = "9780123456479",
+                    RelaseYear = 1813,
+                    Quantity = 8,
+                    Genres = new List<Genre>
+                    {
+                        new Genre { Id = 2, Name = "Romance" }
+                    },
+                    Author = new Author { Id = 2, FirstName = "Jane", LastName = "Austen" },
+                    Publisher = new Publisher { Id = 2, Name = "Classic Reads" },
+                    BookGenres = new List<BookGenre>
+                    {
+                        new BookGenre { Book = new Book { Id = 2 }, Genre = new Genre { Id = 2, Name = "Romance" },GenreId = 2 }
+                    },
+                    Loans = new List<Loan>() { new Loan { Id = loanId } }
+                }
+            };
+            var returnRecordVm = new NewReturnRecordVm() { Id = 1, LoanId = loanId };
+
+            mockBookRepo.Setup(r => r.GetAllBooks()).Returns(bookList.AsQueryable);
+
+            var service = new LoanService(mapper, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.SetBooksToVm(returnRecordVm);
+
+            result.BorrowedBooks.Should().NotBeNull();
+            result.BorrowedBooks.Count.Should().Be(bookList.Count);
+            result.BorrowedBooks.Should().Contain(b => b.Id == 1);
+            result.BorrowedBooks.Should().Contain(b => b.Id == 2);
+        }
+        
     }
 }

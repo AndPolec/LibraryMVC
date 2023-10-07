@@ -378,7 +378,7 @@ namespace LibraryMVC.Application.Services
             }
         }
 
-        public NewReturnRecordVm SetParametersToVm(NewReturnRecordVm model)
+        public NewReturnRecordVm SetBooksToVm(NewReturnRecordVm model)
         {
             var books = _bookRepository.GetAllBooks()
                 .Where(b => b.Loans.Any(l => l.Id == model.LoanId))

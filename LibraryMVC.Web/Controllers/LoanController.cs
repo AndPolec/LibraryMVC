@@ -145,7 +145,7 @@ namespace LibraryMVC.Web.Controllers
             if (!result.IsValid)
             {
                 result.AddToModelState(ModelState);
-                model = _loanService.SetParametersToVm(model);
+                model = _loanService.SetBooksToVm(model);
                 return View(model);
             }
 
