@@ -364,11 +364,18 @@ namespace LibraryMVC.Application.Services
             return loansListVm;
         }
 
-        public NewReturnRecordVm GetInfoForConfirmReturn(int loanId)
+        public NewReturnRecordVm? GetInfoForConfirmReturn(int loanId)
         {
             var loan = _loanRepository.GetLoanById(loanId);
-            var returnRecordVm = _mapper.Map<NewReturnRecordVm>(loan);
-            return returnRecordVm;
+            if (loan == null)
+            {
+                return null;
+            }
+            else
+            {
+                var returnRecordVm = _mapper.Map<NewReturnRecordVm>(loan);
+                return returnRecordVm;
+            }
         }
 
         public NewReturnRecordVm SetParametersToVm(NewReturnRecordVm model)

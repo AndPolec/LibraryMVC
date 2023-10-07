@@ -27,7 +27,7 @@ namespace LibraryMVC.Application.Interfaces
         LoanDetailsVm? GetLoanForDetails(int loanId);
         bool CancelLoan(int loanId);
         int ConfirmCheckOut(int loanId, string librarianIdentityUserId);
-        NewReturnRecordVm GetInfoForConfirmReturn(int loanId);
+        NewReturnRecordVm? GetInfoForConfirmReturn(int loanId);
         NewReturnRecordVm SetParametersToVm(NewReturnRecordVm model);
         int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId);
         ReturnRecordDetailsVm GetReturnRecordForDetails(int returnRecordId);
