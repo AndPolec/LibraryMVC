@@ -845,6 +845,61 @@ namespace LibraryMVC.Tests
             result.BorrowedBooks.Should().Contain(b => b.Id == 1);
             result.BorrowedBooks.Should().Contain(b => b.Id == 2);
         }
-        
+
+        [Fact]
+        public void ConfirmReturn_ValidArguments_ShouldReturnReturnRecordIdAndUpdateLoan()
+        {
+            var loan = new Loan { Id = 2, StatusId = (int) LoanStatusId.Borrowed };
+            var model = new NewReturnRecordVm { LoanId = loan.Id, ReturnedBooksId = new List<int>() { 1 }, LostOrDestroyedBooksId = new List<int>() { 5 } };
+            var returnRecord = new ReturnRecord { Id = 3 };
+            var librarianInfo = new AdditionalLibrarianInfo { Id = 4 };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loan.Id)).Returns(loan);
+            mockAdditionalLibrarianInfoRepo.Setup(r => r.GetInfoByIdentityUserId(It.IsAny<string>())).Returns(librarianInfo);
+            mockMapper.Setup(r => r.Map<ReturnRecord>(model)).Returns(returnRecord);
+            mockBookRepo.Setup(r => r.GetBookById(It.IsAny<int>())).Returns(new Book());
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.ConfirmReturn(model, "librarianUserId");
+
+            mockLoanRepo.Verify(r => r.UpdateLoan(It.Is<Loan>(l => l.StatusId == (int)LoanStatusId.Completed && l.ReturnRecord == returnRecord)), Times.Once);
+            result.Should().Be(returnRecord.Id);
+            mockBookRepo.Verify(r => r.UpdateBooksQuantity(It.IsAny<ICollection<Book>>()), Times.Once);
+            mockBookRepo.Verify(r => r.GetBookById(It.IsAny<int>()), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void ConfirmReturn_NoLoanFound_ShouldThrowNotFoundException()
+        {
+            var loan = new Loan { Id = 2, StatusId = (int)LoanStatusId.Borrowed };
+            var model = new NewReturnRecordVm { LoanId = loan.Id, ReturnedBooksId = new List<int>() { 1 }, LostOrDestroyedBooksId = new List<int>() { 5 } };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loan.Id)).Returns((Loan) null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            Action result = () => service.ConfirmReturn(model, "librarianUserId");
+
+            result.Should().Throw<NotFoundException>().WithMessage($"No Loan found for Id: {model.LoanId}");
+        }
+
+        [Fact]
+        public void ConfirmReturn_NoLibrarianInfoFound_ShouldThrowNotFoundException()
+        {
+            var userId = "librarianUserId";
+            var loan = new Loan { Id = 2, StatusId = (int)LoanStatusId.Borrowed };
+            var model = new NewReturnRecordVm { LoanId = loan.Id, ReturnedBooksId = new List<int>() { 1 }, LostOrDestroyedBooksId = new List<int>() { 5 } };
+
+            mockLoanRepo.Setup(r => r.GetLoanById(loan.Id)).Returns(loan);
+            mockAdditionalLibrarianInfoRepo.Setup(r => r.GetInfoByIdentityUserId(It.IsAny<string>())).Returns((AdditionalLibrarianInfo) null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            Action result = () => service.ConfirmReturn(model, userId);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"No LibrarianInfo found for Id: {userId}");
+        }
+
     }
 }

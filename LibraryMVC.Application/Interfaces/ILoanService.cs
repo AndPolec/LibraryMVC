@@ -30,7 +30,7 @@ namespace LibraryMVC.Application.Interfaces
         NewReturnRecordVm? GetInfoForConfirmReturn(int loanId);
         NewReturnRecordVm SetBooksToVm(NewReturnRecordVm model);
         int ConfirmReturn(NewReturnRecordVm model, string librarianIdentityUserId);
-        ReturnRecordDetailsVm GetReturnRecordForDetails(int returnRecordId);
+        ReturnRecordDetailsVm? GetReturnRecordForDetails(int returnRecordId);
         void SetGlobalLoanSettings(LoanSettingsVm model);
         LoanSettingsVm GetGlobalLoanSettings();
         void UpdateOverduePenaltyAndStatusForAllLoans();

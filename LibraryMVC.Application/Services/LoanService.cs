@@ -397,12 +397,14 @@ namespace LibraryMVC.Application.Services
 
             foreach (var i in model.ReturnedBooksId)
             {
-                returnRecord.ReturnedBooks.Add(_bookRepository.GetBookById(i));
+                var book = _bookRepository.GetBookById(i);
+                returnRecord.ReturnedBooks.Add(book);
             }
 
             foreach (var i in model.LostOrDestroyedBooksId)
             {
-                returnRecord.LostOrDestroyedBooks.Add(_bookRepository.GetBookById(i));
+                var book = _bookRepository.GetBookById(i);
+                returnRecord.LostOrDestroyedBooks.Add(book);
             }
 
             return returnRecord;
@@ -432,11 +434,18 @@ namespace LibraryMVC.Application.Services
             return returnRecord.Id;
         }
 
-        public ReturnRecordDetailsVm GetReturnRecordForDetails(int returnRecordId)
+        public ReturnRecordDetailsVm? GetReturnRecordForDetails(int returnRecordId)
         {
             var returnRecord = _returnRecordRepository.GetReturnRecordById(returnRecordId);
-            var model = _mapper.Map<ReturnRecordDetailsVm>(returnRecord);
-            return model;
+            if (returnRecord == null)
+            {
+                return null;
+            }
+            else
+            {
+                var model = _mapper.Map<ReturnRecordDetailsVm>(returnRecord);
+                return model;
+            }
         }
 
         public LoanSettingsVm GetGlobalLoanSettings()
