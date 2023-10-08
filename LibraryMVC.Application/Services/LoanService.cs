@@ -468,6 +468,5 @@ namespace LibraryMVC.Application.Services
             settings.MaxBooksInOrder = model.maxBooksInOrder;
             _loanSettingsRepository.UpdateSettings(settings);
         }
-
     }
 }

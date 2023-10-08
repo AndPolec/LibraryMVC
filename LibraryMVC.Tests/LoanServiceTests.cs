@@ -901,5 +901,70 @@ namespace LibraryMVC.Tests
             result.Should().Throw<NotFoundException>().WithMessage($"No LibrarianInfo found for Id: {userId}");
         }
 
+        [Fact]
+        public void GetReturnRecordForDetails_ReturnRecordFound_ShouldReturnValidVm()
+        {
+            int returnRecordId = 1;
+            var returnRecord = new ReturnRecord() { Id = returnRecordId };
+            var returnRecordVm = new ReturnRecordDetailsVm() { Id = returnRecordId };
+
+            mockReturnRecordRepo.Setup(r => r.GetReturnRecordById(returnRecordId)).Returns(returnRecord);
+            mockMapper.Setup(r => r.Map<ReturnRecordDetailsVm>(returnRecord)).Returns(returnRecordVm);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetReturnRecordForDetails(returnRecordId);
+
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(returnRecordVm);
+        }
+
+        [Fact]
+        public void GetReturnRecordForDetails_ReturnRecordNotFound_ShouldReturnNull()
+        {
+            int returnRecordId = 1;
+
+            mockReturnRecordRepo.Setup(r => r.GetReturnRecordById(returnRecordId)).Returns((ReturnRecord)null);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetReturnRecordForDetails(returnRecordId);
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void GetGlobalLoanSettings_WhenCall_ShouldReturnValidVm()
+        {
+            var settings = new GlobalLoanSettings() { Id = 1, DurationOfFreeLoanInDays = 21, MaxBooksInOrder = 5, OverduePenaltyRatePerDayForOneBook = 0.2M };
+            var settingsVm = new LoanSettingsVm() { durationOfFreeLoan = 21, maxBooksInOrder = 5, penaltyRatePerDay = 0.2M };
+
+            mockGlobalLoanSettingsRepo.Setup(r => r.GetSettings()).Returns(settings);
+            mockMapper.Setup(r => r.Map<LoanSettingsVm>(settings)).Returns(settingsVm);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            var result = service.GetGlobalLoanSettings();
+
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(settingsVm);
+        }
+
+        [Fact]
+        public void SetGlobalLoanSettings_WhenCall_ShouldUpdateSettings()
+        {
+            var newSettingsVm = new LoanSettingsVm() { durationOfFreeLoan = 22, maxBooksInOrder = 7, penaltyRatePerDay = 0.4M };
+            var settings = new GlobalLoanSettings() { Id = 1, DurationOfFreeLoanInDays = 21, MaxBooksInOrder = 5, OverduePenaltyRatePerDayForOneBook = 0.2M };
+            var expectedSettings = new GlobalLoanSettings() { Id = 1, DurationOfFreeLoanInDays = 22, MaxBooksInOrder = 7, OverduePenaltyRatePerDayForOneBook = 0.4M };
+
+            mockGlobalLoanSettingsRepo.Setup(r => r.GetSettings()).Returns(settings);
+
+            var service = new LoanService(mockMapper.Object, mockBorrowingCartRepo.Object, mockLoanRepo.Object, mockBookRepo.Object, mockAdditionalLibrarianInfoRepo.Object, mockReturnRecordRepo.Object, mockGlobalLoanSettingsRepo.Object);
+
+            service.SetGlobalLoanSettings(newSettingsVm);
+
+            mockGlobalLoanSettingsRepo.Verify(r => r.UpdateSettings(settings), Times.Once);
+            settings.Should().BeEquivalentTo(expectedSettings);
+        }
     }
 }
