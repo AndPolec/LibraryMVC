@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.LibraryUser;
 using LibraryMVC.Application.ViewModels.User;
@@ -8,6 +9,7 @@ using LibraryMVC.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,6 +47,10 @@ namespace LibraryMVC.Application.Services
         public LibraryUserDetailsVm GetLibraryUserForDetails(int id)
         {
             var libraryUser = _libraryUserRepository.GetUserById(id);
+            if(libraryUser == null)
+            {
+                throw new NotFoundException($"User with ID {id} was not found.");
+            }
             var libraryUserVm = _mapper.Map<LibraryUserDetailsVm>(libraryUser);
             return libraryUserVm;
         }
