@@ -278,5 +278,31 @@ namespace LibraryMVC.Tests
 
             result.Should().Throw<NotFoundException>().WithMessage($"User with identity ID {identityUserId} was not found.");
         }
+
+        [Fact]
+        public void BlockUser_UserFoundByIdentityIdAndIsBlocked_ShouldReturnTrue()
+        {
+            var identityUserId = "test";
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(identityUserId)).Returns(new LibraryUser() { isBlocked = true });
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.IsBlocked(identityUserId);
+
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsBlocked_UserNotFoundByIdentityId_ShouldThrowNotFoundException()
+        {
+            var identityUserId = "test";
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(identityUserId)).Returns((LibraryUser)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            Action result = () => service.IsBlocked(identityUserId);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"User with identity ID {identityUserId} was not found.");
+        }
     }
 }

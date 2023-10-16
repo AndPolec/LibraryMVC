@@ -6,6 +6,7 @@ using LibraryMVC.Application.ViewModels.LibraryUser;
 using LibraryMVC.Application.ViewModels.User;
 using LibraryMVC.Domain.Interfaces;
 using LibraryMVC.Domain.Model;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,27 +84,42 @@ namespace LibraryMVC.Application.Services
         public bool BlockUser(int userId)
         {
             var user = _libraryUserRepository.GetUserById(userId);
-            if (user is null)
+            if (user == null)
+            {
+                throw new NotFoundException($"User with ID {userId} was not found.");
+            }
+
+            if (!user.isBlocked)
+            {
+                user.isBlocked = true;
+                _libraryUserRepository.UpdateUser(user);
+                return true;
+            }
+            else
             {
                 return false;
             }
-
-            user.isBlocked = true;
-            _libraryUserRepository.UpdateUser(user);
-            return true;
+            
         }
 
         public bool UnblockUser(int userId)
         {
             var user = _libraryUserRepository.GetUserById(userId);
-            if (user is null)
+            if (user == null)
+            {
+                throw new NotFoundException($"User with ID {userId} was not found.");
+            }
+
+            if (user.isBlocked)
+            {
+                user.isBlocked = false;
+                _libraryUserRepository.UpdateUser(user);
+                return true;
+            }
+            else
             {
                 return false;
             }
-
-            user.isBlocked = false;
-            _libraryUserRepository.UpdateUser(user);
-            return true;
         }
 
         public async Task ChangeLibraryUserType(string userId, List<string> newRoles)
