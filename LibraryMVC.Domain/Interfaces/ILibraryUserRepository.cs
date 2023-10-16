@@ -10,6 +10,5 @@ namespace LibraryMVC.Domain.Interfaces
         LibraryUser GetUserById(int userId);
         LibraryUser GetUserByIdentityUserId(string userId);
         void UpdateUser(LibraryUser user);
-        bool CheckIsUserExistsByIdentityUserId(string userId);
     }
 }

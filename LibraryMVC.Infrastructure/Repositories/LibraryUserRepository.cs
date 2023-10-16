@@ -66,11 +66,5 @@ namespace LibraryMVC.Infrastructure.Repositories
         {
             return _context.LibraryUsers.AsNoTracking();
         }
-        
-        public bool CheckIsUserExistsByIdentityUserId(string userId)
-        {
-            return _context.LibraryUsers.Any(u => u.IdentityUserId == userId);
-        }
-
     }
 }

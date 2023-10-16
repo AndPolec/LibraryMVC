@@ -57,18 +57,26 @@ namespace LibraryMVC.Application.Services
 
         public bool IsUserDataExists(string identityUserId)
         {
-            return _libraryUserRepository.CheckIsUserExistsByIdentityUserId(identityUserId);
+            return _libraryUserRepository.GetAllUsers().Any(u => u.IdentityUserId == identityUserId);
         }
 
         public bool IsBlocked(int userId)
         {
             var user = _libraryUserRepository.GetUserById(userId);
+            if (user == null)
+            {
+                throw new NotFoundException($"User with ID {userId} was not found.");
+            }
             return user.isBlocked;
         }
 
         public bool IsBlocked(string identityUserId)
         {
             var user = _libraryUserRepository.GetUserByIdentityUserId(identityUserId);
+            if (user == null)
+            {
+                throw new NotFoundException($"User with identity ID {identityUserId} was not found.");
+            }
             return user.isBlocked;
         }
 
