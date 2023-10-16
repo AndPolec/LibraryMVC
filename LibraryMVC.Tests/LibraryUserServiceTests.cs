@@ -280,29 +280,93 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void BlockUser_UserFoundByIdentityIdAndIsBlocked_ShouldReturnTrue()
+        public void BlockUser_UserFoundAndIsNotBlocked_ShouldBlockUserAndReturnTrue()
         {
-            var identityUserId = "test";
-            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(identityUserId)).Returns(new LibraryUser() { isBlocked = true });
+            var userId = 2;
+            var testUser = new LibraryUser() { Id = userId, isBlocked = false };
+            mockLibraryUserRepo.Setup(r => r.GetUserById(userId)).Returns(testUser);
 
             var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
 
-            var result = service.IsBlocked(identityUserId);
+            var result = service.BlockUser(userId);
 
             result.Should().BeTrue();
+            testUser.isBlocked.Should().BeTrue();
+            mockLibraryUserRepo.Verify(r => r.UpdateUser(testUser), Times.Once());
         }
 
         [Fact]
-        public void IsBlocked_UserNotFoundByIdentityId_ShouldThrowNotFoundException()
+        public void BlockUser_UserFoundAndIsBlocked_ShouldReturnFalse()
         {
-            var identityUserId = "test";
-            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(identityUserId)).Returns((LibraryUser)null);
+            var userId = 2;
+            var testUser = new LibraryUser() { Id = userId, isBlocked = true };
+            mockLibraryUserRepo.Setup(r => r.GetUserById(userId)).Returns(testUser);
 
             var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
 
-            Action result = () => service.IsBlocked(identityUserId);
+            var result = service.BlockUser(userId);
 
-            result.Should().Throw<NotFoundException>().WithMessage($"User with identity ID {identityUserId} was not found.");
+            result.Should().BeFalse();
+            testUser.isBlocked.Should().BeTrue();
+            mockLibraryUserRepo.Verify(r => r.UpdateUser(testUser), Times.Never());
+        }
+
+        [Fact]
+        public void BlockUser_UserNotFound_ShouldThrowNotFoundException()
+        {
+            var userId = 2;
+            mockLibraryUserRepo.Setup(r => r.GetUserById(userId)).Returns((LibraryUser)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            Action result = () => service.BlockUser(userId);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"User with ID {userId} was not found.");
+        }
+
+        [Fact]
+        public void UnblockUser_UserFoundAndIsBlocked_ShouldUnblockUserAndReturnTrue()
+        {
+            var userId = 2;
+            var testUser = new LibraryUser() { Id = userId, isBlocked = true };
+            mockLibraryUserRepo.Setup(r => r.GetUserById(userId)).Returns(testUser);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.UnblockUser(userId);
+
+            result.Should().BeTrue();
+            testUser.isBlocked.Should().BeFalse();
+            mockLibraryUserRepo.Verify(r => r.UpdateUser(testUser), Times.Once());
+        }
+
+        [Fact]
+        public void UnblockUser_UserFoundAndIsNotBlocked_ShouldReturnFalse()
+        {
+            var userId = 2;
+            var testUser = new LibraryUser() { Id = userId, isBlocked = false };
+            mockLibraryUserRepo.Setup(r => r.GetUserById(userId)).Returns(testUser);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.UnblockUser(userId);
+
+            result.Should().BeFalse();
+            testUser.isBlocked.Should().BeFalse();
+            mockLibraryUserRepo.Verify(r => r.UpdateUser(testUser), Times.Never());
+        }
+
+        [Fact]
+        public void UnblockUser_UserNotFound_ShouldThrowNotFoundException()
+        {
+            var userId = 2;
+            mockLibraryUserRepo.Setup(r => r.GetUserById(userId)).Returns((LibraryUser)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            Action result = () => service.UnblockUser(userId);
+
+            result.Should().Throw<NotFoundException>().WithMessage($"User with ID {userId} was not found.");
         }
     }
 }
