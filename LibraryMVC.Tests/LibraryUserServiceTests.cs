@@ -368,5 +368,78 @@ namespace LibraryMVC.Tests
 
             result.Should().Throw<NotFoundException>().WithMessage($"User with ID {userId} was not found.");
         }
+
+        [Fact]
+        public async Task ChangeLibraryUserType_UserNotFound_ShouldThrowNotFoundException()
+        {
+            var userId = "test";
+            var newRoles = new List<string>();
+
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(userId)).Returns((LibraryUser)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            Func<Task> result = () => service.ChangeLibraryUserType(userId, newRoles);
+
+            await result.Should().ThrowAsync<NotFoundException>().WithMessage($"User with ID {userId} was not found.");
+        }
+
+        [Fact]
+        public async Task ChangeLibraryUserType_NewRolesNotFound_ShouldThrowArgumentException()
+        {
+            var userId = "test";
+            var newRoles = new List<string>() {"Role1", "Role2" };
+
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(userId)).Returns(new LibraryUser());
+            mockUserTypeRepo.Setup(r => r.GetAll()).Returns(new List<UserType>().AsQueryable);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            Func<Task> result = () => service.ChangeLibraryUserType(userId, newRoles);
+
+            await result.Should().ThrowAsync<ArgumentException>().WithMessage($"None of the roles {string.Join(", ", newRoles)} were found.");
+        }
+
+        [Fact]
+        public async Task ChangeLibraryUserType_ValidInput_ShouldChangeUserType()
+        {
+            var userId = "test";
+            var testUser = new LibraryUser() { IdentityUserId = userId, UserTypes = new List<UserType>() { new UserType() { Name = "Role3" } } };
+            var newRoles = new List<string>() { "Role1", "Role2" };
+            var newUserTypes = new List<UserType>() { new UserType() { Name = "Role1" }, new UserType() { Name = "Role2" } };
+
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(userId)).Returns(testUser);
+            mockUserTypeRepo.Setup(r => r.GetAll()).Returns(newUserTypes.AsQueryable);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            await service.ChangeLibraryUserType(userId, newRoles);
+
+            testUser.UserTypes.Should().BeEquivalentTo(newUserTypes);
+            mockLibraryUserRepo.Verify(r => r.UpdateUser(testUser), Times.Once);
+        }
+
+        [Fact]
+        public async Task ChangeLibraryUserType_NewRoleIsLibrarian_ShouldCreateAdditionalLibrarianInfo()
+        {
+            var userId = "test";
+            var testUser = new LibraryUser() { Id = 1 ,IdentityUserId = userId, UserTypes = new List<UserType>() { new UserType() { Name = "Role3" } } };
+            var newRoles = new List<string>() { "Bibliotekarz", "Role2" };
+            var newUserTypes = new List<UserType>() { new UserType() { Name = "Bibliotekarz" }, new UserType() { Name = "Role2" } };
+
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(userId)).Returns(testUser);
+            mockUserTypeRepo.Setup(r => r.GetAll()).Returns(newUserTypes.AsQueryable);
+            mockAdditionalLibrarianInfoRepo.Setup(r => r.GetInfoByLibraryUserId(1)).Returns((AdditionalLibrarianInfo)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            await service.ChangeLibraryUserType(userId, newRoles);
+
+            testUser.UserTypes.Should().BeEquivalentTo(newUserTypes);
+            mockLibraryUserRepo.Verify(r => r.UpdateUser(testUser), Times.Once);
+
+            mockAdditionalLibrarianInfoRepo.Verify(
+                r => r.AddNewLibrarianInfo(It.Is<AdditionalLibrarianInfo>(info => info.LibraryUserId == testUser.Id)), Times.Once);
+        }
     }
 }

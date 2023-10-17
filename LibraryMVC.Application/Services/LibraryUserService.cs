@@ -139,7 +139,9 @@ namespace LibraryMVC.Application.Services
             SetNewUserRoles(libraryUser, newUserTypes);
 
             if (newRoles.Contains("Bibliotekarz"))
+            {
                 await CreateAdditionalLibrarianInfoForLibraryUser(libraryUser);
+            }
 
             await Task.Run(() => _libraryUserRepository.UpdateUser(libraryUser));
         }
