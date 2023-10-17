@@ -162,7 +162,7 @@ namespace LibraryMVC.Tests
         }
 
         [Fact]
-        public void GetLibraryUserForDetails_NoUserFound_ShouldThrowNotFoundException()
+        public void GetLibraryUserForDetails_NoUserFound_ShouldReturnNull()
         {
             var mapper = GetMapper();
             var testId = 1;
@@ -170,9 +170,9 @@ namespace LibraryMVC.Tests
 
             var service = new LibraryUserService(mockLibraryUserRepo.Object, mapper, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
 
-            Action result = () => service.GetLibraryUserForDetails(testId);
+            var result = service.GetLibraryUserForDetails(testId);
 
-            result.Should().Throw<NotFoundException>().WithMessage($"User with ID {testId} was not found.");
+            result.Should().BeNull();
         }
 
         [Fact]
@@ -440,6 +440,143 @@ namespace LibraryMVC.Tests
 
             mockAdditionalLibrarianInfoRepo.Verify(
                 r => r.AddNewLibrarianInfo(It.Is<AdditionalLibrarianInfo>(info => info.LibraryUserId == testUser.Id)), Times.Once);
+        }
+
+        [Fact]
+        public void GetLibraryUserForPersonalData_UserFound_ShouldReturnLibraryUserVm()
+        {
+            var testId = 1;
+            var testLibraryUser = new LibraryUser
+            {
+                Id = testId,
+                FirstName = "Jan",
+                LastName = "Kowalski"
+            };
+
+            var expectedLibraryUserVm = new LibraryUserForPersonalDataVm()
+            {
+                Id = testId,
+                FullName = "Jan Kowalski"
+            };
+
+            mockLibraryUserRepo.Setup(r => r.GetUserById(testId)).Returns(testLibraryUser);
+            mockMapper.Setup(m => m.Map<LibraryUserForPersonalDataVm>(testLibraryUser)).Returns(expectedLibraryUserVm);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.GetLibraryUserForPersonalData(testId);
+
+            result.Should().BeEquivalentTo(expectedLibraryUserVm);
+        }
+
+        [Fact]
+        public void GetLibraryUserForPersonalData_NoUserFound_ShouldReturnNull()
+        {
+            var testId = 1;
+            mockLibraryUserRepo.Setup(r => r.GetUserById(testId)).Returns((LibraryUser)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.GetLibraryUserForPersonalData(testId);
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void GetLibraryUserIdByIdentityUserId_UserFound_ShouldReturnValidId()
+        {
+            var testIdentityId = "test";
+            var testId = 1;
+            var user = new LibraryUser() { Id = testId };
+
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(testIdentityId)).Returns(user);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.GetLibraryUserIdByIdentityUserId(testIdentityId);
+
+            result.Should().Be(testId);
+        }
+
+        [Fact]
+        public void GetLibraryUserIdByIdentityUserId_UserNotFound_ShouldReturnMinusOne()
+        {
+            var testIdentityId = "test";
+
+            mockLibraryUserRepo.Setup(r => r.GetUserByIdentityUserId(testIdentityId)).Returns((LibraryUser)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.GetLibraryUserIdByIdentityUserId(testIdentityId);
+
+            result.Should().Be(-1);
+        }
+
+        [Fact]
+        public void GetInfoForUserEdit_UserFound_ShouldReturnUserVm()
+        {
+            var testId = 1;
+            var testLibraryUser = new LibraryUser
+            {
+                Id = testId,
+                FirstName = "Jan",
+                LastName = "Kowalski"
+            };
+
+            var expectedLibraryUserVm = new NewLibraryUserVm()
+            {
+                Id = testId,
+                FirstName = "Jan",
+                LastName = "Kowalski"
+            };
+
+            mockLibraryUserRepo.Setup(r => r.GetUserById(testId)).Returns(testLibraryUser);
+            mockMapper.Setup(m => m.Map<NewLibraryUserVm>(testLibraryUser)).Returns(expectedLibraryUserVm);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.GetInfoForUserEdit(testId);
+
+            result.Should().BeEquivalentTo(expectedLibraryUserVm);
+        }
+
+        [Fact]
+        public void GetInfoForUserEdit_NoUserFound_ShouldReturnNull()
+        {
+            var testId = 1;
+            mockLibraryUserRepo.Setup(r => r.GetUserById(testId)).Returns((LibraryUser)null);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            var result = service.GetInfoForUserEdit(testId);
+
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void UpdateUser_ValidModel_ShouldCallUpdateMethod()
+        {
+            var expectedLibraryUser = new LibraryUser
+            {
+                Id = 1,
+                FirstName = "Jan",
+                LastName = "Kowalski"
+            };
+
+            var libraryUserVm = new NewLibraryUserVm()
+            {
+                Id = 1,
+                FirstName = "Jan",
+                LastName = "Kowalski"
+            };
+
+            mockMapper.Setup(m => m.Map<LibraryUser>(libraryUserVm)).Returns(expectedLibraryUser);
+
+            var service = new LibraryUserService(mockLibraryUserRepo.Object, mockMapper.Object, mockUserTypeRepo.Object, mockAdditionalLibrarianInfoRepo.Object);
+
+            service.UpdateUser(libraryUserVm);
+
+            mockLibraryUserRepo.Verify(r => r.UpdateUser(expectedLibraryUser), Times.Once);
         }
     }
 }

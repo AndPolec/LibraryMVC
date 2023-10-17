@@ -15,9 +15,9 @@ namespace LibraryMVC.Application.Interfaces
         int GetLibraryUserIdByIdentityUserId(string id);
         bool IsUserDataExists(string identityUserId);
         List<LibraryUserForListVm> GetAllLibraryUsersForList();
-        LibraryUserDetailsVm GetLibraryUserForDetails(int id);
-        LibraryUserForPersonalDataVm GetLibraryUserForPersonalData(int id);
-        NewLibraryUserVm GetInfoForUserEdit(int id);
+        LibraryUserDetailsVm? GetLibraryUserForDetails(int id);
+        LibraryUserForPersonalDataVm? GetLibraryUserForPersonalData(int id);
+        NewLibraryUserVm? GetInfoForUserEdit(int id);
         bool IsBlocked(int userId);
         bool IsBlocked(string identityUserId);
         bool BlockUser(int userId);

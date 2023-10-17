@@ -45,13 +45,14 @@ namespace LibraryMVC.Application.Services
             return users;
         }
 
-        public LibraryUserDetailsVm GetLibraryUserForDetails(int id)
+        public LibraryUserDetailsVm? GetLibraryUserForDetails(int id)
         {
             var libraryUser = _libraryUserRepository.GetUserById(id);
             if(libraryUser == null)
             {
-                throw new NotFoundException($"User with ID {id} was not found.");
+                return null;
             }
+
             var libraryUserVm = _mapper.Map<LibraryUserDetailsVm>(libraryUser);
             return libraryUserVm;
         }
@@ -170,9 +171,14 @@ namespace LibraryMVC.Application.Services
             return additionalLibrarianInfo != null;
         }
 
-        public LibraryUserForPersonalDataVm GetLibraryUserForPersonalData(int id)
+        public LibraryUserForPersonalDataVm? GetLibraryUserForPersonalData(int id)
         {
             var libraryUser = _libraryUserRepository.GetUserById(id);
+            if (libraryUser == null)
+            {
+                return null;
+            }
+
             var libraryUserVm = _mapper.Map<LibraryUserForPersonalDataVm>(libraryUser);
             return libraryUserVm;
         }
@@ -180,12 +186,18 @@ namespace LibraryMVC.Application.Services
         public int GetLibraryUserIdByIdentityUserId(string id)
         {
             var user = _libraryUserRepository.GetUserByIdentityUserId(id);
-            return user.Id;
+            var userId = user == null ? -1 : user.Id;
+            return userId;
         }
 
-        public NewLibraryUserVm GetInfoForUserEdit(int id)
+        public NewLibraryUserVm? GetInfoForUserEdit(int id)
         {
             var user = _libraryUserRepository.GetUserById(id);
+            if (user == null)
+            {
+                return null;
+            }
+
             var userVm = _mapper.Map<NewLibraryUserVm>(user);
             return userVm;
         }
