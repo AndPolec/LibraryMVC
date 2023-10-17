@@ -125,20 +125,35 @@ namespace LibraryMVC.Application.Services
         public async Task ChangeLibraryUserType(string userId, List<string> newRoles)
         {
             var libraryUser = await Task.Run(() => _libraryUserRepository.GetUserByIdentityUserId(userId));
-            var newUserTypes = await Task.Run(() => _userTypeRepository.GetAll().Where(ut => newRoles.Contains(ut.Name)).ToList());
+            if (libraryUser == null)
+            {
+                throw new NotFoundException($"User with ID {userId} was not found.");
+            }
+
+            List<UserType> newUserTypes = await Task.Run(() => _userTypeRepository.GetAll().Where(ut => newRoles.Contains(ut.Name)).ToList());
+            if (!newUserTypes.Any())
+            {
+                throw new ArgumentException($"None of the roles {string.Join(", ", newRoles)} were found.");
+            }
+
+            SetNewUserRoles(libraryUser, newUserTypes);
+
+            if (newRoles.Contains("Bibliotekarz"))
+                await CreateAdditionalLibrarianInfoForLibraryUser(libraryUser);
+
+            await Task.Run(() => _libraryUserRepository.UpdateUser(libraryUser));
+        }
+
+        private void SetNewUserRoles(LibraryUser libraryUser, List<UserType> newUserTypes)
+        {
             libraryUser.UserTypes.Clear();
             foreach (var userType in newUserTypes)
             {
                 libraryUser.UserTypes.Add(userType);
             }
-
-            if (newRoles.Contains("Bibliotekarz"))
-                CreateAdditionalLibrarianInfoForLibraryUser(libraryUser);
-
-            await Task.Run(() => _libraryUserRepository.UpdateUser(libraryUser));
         }
 
-        private async void CreateAdditionalLibrarianInfoForLibraryUser(LibraryUser user)
+        private async Task CreateAdditionalLibrarianInfoForLibraryUser(LibraryUser user)
         {
             if (!IsAdditionalLibrarianInfoExists(user.Id))
             {
