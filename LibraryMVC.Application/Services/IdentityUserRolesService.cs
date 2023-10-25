@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.IdentityUserRoles;
 using LibraryMVC.Domain.Interfaces;
+using LibraryMVC.Domain.Model;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -42,6 +44,11 @@ namespace LibraryMVC.Application.Services
         public async Task<List<string>> GetRolesByUserIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                throw new NotFoundException($"No identityUser found for user with ID: {id}");
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
             return roles.ToList();
         }
@@ -49,6 +56,11 @@ namespace LibraryMVC.Application.Services
         public async Task<IdentityUserRolesDetailsVm> GetUserRolesDetailsAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                throw new NotFoundException($"No identityUser found for user with ID: {id}");
+            }
+
             var userDetailsVm = _mapper.Map<IdentityUserRolesDetailsVm>(user);
             userDetailsVm.UserRoles = await GetRolesByUserIdAsync(id);
             userDetailsVm.AllRoles = GetAllRoles().ToList();

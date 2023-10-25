@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.Mapping;
 using LibraryMVC.Application.Services;
@@ -96,6 +97,75 @@ namespace LibraryMVC.Tests
             var result = service.GetAllRoles();
 
             result.Should().BeEquivalentTo(expectedRolesListVm);
+        }
+        
+        [Fact]
+        public async Task GetRolesByUserIdAsync_WhenValidCall_ShouldReturnUserRolesList()
+        {
+            var testId = "test";
+            var testUser = new IdentityUser();
+            var rolesList = new List<string>() { "role1", "role2" };
+
+            mockUserManager.Setup(m => m.FindByIdAsync(testId)).ReturnsAsync(testUser);
+            mockUserManager.Setup(m => m.GetRolesAsync(testUser)).ReturnsAsync(rolesList);
+
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mockMapper.Object, mockLibraryUserService.Object);
+
+            var result = await service.GetRolesByUserIdAsync(testId);
+
+            result.Should().BeEquivalentTo(rolesList);
+        }
+
+        [Fact]
+        public async Task GetRolesByUserIdAsync_UserNotFound_ShouldThrowNotFoundException()
+        {
+            var testId = "test";
+
+            mockUserManager.Setup(m => m.FindByIdAsync(testId)).ReturnsAsync((IdentityUser)null);
+
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mockMapper.Object, mockLibraryUserService.Object);
+
+            Func<Task> result = () => service.GetRolesByUserIdAsync(testId);
+
+            await result.Should().ThrowAsync<NotFoundException>().WithMessage($"No identityUser found for user with ID: {testId}");
+        }
+
+        [Fact]
+        public async Task GetUserRolesDetailsAsync_WhenValidCall_ShouldReturnUserRolesDetailsVm()
+        {
+            var mapper = GetMapper();
+            var testId = "test";
+            var testUser = new IdentityUser() { Id = testId, UserName = "TestUserName" };
+            var testIdentityUserRolesDetailsVm = new IdentityUserRolesDetailsVm() { Id = testId, UserName = "TestUserName" };
+            var testUserRolesList = new List<string>() { "Role1", "Role2" };
+            var identityRolesList = new List<IdentityRole>() { new IdentityRole() { Id = "TestId1", Name = "Role1" }, new IdentityRole() { Id = "TestId2", Name = "Role2" } };
+            var expectedRolesListVm = new List<RoleVm>() { new RoleVm() { Id = "TestId1", Name = "Role1" }, new RoleVm() { Id = "TestId2", Name = "Role2" } };
+            var expectedResult = new IdentityUserRolesDetailsVm() { Id = testId, UserName = "TestUserName", AllRoles = expectedRolesListVm, UserRoles = testUserRolesList };
+            
+            mockUserManager.Setup(m => m.FindByIdAsync(testId)).ReturnsAsync(testUser);
+            mockUserManager.Setup(m => m.GetRolesAsync(testUser)).ReturnsAsync(testUserRolesList);
+            mockRoleManager.Setup(m => m.Roles).Returns(identityRolesList.AsQueryable);
+
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mapper, mockLibraryUserService.Object);
+
+            var result = await service.GetUserRolesDetailsAsync(testId);
+
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expectedResult);
+        }
+
+        [Fact]
+        public async Task GetUserRolesDetailsAsync_UserNotFound_ShouldThrowNotFoundException()
+        {
+            var testId = "test";
+            
+            mockUserManager.Setup(m => m.FindByIdAsync(testId)).ReturnsAsync((IdentityUser)null);
+            
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mockMapper.Object, mockLibraryUserService.Object);
+
+            Func<Task> result = () => service.GetUserRolesDetailsAsync(testId);
+
+            await result.Should().ThrowAsync<NotFoundException>().WithMessage($"No identityUser found for user with ID: {testId}");
         }
     }
 }
