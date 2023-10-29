@@ -70,6 +70,11 @@ namespace LibraryMVC.Application.Services
         public async Task ChangeUserRolesAsync(string userId, List<string> newRoles)
         {
             var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new NotFoundException($"No identityUser found for user with ID: {userId}");
+            }
+
             var userRoles = await _userManager.GetRolesAsync(user);
 
             if (!IsRoleChanged(userRoles, newRoles))

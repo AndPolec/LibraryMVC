@@ -167,5 +167,72 @@ namespace LibraryMVC.Tests
 
             await result.Should().ThrowAsync<NotFoundException>().WithMessage($"No identityUser found for user with ID: {testId}");
         }
+
+        [Fact]
+        public async Task ChangeUserRolesAsync_WhenValidCall_ShouldChangeUserRoles()
+        {
+            var testUser = new IdentityUser() { Id = "test" };
+            var userRole = new List<string>() { "Czytelnik" };
+            var newRole = new List<string>() { "Bibliotekarz" };
+
+            mockUserManager.Setup(m => m.FindByIdAsync(testUser.Id)).ReturnsAsync(testUser);
+            mockUserManager.Setup(m => m.GetRolesAsync(testUser)).ReturnsAsync(userRole);
+
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mockMapper.Object, mockLibraryUserService.Object);
+
+            await service.ChangeUserRolesAsync(testUser.Id,newRole);
+
+            mockLibraryUserService.Verify(m => m.ChangeLibraryUserType(testUser.Id, newRole), Times.Once);
+            mockUserManager.Verify(m => m.AddToRolesAsync(testUser, newRole), Times.Once);
+            mockUserManager.Verify(m => m.RemoveFromRolesAsync(testUser, userRole), Times.Once);
+        }
+
+        [Fact]
+        public async Task ChangeUserRolesAsync_NewRolesAreSameAsCurrent_ShouldChangeNothing()
+        {
+            var testUser = new IdentityUser() { Id = "test" };
+            var userRole = new List<string>() { "Czytelnik" };
+            var newRole = new List<string>() { "Czytelnik" };
+
+            mockUserManager.Setup(m => m.FindByIdAsync(testUser.Id)).ReturnsAsync(testUser);
+            mockUserManager.Setup(m => m.GetRolesAsync(testUser)).ReturnsAsync(userRole);
+
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mockMapper.Object, mockLibraryUserService.Object);
+
+            await service.ChangeUserRolesAsync(testUser.Id, newRole);
+
+            mockLibraryUserService.Verify(m => m.ChangeLibraryUserType(testUser.Id, newRole), Times.Never);
+            mockUserManager.Verify(m => m.AddToRolesAsync(testUser, newRole), Times.Never);
+            mockUserManager.Verify(m => m.RemoveFromRolesAsync(testUser, userRole), Times.Never);
+        }
+
+        [Fact]
+        public async Task ChangeUserRolesAsync_NoUserFound_ShouldThrowNotFoundException()
+        {
+            var testUser = new IdentityUser() { Id = "test" };
+            var newRole = new List<string>() { "Czytelnik" };
+
+            mockUserManager.Setup(m => m.FindByIdAsync(testUser.Id)).ReturnsAsync((IdentityUser)null);
+
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mockMapper.Object, mockLibraryUserService.Object);
+
+            Func<Task> result = () => service.ChangeUserRolesAsync(testUser.Id, newRole); ;
+
+            await result.Should().ThrowAsync<NotFoundException>().WithMessage($"No identityUser found for user with ID: {testUser.Id}");
+        }
+
+        [Fact]
+        public async Task SetStandardReaderRoleAsync_WhenValidCall_ShouldSetStandardReaderRole()
+        {
+            var testUser = new IdentityUser() { Id = "test" };
+            var userRole = new List<string>() { "Czytelnik" };
+
+            var service = new IdentityUserRolesService(mockUserManager.Object, mockRoleManager.Object, mockMapper.Object, mockLibraryUserService.Object);
+
+            await service.SetStandardReaderRoleAsync(testUser);
+
+            mockLibraryUserService.Verify(m => m.ChangeLibraryUserType(testUser.Id, userRole),Times.Once);
+            mockUserManager.Verify(m => m.AddToRolesAsync(testUser, userRole),Times.Once);
+        }
     }
 }
