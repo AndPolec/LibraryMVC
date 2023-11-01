@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using LibraryApi.Filters;
+using LibraryMVC.Application.Helpers;
 using LibraryMVC.Application.Interfaces;
 using LibraryMVC.Application.ViewModels.LibraryUser;
 using LibraryMVC.Application.ViewModels.User;
@@ -92,12 +93,13 @@ namespace LibraryApi.Controllers
         {
             try
             {
-                bool result = _userService.BlockUser(userId);
-                if (!result)
-                {
-                    return NotFound("Użytkowniko podanym id nie został znaleziony.");
-                }
+                _userService.BlockUser(userId);
                 return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Error while BlockUser for id = {userId}", userId);
+                return NotFound();
             }
             catch (Exception ex)
             {
@@ -112,12 +114,13 @@ namespace LibraryApi.Controllers
         {
             try
             {
-                bool result = _userService.UnblockUser(userId);
-                if (!result)
-                {
-                    return NotFound("Użytkownik o podanym id nie został znaleziony.");
-                }
+                _userService.UnblockUser(userId);
                 return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogInformation(ex, "Error while BlockUser for id = {userId}", userId);
+                return NotFound();
             }
             catch (Exception ex)
             {
