@@ -78,6 +78,10 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult ViewLoan(int loanId)
         {
             var model = _loanService.GetLoanForDetails(loanId);
+            if (model == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(model);
         }
 
@@ -129,6 +133,10 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult ConfirmReturn(int loanId)
         {
             var model = _loanService.GetInfoForConfirmReturn(loanId);
+            if (model == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(model);
         }
 
@@ -150,7 +158,7 @@ namespace LibraryMVC.Web.Controllers
             }
 
             var librarianId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var returnRecordId = _loanService.ConfirmReturn(model, librarianId);
+            _loanService.ConfirmReturn(model, librarianId);
 
             TempData["success"] = $"Zwrot zamówienia nr {model.LoanId} został potwierdzony.";
             return RedirectToAction("ConfirmReturnIndex");
@@ -161,6 +169,10 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult ViewReturnRecord(int returnRecordId)
         {
             var model = _loanService.GetReturnRecordForDetails(returnRecordId);
+            if (model == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(model);
         }
 

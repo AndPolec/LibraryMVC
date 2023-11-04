@@ -92,6 +92,10 @@ namespace LibraryMVC.Web.Controllers
             ViewBag.IsUserBlocked = false;
 
             var bookModel = _bookService.GetBookForDetails(id);
+            if(bookModel == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(bookModel);
         }
 
@@ -125,6 +129,10 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult EditBook(int id)
         {
             var editBookModel = _bookService.GetInfoForBookEdit(id);
+            if (editBookModel == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(editBookModel);
         }
 
@@ -159,6 +167,10 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult ViewBookForLibrarian(int id)
         {
             var bookModel = _bookService.GetBookForDetails(id);
+            if (bookModel == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(bookModel);
         }
 

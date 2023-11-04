@@ -61,6 +61,10 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult EditUserData(int libraryUserId)
         {
             var model = _userService.GetInfoForUserEdit(libraryUserId);
+            if (model == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(model);
         }
 
@@ -83,6 +87,10 @@ namespace LibraryMVC.Web.Controllers
         public IActionResult ViewUserDetails(int libraryUserId)
         {
             var model = _userService.GetLibraryUserForDetails(libraryUserId);
+            if (model == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View(model);
         }
 
@@ -92,6 +100,10 @@ namespace LibraryMVC.Web.Controllers
             var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var libraryUserId = _userService.GetLibraryUserIdByIdentityUserId(identityUserId);
             var model = _userService.GetLibraryUserForPersonalData(libraryUserId);
+            if (model == null)
+            {
+                return RedirectToAction("NotFoundPage", "Home");
+            }
             return View("ViewUserPersonalDetails", model);
         }
 
