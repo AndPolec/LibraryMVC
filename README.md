@@ -9,7 +9,7 @@
 * [Screenshots](#screenshots)
 
 ## Status
-The project is not yet completed. It is still under development.
+The project is completed but not closed. It may be expanded with new features in the future.
 
 ## General info
 The application is designed to enhance the operations of small to medium-sized libraries in an online environment. It allows users to browse the library catalog and simplifies the book lending process. The application allows for tracking the entire loan process, from the initiation of an order online, through the physical collection of the book at the library, to its eventual return. Users can also view their borrowing history and any potential fees incurred for overdue items or damages/loss of borrowed books.
